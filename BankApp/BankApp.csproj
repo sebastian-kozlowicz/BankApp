@@ -30,6 +30,39 @@
     <None Include="$(SpaRoot)**" Exclude="$(SpaRoot)node_modules\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Data\Migrations\20200114180146_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114180146_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114180216_RemoveMigration.cs" />
+    <Compile Remove="Data\Migrations\20200114180216_RemoveMigration.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114180333_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114180333_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114181330_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114181330_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114183415_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114183415_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114184348_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114184348_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114185800_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114185800_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114190130_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114190130_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114190635_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114190635_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114191136_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114191136_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114191314_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114191314_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114191709_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114191709_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114191756_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114191756_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114192019_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114192019_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200114192341_AddCustomersTable.cs" />
+    <Compile Remove="Data\Migrations\20200114192341_AddCustomersTable.Designer.cs" />
+  </ItemGroup>
+
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
