@@ -61,6 +61,8 @@
     <Compile Remove="Data\Migrations\20200114192019_AddCustomersTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200114192341_AddCustomersTable.cs" />
     <Compile Remove="Data\Migrations\20200114192341_AddCustomersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200115180912_AddAccountsTable.cs" />
+    <Compile Remove="Data\Migrations\20200115180912_AddAccountsTable.Designer.cs" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

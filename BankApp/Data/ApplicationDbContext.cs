@@ -8,6 +8,8 @@ namespace BankApp.Data
 {
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
     {
+        public DbSet<Account> Accounts { get; set; }
+
         public DbSet<Customer> Customers { get; set; }
 
         public ApplicationDbContext(
@@ -25,6 +27,10 @@ namespace BankApp.Data
                 .HasOne(c => c.ApplicationUser)
                 .WithOne(c => c.Customer)
                 .HasForeignKey<Customer>(c => c.Id);
+
+            builder.Entity<Account>()
+                .Property(a => a.Balance)
+                .HasColumnType("decimal(18,2)");
 
             base.OnModelCreating(builder);
         }
