@@ -16,8 +16,8 @@ namespace BankApp.Controllers
 
         public CustomersController(ApplicationDbContext context, IMapper mapper)
         {
-            this._context = context;
-            this._mapper = mapper;
+            _context = context;
+            _mapper = mapper;
         }
 
         [HttpGet("api/{controller}")]
