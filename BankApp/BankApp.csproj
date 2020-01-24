@@ -67,6 +67,10 @@
     <Compile Remove="Data\Migrations\20200114192341_AddCustomersTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200115180912_AddAccountsTable.cs" />
     <Compile Remove="Data\Migrations\20200115180912_AddAccountsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200124193707_DeletePersistedGrandsTable.cs" />
+    <Compile Remove="Data\Migrations\20200124193707_DeletePersistedGrandsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200124193814_DeletePersistedGrandsAndDevicesCodesTables.cs" />
+    <Compile Remove="Data\Migrations\20200124193814_DeletePersistedGrandsAndDevicesCodesTables.Designer.cs" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
