@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {
-    public class AccountsController : Controller
+    public class BankAccountsController : Controller
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
 
-        public AccountsController(ApplicationDbContext context, IMapper mapper)
+        public BankAccountsController(ApplicationDbContext context, IMapper mapper)
         {
             _context = context;
             _mapper = mapper;
