@@ -35,6 +35,11 @@ namespace BankApp
             services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddIdentityServer()
+                .AddInMemoryCaching()
+                .AddClientStore<InMemoryClientStore>()
+                .AddResourceStore<InMemoryResourcesStore>();
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
