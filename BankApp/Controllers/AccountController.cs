@@ -1,9 +1,12 @@
 ﻿using System.Threading.Tasks;
 using BankApp.Models;
 using BankApp.ViewModels.Account;
+using IdentityServer4.Events;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -29,7 +32,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        [Route("api/{controller}")]
+        [Route("api/{controller}/{action}")]
         public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -46,6 +49,28 @@ namespace BankApp.Controllers
             await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("email", user.Email));
 
             return Ok(user);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("api/{controller}/{action}")]
+        public async Task<IActionResult> Login([FromBody]LoginViewModel model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = await _userManager.FindByEmailAsync(model.Email);
+
+            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            {
+                await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.Name));
+                await HttpContext.SignInAsync(user.Id, user.UserName);
+
+                return Ok(user);
+            }
+
+            ModelState.AddModelError("", "Invalid login attempt.");
+            return BadRequest(ModelState);
         }
     }
 }
