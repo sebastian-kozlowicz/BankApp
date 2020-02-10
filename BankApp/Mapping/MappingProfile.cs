@@ -10,6 +10,7 @@ namespace BankApp.Mapping
         {
             CreateMap<Account, AccountDto>();
             CreateMap<ApplicationUser, ApplicationUserDto>();
+            CreateMap<Card, CardDto>();
             CreateMap<Customer, CustomerDto>();
             CreateMap<Employee, EmployeeDto>();
         }
