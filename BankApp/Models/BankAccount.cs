@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace BankApp.Models
 {
-    public class Account
+    public class BankAccount
     {
         public int Id { get; set; }
         public string Number { get; set; }

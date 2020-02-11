@@ -8,7 +8,7 @@ namespace BankApp.Mapping
     {
         public MappingProfile()
         {
-            CreateMap<Account, AccountDto>();
+            CreateMap<BankAccount, BankAccountDto>();
             CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<Card, CardDto>();
             CreateMap<Customer, CustomerDto>();

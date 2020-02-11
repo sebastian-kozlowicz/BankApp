@@ -6,7 +6,7 @@ namespace BankApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Account> Accounts { get; set; }
+        public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Employee> Employees { get; set; }
@@ -33,7 +33,7 @@ namespace BankApp.Data
                 .WithOne(e => e.Employee)
                 .HasForeignKey<Employee>(e => e.Id);
 
-            builder.Entity<Account>()
+            builder.Entity<BankAccount>()
                 .Property(a => a.Balance)
                 .HasColumnType("decimal(18,2)");
 
