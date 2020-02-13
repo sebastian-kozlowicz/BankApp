@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankApp.Controllers
 {
-    public class AccountController : Controller
+    [ApiController]
+    public class AccountController : ControllerBase
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -32,7 +33,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        [Route("api/{controller}/{action}")]
+        [Route("api/[controller]/[action]")]
         public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
         {
             if (!ModelState.IsValid)
@@ -53,7 +54,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/{controller}/{action}")]
+        [Route("api/[controller]/[action]")]
         public async Task<IActionResult> Login([FromBody]LoginViewModel model)
         {
             if (!ModelState.IsValid)

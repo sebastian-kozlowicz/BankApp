@@ -9,7 +9,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {
-    public class BankAccountsController : Controller
+    [ApiController]
+    public class BankAccountsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -20,7 +21,7 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("api/{controller}")]
+        [HttpGet("api/[controller]")]
         public IEnumerable<BankAccountDto> GetAccounts()
         {
             var accounts = _context.BankAccounts.ToList();
