@@ -8,7 +8,7 @@ import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
-import { RegistrationComponent } from './account/registration/registration/registration.component';
+import { RegistrationComponent } from './account/registration/registration.component';
 
 @NgModule({
   declarations: [
