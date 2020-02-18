@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using AutoMapper;
 using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace BankApp
 {
@@ -92,6 +93,7 @@ namespace BankApp
 
                 if (env.IsDevelopment())
                 {
+          			spa.Options.StartupTimeout = new TimeSpan(days: 0, hours: 0, minutes: 1, seconds: 0);
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
