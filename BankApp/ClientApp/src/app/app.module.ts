@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 
@@ -9,6 +9,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { RegistrationComponent } from './account/registration/registration.component';
+import { AccountService } from './services/account.service';
 
 @NgModule({
   declarations: [
@@ -21,7 +22,7 @@ import { RegistrationComponent } from './account/registration/registration.compo
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
-    FormsModule,
+    ReactiveFormsModule,
     RouterModule.forRoot([
       {
         path: '', component: HomeComponent, pathMatch: 'full'
@@ -37,6 +38,7 @@ import { RegistrationComponent } from './account/registration/registration.compo
     ])
   ],
   providers: [
+    AccountService
   ],
   bootstrap: [AppComponent]
 })
