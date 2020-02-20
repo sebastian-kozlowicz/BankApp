@@ -1,1 +1,35 @@
-<p>registration works!</p>
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+</head>
+<body>
+  <form [formGroup]="accountService.registerModel" autocomplete="off">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input id="name" class="form-control" formControlName="name" />
+    </div>
+
+    <div class="form-group">
+      <label for="surname">Surname</label>
+      <input id="surname" class="form-control" formControlName="surname" />
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input id="email" class="form-control" formControlName="email" />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input id="password" class="form-control" formControlName="password" />
+    </div>
+
+    <div class="form-group">
+      <label for="confirm-password">Confirm password</label>
+      <input id="confirm-password" class="form-control" formControlName="confirmPassword" />
+    </div>
+
+  </form>
+</body>
+</html>
