@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../../services/account.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Register } from '../../models/register';
 
 @Component({
   selector: 'app-registration',
@@ -9,19 +10,19 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 })
 export class RegistrationComponent implements OnInit {
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private accountService: AccountService) { }
 
-   registerModel = this.fb.group({
-      name: ['', Validators.required],
-      surname: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', Validators.required],
-      confirmPassword: ['', Validators.required]
-    }, {
-      validator: this.isPasswordMatch
-    });
+  registerFormModel = this.fb.group({
+    name: ['', Validators.required],
+    surname: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
+    confirmPassword: ['', Validators.required]
+  }, {
+    validator: this.isPasswordMatch
+  });
 
-   isPasswordMatch(fg: FormGroup) {
+  isPasswordMatch(fg: FormGroup) {
     let password = fg.controls['password'];
     let confirmPassword = fg.controls['confirmPassword'];
 
@@ -36,4 +37,21 @@ export class RegistrationComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onSubmit() {
+    let registerModel: Register = {
+      name: this.registerFormModel.controls['name'].value,
+      surname: this.registerFormModel.controls['surname'].value,
+      email: this.registerFormModel.controls['email'].value,
+      password: this.registerFormModel.controls['password'].value,
+      confirmPassword: this.registerFormModel.controls['confirmPassword'].value,
+    };
+
+    this.accountService.register(registerModel).subscribe(
+      (response: any) => {
+      },
+      error => {
+        console.log(error);
+      }
+    );
+  }
 }
