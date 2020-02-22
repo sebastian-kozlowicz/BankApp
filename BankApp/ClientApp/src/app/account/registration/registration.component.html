@@ -4,13 +4,13 @@
   <title></title>
 </head>
 <body>
-  <form [formGroup]="accountService.registerModel" autocomplete="off">
+  <form [formGroup]="registerModel" autocomplete="off">
     <div class="form-group">
       <label for="name">Name</label>
       <input id="name" class="form-control" formControlName="name" />
       <label class="text-danger"
-             *ngIf="accountService.registerModel.get('name').touched
-              && accountService.registerModel.get('name').errors?.required">
+             *ngIf="registerModel.get('name').touched
+              && registerModel.get('name').errors?.required">
         The Name field is required.
       </label>
 
@@ -20,8 +20,8 @@
       <label for="surname">Surname</label>
       <input id="surname" class="form-control" formControlName="surname" />
       <label class="text-danger"
-             *ngIf="accountService.registerModel.get('surname').touched
-              && accountService.registerModel.get('surname').errors?.required">
+             *ngIf="registerModel.get('surname').touched
+              && registerModel.get('surname').errors?.required">
         The Surname field is required.
       </label>
     </div>
@@ -30,13 +30,13 @@
       <label for="email">Email</label>
       <input id="email" class="form-control" formControlName="email" />
       <label class="text-danger"
-             *ngIf="accountService.registerModel.get('email').touched
-              && accountService.registerModel.get('email').errors?.required">
+             *ngIf="registerModel.get('email').touched
+              && registerModel.get('email').errors?.required">
         The Email field is required.
       </label>
       <label class="text-danger"
-             *ngIf="accountService.registerModel.get('email').touched
-              && accountService.registerModel.get('email').errors?.email">
+             *ngIf="registerModel.get('email').touched
+              && registerModel.get('email').errors?.email">
         The Email field is not a valid e-mail address.
       </label>
     </div>
@@ -45,8 +45,8 @@
       <label for="password">Password</label>
       <input type="password" id="password" class="form-control" formControlName="password" />
       <label class="text-danger"
-             *ngIf="accountService.registerModel.get('password').touched
-              && accountService.registerModel.get('password').errors?.required">
+             *ngIf="registerModel.get('password').touched
+              && registerModel.get('password').errors?.required">
         The Password field is required.
       </label>
     </div>
@@ -55,14 +55,14 @@
       <label for="confirm-password">Confirm password</label>
       <input type="password" id="confirm-password" class="form-control" formControlName="confirmPassword" />
       <label class="text-danger"
-             *ngIf="accountService.registerModel.get('confirmPassword').touched
-              && accountService.registerModel.get('confirmPassword').errors?.required">
+             *ngIf="registerModel.get('confirmPassword').touched
+              && registerModel.get('confirmPassword').errors?.required">
         The Confirm password field is required.
       </label>
       <label class="text-danger"
-             *ngIf="accountService.registerModel.get('confirmPassword').touched
-              && accountService.registerModel.get('confirmPassword').errors?.passwordMismatch">
-        Passwords are not equal
+             *ngIf="registerModel.get('confirmPassword').touched
+              && registerModel.get('confirmPassword').errors?.passwordMismatch">
+        Passwords do not match
       </label>
     </div>
 
