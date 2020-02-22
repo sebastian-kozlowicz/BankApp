@@ -43,7 +43,7 @@
 
     <div class="form-group">
       <label for="password">Password</label>
-      <input id="password" class="form-control" formControlName="password" />
+      <input type="password" id="password" class="form-control" formControlName="password" />
       <label class="text-danger"
              *ngIf="accountService.registerModel.get('password').touched
               && accountService.registerModel.get('password').errors?.required">
@@ -53,11 +53,16 @@
 
     <div class="form-group">
       <label for="confirm-password">Confirm password</label>
-      <input id="confirm-password" class="form-control" formControlName="confirmPassword" />
+      <input type="password" id="confirm-password" class="form-control" formControlName="confirmPassword" />
       <label class="text-danger"
              *ngIf="accountService.registerModel.get('confirmPassword').touched
               && accountService.registerModel.get('confirmPassword').errors?.required">
         The Confirm password field is required.
+      </label>
+      <label class="text-danger"
+             *ngIf="accountService.registerModel.get('confirmPassword').touched
+              && accountService.registerModel.get('confirmPassword').errors?.passwordMismatch">
+        Passwords are not equal
       </label>
     </div>
 
