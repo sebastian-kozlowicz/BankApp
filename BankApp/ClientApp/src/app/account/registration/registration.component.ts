@@ -3,6 +3,7 @@ import { AccountService } from '../../services/account.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Register } from '../../models/register';
 import { PasswordValidator } from '../../validators/password-validator';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-registration',
@@ -11,20 +12,20 @@ import { PasswordValidator } from '../../validators/password-validator';
 })
 export class RegistrationComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private accountService: AccountService) { }
+  constructor(private fb: FormBuilder, private accountService: AccountService, private toastr: ToastrService) { }
 
   registerFormModel = this.fb.group({
     name: ['', Validators.required],
     surname: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.compose([
-         Validators.required,
-         PasswordValidator.patternValidator(/\d/, { hasNumber: true }),
-         PasswordValidator.patternValidator(/[A-Z]/, { hasCapitalCase: true }),
-         PasswordValidator.patternValidator(/[a-z]/, { hasLowerCase: true }),
-         PasswordValidator.patternValidator(/[-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]/, { hasSpecialCharacter: true }),
-         Validators.minLength(8)])
-      ],
+      Validators.required,
+      PasswordValidator.patternValidator(/\d/, { hasNumber: true }),
+      PasswordValidator.patternValidator(/[A-Z]/, { hasCapitalCase: true }),
+      PasswordValidator.patternValidator(/[a-z]/, { hasLowerCase: true }),
+      PasswordValidator.patternValidator(/[-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]/, { hasSpecialCharacter: true }),
+      Validators.minLength(8)])
+    ],
     confirmPassword: ['', Validators.required]
   }, {
     validator: this.isPasswordMatch
@@ -54,10 +55,19 @@ export class RegistrationComponent implements OnInit {
     };
 
     this.accountService.register(registerModel).subscribe(
-      (response: any) => {
+      response => {
+        if (response) {
+          this.toastr.success('New user created!', 'Registration successful.');
+        }
       },
-      error => {
-        console.log(error);
+      badRequest => {
+        if (Array.isArray(badRequest.error))
+          badRequest.error.forEach(element => {
+            if (element.code == 'DuplicateUserName')
+              this.toastr.error('Username is already taken', 'Registration failed.');
+          });
+        else
+          this.toastr.error('Registration failed.');
       }
     );
   }
