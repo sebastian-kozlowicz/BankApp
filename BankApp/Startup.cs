@@ -41,6 +41,16 @@ namespace BankApp
                 .AddClientStore<InMemoryClientStore>()
                 .AddResourceStore<InMemoryResourcesStore>();
 
+            services.Configure<IdentityOptions>(options =>
+                {
+                    options.Password.RequireDigit = true;
+                    options.Password.RequireNonAlphanumeric = true;
+                    options.Password.RequireLowercase = true;
+                    options.Password.RequireUppercase = true;
+                    options.Password.RequiredLength = 8;
+                }
+            );
+
             services.AddControllersWithViews();
             services.AddRazorPages();
             // In production, the Angular files will be served from this directory
