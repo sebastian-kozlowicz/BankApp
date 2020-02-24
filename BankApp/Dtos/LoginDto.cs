@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BankApp.ViewModels.Account
+namespace BankApp.Dtos
 {
-    public class LoginViewModel
+    public class LoginDto
     {
         [Required]
         [Display(Name = "Email")]

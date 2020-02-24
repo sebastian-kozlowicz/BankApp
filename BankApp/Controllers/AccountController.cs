@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using BankApp.Dtos;
 using BankApp.Models;
 using BankApp.ViewModels.Account;
 using IdentityServer4.Events;
@@ -34,7 +35,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("api/[controller]/[action]")]
-        public async Task<IActionResult> Register([FromBody]RegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody]RegisterDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -55,7 +56,7 @@ namespace BankApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("api/[controller]/[action]")]
-        public async Task<IActionResult> Login([FromBody]LoginViewModel model)
+        public async Task<IActionResult> Login([FromBody]LoginDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

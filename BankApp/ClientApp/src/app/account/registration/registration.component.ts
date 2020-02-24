@@ -18,17 +18,11 @@ export class RegistrationComponent implements OnInit {
     surname: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.compose([
-         // 1. Password Field is Required
          Validators.required,
-         // 2. check whether the entered password has a number
          PasswordValidator.patternValidator(/\d/, { hasNumber: true }),
-         // 3. check whether the entered password has upper case letter
          PasswordValidator.patternValidator(/[A-Z]/, { hasCapitalCase: true }),
-         // 4. check whether the entered password has a lower-case letter
          PasswordValidator.patternValidator(/[a-z]/, { hasLowerCase: true }),
-         // 5. check whether the entered password has a special character
          PasswordValidator.patternValidator(/[-!$%^&*()_+|~=`{}\[\]:\/;<>?,.@#]/, { hasSpecialCharacter: true }),
-         // 6. Has a minimum length of 8 characters
          Validators.minLength(8)])
       ],
     confirmPassword: ['', Validators.required]
