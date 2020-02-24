@@ -51,7 +51,6 @@ export class RegistrationComponent implements OnInit {
       surname: this.registerFormModel.controls['surname'].value,
       email: this.registerFormModel.controls['email'].value,
       password: this.registerFormModel.controls['password'].value,
-      confirmPassword: this.registerFormModel.controls['confirmPassword'].value,
     };
 
     this.accountService.register(registerModel).subscribe(

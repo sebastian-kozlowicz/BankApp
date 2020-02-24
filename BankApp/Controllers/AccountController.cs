@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BankApp.Dtos;
 using BankApp.Models;
-using BankApp.ViewModels.Account;
 using IdentityServer4.Events;
 using IdentityServer4.Services;
 using IdentityServer4.Stores;
