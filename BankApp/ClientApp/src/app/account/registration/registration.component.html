@@ -74,7 +74,7 @@
       </label>
     </div>
 
-    <button class="btn btn-primary">Sign Up</button>
+    <button class="btn btn-primary" [disabled]="!registerFormModel.valid">Sign Up</button>
   </form>
 </body>
 </html>
