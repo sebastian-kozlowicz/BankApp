@@ -8,70 +8,70 @@
     <div class="form-group">
       <label for="name">Name</label>
       <input id="name" class="form-control" formControlName="name" />
-      <label class="text-danger"
-             *ngIf="name.touched
+      <div class="alert alert-danger"
+           *ngIf="name.touched
               && name.errors?.required">
         The Name field is required.
-      </label>
-
+      </div>
     </div>
 
     <div class="form-group">
       <label for="surname">Surname</label>
       <input id="surname" class="form-control" formControlName="surname" />
-      <label class="text-danger"
-             *ngIf="surname.touched
+      <div class="alert alert-danger"
+           *ngIf="surname.touched
               && surname.errors?.required">
         The Surname field is required.
-      </label>
+      </div>
     </div>
 
     <div class="form-group">
       <label for="email">Email</label>
       <input id="email" class="form-control" formControlName="email" />
-      <label class="text-danger"
-             *ngIf="email.touched
+      <div class="alert alert-danger"
+           *ngIf="email.touched
               && email.errors?.required">
         The Email field is required.
-      </label>
-      <label class="text-danger"
-             *ngIf="email.touched
+      </div>
+      <div class="alert alert-danger"
+           *ngIf="email.touched
               && email.errors?.email">
         The Email field is not a valid e-mail address.
-      </label>
+      </div>
     </div>
 
     <div class="form-group">
       <label for="password">Password</label>
       <input type="password" id="password" class="form-control" formControlName="password" />
-      <label class="text-danger"
-             *ngIf="password.touched
+      <div class="alert alert-danger"
+           *ngIf="password.touched
               && password.errors?.required">
         The Password field is required.
-      </label>
-      <label class="text-danger"
-             *ngIf="password.touched">
-        <text *ngIf="password.errors?.hasNumber">The Password must include number <br /></text>
-        <text *ngIf="password.errors?.hasCapitalCase">The Password must include capital case letter  <br /></text>
-        <text *ngIf="password.errors?.hasLowerCase">The Password must include lower case letter  <br /></text>
-        <text *ngIf="password.errors?.hasSpecialCharacter">The Password must include special character  <br /></text>
-        <text *ngIf="password.errors?.minlength">The Password must be at least 8 characters  <br /></text>
-      </label>
+      </div>
+      <div class="alert alert-danger"
+           *ngIf="password.touched
+              && !password.errors?.required">
+        <span *ngIf="password.errors?.hasNumber">The Password must include number <br /></span>
+        <span *ngIf="password.errors?.hasCapitalCase">The Password must include capital case letter  <br /></span>
+        <span *ngIf="password.errors?.hasLowerCase">The Password must include lower case letter  <br /></span>
+        <span *ngIf="password.errors?.hasSpecialCharacter">The Password must include special character  <br /></span>
+        <span *ngIf="password.errors?.minlength">The Password must be at least 8 characters  <br /></span>
+      </div>
     </div>
 
     <div class="form-group">
       <label for="confirm-password">Confirm password</label>
       <input type="password" id="confirm-password" class="form-control" formControlName="confirmPassword" />
-      <label class="text-danger"
-             *ngIf="confirmPassword.touched
+      <div class="alert alert-danger"
+           *ngIf="confirmPassword.touched
               && confirmPassword.errors?.required">
         The Confirm password field is required.
-      </label>
-      <label class="text-danger"
-             *ngIf="confirmPassword.touched
+      </div>
+      <div class="alert alert-danger"
+           *ngIf="confirmPassword.touched
               && confirmPassword.errors?.passwordMismatch">
         Passwords do not match
-      </label>
+      </div>
     </div>
 
     <button class="btn btn-primary" [disabled]="!registerFormModel.valid">Sign Up</button>
