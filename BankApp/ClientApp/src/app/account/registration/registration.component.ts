@@ -14,6 +14,22 @@ export class RegistrationComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private accountService: AccountService, private toastr: ToastrService) { }
 
+  get name() {
+    return this.registerFormModel.get('name');
+  }
+  get surname() {
+    return this.registerFormModel.get('surname');
+  }
+  get email() {
+    return this.registerFormModel.get('email');
+  }
+  get password() {
+    return this.registerFormModel.get('password');
+  }
+  get confirmPassword() {
+    return this.registerFormModel.get('confirmPassword');
+  }
+
   registerFormModel = this.fb.group({
     name: ['', Validators.required],
     surname: ['', Validators.required],
@@ -48,10 +64,10 @@ export class RegistrationComponent implements OnInit {
 
   onSubmit() {
     let registerModel: Register = {
-      name: this.registerFormModel.controls['name'].value,
-      surname: this.registerFormModel.controls['surname'].value,
-      email: this.registerFormModel.controls['email'].value,
-      password: this.registerFormModel.controls['password'].value,
+      name: this.name.value,
+      surname: this.surname.value,
+      email: this.email.value,
+      password: this.password.value,
     };
 
     this.accountService.register(registerModel).subscribe(
