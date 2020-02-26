@@ -12,6 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { RegistrationComponent } from './account/registration/registration.component';
 import { AccountService } from './services/account.service';
+import { LoginComponent } from './account/login/login/login.component';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { AccountService } from './services/account.service';
     HomeComponent,
     AccountComponent,
     RegistrationComponent,
+    LoginComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
