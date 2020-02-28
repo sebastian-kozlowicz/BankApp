@@ -7,6 +7,11 @@
               && email.errors?.required">
       The Email field is required.
     </div>
+    <div class="alert alert-danger"
+         *ngIf="email.touched
+              && email.errors?.email">
+      The Email field is not a valid e-mail address.
+    </div>
   </div>
 
   <div class="form-group">
