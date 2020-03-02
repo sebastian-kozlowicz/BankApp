@@ -1,35 +1,29 @@
-﻿using System.Threading.Tasks;
+﻿using System.Security.Claims;
+using System.Threading.Tasks;
 using BankApp.Dtos;
+using BankApp.Helpers;
+using BankApp.Interfaces;
 using BankApp.Models;
-using IdentityServer4.Events;
-using IdentityServer4.Services;
-using IdentityServer4.Stores;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
 
 namespace BankApp.Controllers
 {
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IIdentityServerInteractionService _interaction;
-        private readonly IAuthenticationSchemeProvider _schemeProvider;
-        private readonly IClientStore _clientStore;
-        private readonly IEventService _events;
+        private readonly IJwtFactory _jwtFactory;
+        private readonly JwtIssuerOptions _jwtOptions;
 
-        public AccountController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager, IIdentityServerInteractionService interaction, IAuthenticationSchemeProvider schemeProvider, IClientStore clientStore, IEventService events)
+        public AccountController(UserManager<ApplicationUser> userManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
         {
             _userManager = userManager;
-            _interaction = interaction;
-            _schemeProvider = schemeProvider;
-            _clientStore = clientStore;
-            _events = events;
-            _signInManager = signInManager;
+            _jwtFactory = jwtFactory;
+            _jwtOptions = jwtOptions.Value;
         }
 
         [HttpPost]
@@ -45,10 +39,6 @@ namespace BankApp.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("userName", user.UserName));
-            await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("name", user.Name));
-            await _userManager.AddClaimAsync(user, new System.Security.Claims.Claim("email", user.Email));
-
             return Ok(user);
         }
 
@@ -60,18 +50,31 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = await _userManager.FindByEmailAsync(model.Email);
-
-            if (user != null && await _userManager.CheckPasswordAsync(user, model.Password))
+            if (await GetClaimsIdentity(model.Email, model.Password) is ClaimsIdentity claimsIdentity && claimsIdentity != null)
             {
-                await _events.RaiseAsync(new UserLoginSuccessEvent(user.UserName, user.Id, user.Name));
-                await HttpContext.SignInAsync(user.Id, user.UserName);
+                var jwt = await JwtTokenHelper.GenerateJwt(claimsIdentity, _jwtFactory, model.Email, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
 
-                return Ok(user);
+                return Ok(jwt);
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
             return BadRequest(ModelState);
+        }
+
+        private async Task<ClaimsIdentity> GetClaimsIdentity(string email, string password)
+        {
+            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
+                return await Task.FromResult<ClaimsIdentity>(null);
+
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null) 
+                return await Task.FromResult<ClaimsIdentity>(null);
+
+            if (await _userManager.CheckPasswordAsync(user, password))
+                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(email, user.Id));
+
+            return await Task.FromResult<ClaimsIdentity>(null);
         }
     }
 }

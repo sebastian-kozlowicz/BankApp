@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using BankApp.Helpers;
+using BankApp.Interfaces;
 
 namespace BankApp
 {
@@ -46,6 +47,8 @@ namespace BankApp
                 .AddInMemoryCaching()
                 .AddClientStore<InMemoryClientStore>()
                 .AddResourceStore<InMemoryResourcesStore>();
+
+            services.AddSingleton<IJwtFactory, JwtFactory>();
 
             services.Configure<IdentityOptions>(options =>
                 {

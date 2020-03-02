@@ -1,4 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using System;
+using System.Threading.Tasks;
 
 namespace BankApp.Helpers
 {
@@ -6,6 +8,12 @@ namespace BankApp.Helpers
     {
         public string Issuer { get; set; }
         public string Audience { get; set; }
+        public DateTime Expiration => IssuedAt.Add(ValidFor);
+        public DateTime NotBefore => DateTime.UtcNow;
+        public DateTime IssuedAt => DateTime.UtcNow;
+        public TimeSpan ValidFor { get; set; } = TimeSpan.FromMinutes(10);
+        public Func<Task<string>> JtiGenerator =>
+          () => Task.FromResult(Guid.NewGuid().ToString());
         public SigningCredentials SigningCredentials { get; set; }
     }
 }
