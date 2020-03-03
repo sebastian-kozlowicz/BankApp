@@ -44,6 +44,7 @@
     </div>
     <div class="alert alert-danger"
          *ngIf="password.touched
+              && password.errors
               && !password.errors?.required">
       <span *ngIf="password.errors?.hasNumber">The Password must include number <br /></span>
       <span *ngIf="password.errors?.hasCapitalCase">The Password must include capital case letter  <br /></span>
