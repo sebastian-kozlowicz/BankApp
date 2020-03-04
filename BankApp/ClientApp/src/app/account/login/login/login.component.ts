@@ -30,9 +30,10 @@ export class LoginComponent implements OnInit {
 
   onSubmit() {
     this.accountService.login(this.loginFormModel.value).subscribe(
-      response => {
+      (response: any) => {
         if (response) {
-          this.router.navigateByUrl('/home');
+          localStorage.setItem("token", response.token);
+          this.router.navigateByUrl('/');
         }
       },
       error => {

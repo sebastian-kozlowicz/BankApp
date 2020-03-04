@@ -34,9 +34,6 @@ import { LoginComponent } from './account/login/login/login.component';
         path: '', component: HomeComponent, pathMatch: 'full'
       },
       {
-        path: 'home', component: HomeComponent
-      },
-      {
         path: 'account', component: AccountComponent,
         children: [
           {
