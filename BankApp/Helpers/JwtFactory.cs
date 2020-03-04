@@ -18,13 +18,14 @@ namespace BankApp.Helpers
             ThrowIfInvalidOptions(_jwtOptions);
         }
 
-        public async Task<string> GenerateEncodedToken(string email)
+        public async Task<string> GenerateEncodedToken(string email, ClaimsIdentity claimsIdentity)
         {
             var claims = new[]
             {
                  new Claim(JwtRegisteredClaimNames.Sub, email),
                  new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
-                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64)
+                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
+                 claimsIdentity.FindFirst("userId"),
              };
 
             var jwt = new JwtSecurityToken(

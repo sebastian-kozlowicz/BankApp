@@ -13,7 +13,7 @@ namespace BankApp.Helpers
             var response = new
             {
                 userId = claimsIdentity.Claims.Single(c => c.Type == "userId").Value,
-                token = await jwtFactory.GenerateEncodedToken(email),
+                token = await jwtFactory.GenerateEncodedToken(email, claimsIdentity),
                 expiresIn = (int)jwtOptions.ValidFor.TotalSeconds
             };
 
