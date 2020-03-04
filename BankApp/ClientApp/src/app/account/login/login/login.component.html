@@ -1,4 +1,4 @@
-<form [formGroup]="loginFormModel" autocomplete="off">
+<form [formGroup]="loginFormModel" autocomplete="off" (submit)="onSubmit()">
   <div class="form-group">
     <label for="email">Email</label>
     <input id="email" class="form-control" formControlName="email" />

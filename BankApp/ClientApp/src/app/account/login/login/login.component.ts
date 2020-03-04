@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { AccountService } from '../../../services/account.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,7 +10,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) { }
 
   get email() {
     return this.loginFormModel.get('email');
@@ -24,6 +26,19 @@ export class LoginComponent implements OnInit {
 
 
   ngOnInit(): void {
+  }
+
+  onSubmit() {
+    this.accountService.login(this.loginFormModel.value).subscribe(
+      response => {
+        if (response) {
+          this.router.navigateByUrl('/home');
+        }
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
 
 }
