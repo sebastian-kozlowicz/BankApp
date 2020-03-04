@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { AccountService } from '../../../services/account.service';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -10,7 +11,7 @@ import { Router } from '@angular/router';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private router: Router) { }
+  constructor(private fb: FormBuilder, private accountService: AccountService, private toastr: ToastrService, private router: Router) { }
 
   get email() {
     return this.loginFormModel.get('email');
@@ -32,12 +33,14 @@ export class LoginComponent implements OnInit {
     this.accountService.login(this.loginFormModel.value).subscribe(
       (response: any) => {
         if (response) {
-          localStorage.setItem("token", response.token);
+          localStorage.setItem('token', response.token);
           this.router.navigateByUrl('/');
         }
       },
       error => {
-        console.log(error);
+        if (error.status == 400) {
+          this.toastr.error('Invalid login attempt');
+        }
       }
     );
   }
