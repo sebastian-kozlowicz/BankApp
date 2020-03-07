@@ -43,4 +43,8 @@ export class AccountService {
         return this.errorHandler(error)
       }))
   }
+
+  logout() {
+    localStorage.removeItem('token');
+  }
 }
