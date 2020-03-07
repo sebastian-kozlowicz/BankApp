@@ -19,7 +19,14 @@ export class AccountService {
   }
 
   register(registerModel: Register) {
-    return this.http.post(this.registrationEndpoint, registerModel);
+    return this.http.post(this.registrationEndpoint, registerModel)
+      .pipe(map(
+        () => {
+          return true;
+        }
+      ), catchError(error => {
+        return this.errorHandler(error)
+      }))
   }
 
   login(loginModel) {
