@@ -3,6 +3,8 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AccountService } from '../../services/account.service';
+import { map, catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -25,24 +27,19 @@ export class LoginComponent implements OnInit {
     password: ['', Validators.required]
   });
 
-
   ngOnInit(): void {
   }
 
   onSubmit() {
     this.accountService.login(this.loginFormModel.value).subscribe(
-      (response: any) => {
-        if (response) {
-          localStorage.setItem('token', response.token);
+      response => {
+        if (response)
           this.router.navigateByUrl('/');
-        }
       },
       error => {
-        if (error.status == 400) {
+        if (error.status == 400)
           this.toastr.error('Invalid login attempt');
-        }
       }
     );
   }
-
 }
