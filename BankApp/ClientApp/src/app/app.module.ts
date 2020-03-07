@@ -12,7 +12,7 @@ import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { RegistrationComponent } from './account/registration/registration.component';
 import { AccountService } from './services/account.service';
-import { LoginComponent } from './account/login/login/login.component';
+import { LoginComponent } from './account/login/login.component';
 
 @NgModule({
   declarations: [
