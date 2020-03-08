@@ -3,13 +3,15 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Register } from '../models/register';
 import { map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
+import { JwtHelperService } from '@auth0/angular-jwt';
+
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
 
   private readonly registrationEndpoint = '/api/account/register';
   private readonly loginEndpoint = '/api/account/login';
@@ -46,5 +48,9 @@ export class AccountService {
 
   logout() {
     localStorage.removeItem('token');
+  }
+
+  isLoggedIn() {
+    return this.jwtHelper.getTokenExpirationDate();
   }
 }
