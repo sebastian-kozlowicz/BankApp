@@ -1,1 +1,8 @@
-<p>nav-login-menu works!</p>
+<ul class="navbar-nav">
+  <li *ngIf="accountService.isLoggedIn()" class="nav-item">
+    <a class="nav-link text-dark" [routerLink]='["/account/logout"]'>Logout</a>
+  </li>
+  <li *ngIf="!accountService.isLoggedIn()" class="nav-item">
+    <a class="nav-link text-dark" [routerLink]='["/account/login"]'>Login</a>
+  </li>
+</ul>
