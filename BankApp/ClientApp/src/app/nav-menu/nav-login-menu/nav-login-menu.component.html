@@ -1,6 +1,6 @@
 <ul class="navbar-nav">
   <li *ngIf="accountService.isLoggedIn()" class="nav-item">
-    <a class="nav-link text-dark" [routerLink]='["/account/logout"]'>Logout</a>
+    <a class="nav-link text-dark" [routerLink]='["/home"]' (click)="accountService.logout()">Logout</a>
   </li>
   <li *ngIf="!accountService.isLoggedIn()" class="nav-item">
     <a class="nav-link text-dark" [routerLink]='["/account/login"]'>Login</a>

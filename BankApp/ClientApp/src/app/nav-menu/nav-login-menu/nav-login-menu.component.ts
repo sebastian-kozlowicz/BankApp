@@ -12,5 +12,4 @@ export class NavLoginMenuComponent implements OnInit {
 
   ngOnInit(): void {
   }
-
 }

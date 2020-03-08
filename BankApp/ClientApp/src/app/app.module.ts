@@ -63,8 +63,7 @@ export function tokenGetter() {
     ])
   ],
   providers: [
-    AccountService,
-
+    AccountService
   ],
   bootstrap: [AppComponent]
 })
