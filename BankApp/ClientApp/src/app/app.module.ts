@@ -55,6 +55,9 @@ export function tokenGetter() {
           {
             path: 'login', component: LoginComponent
           },
+          {
+            path: 'logout', component: LoginComponent
+          },
         ]
       },
     ])
