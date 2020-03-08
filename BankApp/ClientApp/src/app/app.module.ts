@@ -14,6 +14,11 @@ import { RegistrationComponent } from './account/registration/registration.compo
 import { AccountService } from './services/account.service';
 import { LoginComponent } from './account/login/login.component';
 import { NavLoginMenuComponent } from './nav-menu/nav-login-menu/nav-login-menu.component';
+import { JwtModule } from '@auth0/angular-jwt';
+
+export function tokenGetter() {
+  return localStorage.getItem("token");
+}
 
 @NgModule({
   declarations: [
@@ -31,6 +36,12 @@ import { NavLoginMenuComponent } from './nav-menu/nav-login-menu/nav-login-menu.
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
+    JwtModule.forRoot({
+      config: {
+        tokenGetter: tokenGetter,
+        whitelistedDomains: ["localhost:44387"]
+      }
+    }),
     RouterModule.forRoot([
       {
         path: '', component: HomeComponent, pathMatch: 'full'
@@ -49,7 +60,8 @@ import { NavLoginMenuComponent } from './nav-menu/nav-login-menu/nav-login-menu.
     ])
   ],
   providers: [
-    AccountService
+    AccountService,
+
   ],
   bootstrap: [AppComponent]
 })

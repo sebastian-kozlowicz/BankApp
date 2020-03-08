@@ -5,7 +5,6 @@ import { map, catchError } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { JwtHelperService } from '@auth0/angular-jwt';
 
-
 @Injectable({
   providedIn: 'root'
 })
