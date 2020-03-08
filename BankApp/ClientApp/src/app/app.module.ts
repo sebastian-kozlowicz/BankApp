@@ -13,6 +13,7 @@ import { AccountComponent } from './account/account.component';
 import { RegistrationComponent } from './account/registration/registration.component';
 import { AccountService } from './services/account.service';
 import { LoginComponent } from './account/login/login.component';
+import { NavLoginMenuComponent } from './nav-menu/nav-login-menu/nav-login-menu.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { LoginComponent } from './account/login/login.component';
     AccountComponent,
     RegistrationComponent,
     LoginComponent,
+    NavLoginMenuComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
