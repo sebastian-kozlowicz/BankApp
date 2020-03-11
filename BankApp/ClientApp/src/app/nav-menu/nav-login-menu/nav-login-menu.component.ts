@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AccountService } from '../../services/account.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-nav-login-menu',
@@ -8,7 +8,7 @@ import { AccountService } from '../../services/account.service';
 })
 export class NavLoginMenuComponent implements OnInit {
 
-  constructor(private accountService: AccountService) { }
+  constructor(private authService: AuthService) { }
 
   ngOnInit(): void {
   }

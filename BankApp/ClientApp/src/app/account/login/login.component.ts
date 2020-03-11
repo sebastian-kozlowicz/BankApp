@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { AccountService } from '../../services/account.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -11,7 +11,7 @@ import { AccountService } from '../../services/account.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private accountService: AccountService, private toastr: ToastrService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private router: Router) { }
 
   get email() {
     return this.loginFormModel.get('email');
@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    this.accountService.login(this.loginFormModel.value).subscribe(
+    this.authService.login(this.loginFormModel.value).subscribe(
       response => {
         if (response)
           this.router.navigateByUrl('/');

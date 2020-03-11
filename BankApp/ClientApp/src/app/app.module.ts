@@ -11,7 +11,7 @@ import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
 import { AccountComponent } from './account/account.component';
 import { RegistrationComponent } from './account/registration/registration.component';
-import { AccountService } from './services/account.service';
+import { AuthService } from './services/auth.service';
 import { LoginComponent } from './account/login/login.component';
 import { NavLoginMenuComponent } from './nav-menu/nav-login-menu/nav-login-menu.component';
 import { JwtModule } from '@auth0/angular-jwt';
@@ -47,7 +47,7 @@ export function tokenGetter() {
         path: '', component: HomeComponent, pathMatch: 'full'
       },
       {
-        path: 'account', component: AccountComponent,
+        path: 'auth', component: AccountComponent,
         children: [
           {
             path: 'registration', component: RegistrationComponent
@@ -63,7 +63,7 @@ export function tokenGetter() {
     ])
   ],
   providers: [
-    AccountService
+    AuthService
   ],
   bootstrap: [AppComponent]
 })

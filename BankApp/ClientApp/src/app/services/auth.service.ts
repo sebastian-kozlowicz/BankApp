@@ -8,12 +8,12 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 @Injectable({
   providedIn: 'root'
 })
-export class AccountService {
+export class AuthService {
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
 
-  private readonly registrationEndpoint = '/api/account/register';
-  private readonly loginEndpoint = '/api/account/login';
+  private readonly registrationEndpoint = '/api/auth/register';
+  private readonly loginEndpoint = '/api/auth/login';
 
   errorHandler(error: HttpErrorResponse) {
     return throwError(error);
