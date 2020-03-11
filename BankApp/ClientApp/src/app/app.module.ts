@@ -15,6 +15,7 @@ import { AuthService } from './services/auth.service';
 import { LoginComponent } from './account/login/login.component';
 import { NavLoginMenuComponent } from './nav-menu/nav-login-menu/nav-login-menu.component';
 import { JwtModule } from '@auth0/angular-jwt';
+import { NavRegistrationMenuComponent } from './nav-menu/nav-registration-menu/nav-registration-menu.component';
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -29,6 +30,7 @@ export function tokenGetter() {
     RegistrationComponent,
     LoginComponent,
     NavLoginMenuComponent,
+    NavRegistrationMenuComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
