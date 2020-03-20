@@ -7,7 +7,6 @@ using BankApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
 namespace BankApp.Controllers
@@ -17,13 +16,11 @@ namespace BankApp.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtFactory _jwtFactory;
-        private readonly JwtIssuerOptions _jwtOptions;
 
-        public AuthController(UserManager<ApplicationUser> userManager, IJwtFactory jwtFactory, IOptions<JwtIssuerOptions> jwtOptions)
+        public AuthController(UserManager<ApplicationUser> userManager, IJwtFactory jwtFactory)
         {
             _userManager = userManager;
             _jwtFactory = jwtFactory;
-            _jwtOptions = jwtOptions.Value;
         }
 
         [HttpPost]
@@ -52,7 +49,7 @@ namespace BankApp.Controllers
 
             if (await GetClaimsIdentity(model.Email, model.Password) is ClaimsIdentity claimsIdentity && claimsIdentity != null)
             {
-                var jwt = await JwtTokenHelper.GenerateJwt(claimsIdentity, _jwtFactory, model.Email, _jwtOptions, new JsonSerializerSettings { Formatting = Formatting.Indented });
+                var jwt = await JwtTokenHelper.GenerateJwt(claimsIdentity, _jwtFactory, model.Email, new JsonSerializerSettings { Formatting = Formatting.Indented });
 
                 return Ok(jwt);
             }

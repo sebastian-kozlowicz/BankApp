@@ -8,13 +8,11 @@ namespace BankApp.Helpers
 {
     public class JwtTokenHelper
     {
-        public static async Task<string> GenerateJwt(ClaimsIdentity claimsIdentity, IJwtFactory jwtFactory, string email, JwtIssuerOptions jwtOptions, JsonSerializerSettings serializerSettings)
+        public static async Task<string> GenerateJwt(ClaimsIdentity claimsIdentity, IJwtFactory jwtFactory, string email, JsonSerializerSettings serializerSettings)
         {
             var response = new
             {
-                userId = claimsIdentity.Claims.Single(c => c.Type == "userId").Value,
-                token = await jwtFactory.GenerateEncodedToken(email, claimsIdentity),
-                expiresIn = (int)jwtOptions.ValidFor.TotalSeconds
+                token = await jwtFactory.GenerateEncodedToken(email, claimsIdentity)
             };
 
             return JsonConvert.SerializeObject(response, serializerSettings);
