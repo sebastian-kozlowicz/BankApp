@@ -72,6 +72,12 @@
     <Compile Remove="Data\Migrations\20200124193707_DeletePersistedGrandsTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200124193814_DeletePersistedGrandsAndDevicesCodesTables.cs" />
     <Compile Remove="Data\Migrations\20200124193814_DeletePersistedGrandsAndDevicesCodesTables.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200322204726_AddAdministratorsTable.cs" />
+    <Compile Remove="Data\Migrations\20200322204726_AddAdministratorsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200322205127_AddAdministratorsTable.cs" />
+    <Compile Remove="Data\Migrations\20200322205127_AddAdministratorsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200322205338_AddAdministratorsTable.cs" />
+    <Compile Remove="Data\Migrations\20200322205338_AddAdministratorsTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

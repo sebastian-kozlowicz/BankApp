@@ -8,6 +8,7 @@ namespace BankApp.Data
     {
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Card> Cards { get; set; }
+        public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Employee> Employees { get; set; }
 
@@ -17,6 +18,14 @@ namespace BankApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+             builder.Entity<Administrator>()
+                .HasKey(a => a.Id);
+
+            builder.Entity<Administrator>()
+                .HasOne(a => a.ApplicationUser)
+                .WithOne(a => a.Administrator)
+                .HasForeignKey<Administrator>(a => a.Id);
+
             builder.Entity<Customer>()
                 .HasKey(c => c.Id);
 
