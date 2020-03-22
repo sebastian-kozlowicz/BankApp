@@ -1,5 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
+using AutoMapper;
 using BankApp.Dtos;
 using BankApp.Helpers;
 using BankApp.Interfaces;
@@ -12,36 +13,42 @@ using Newtonsoft.Json;
 namespace BankApp.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IJwtFactory _jwtFactory;
+        private readonly IMapper _mapper;
 
-        public AuthController(UserManager<ApplicationUser> userManager, IJwtFactory jwtFactory)
+        public AuthController(UserManager<ApplicationUser> userManager, IJwtFactory jwtFactory, IMapper mapper)
         {
             _userManager = userManager;
             _jwtFactory = jwtFactory;
+            _mapper = mapper;
         }
 
         [HttpPost]
-        [Route("api/[controller]/[action]")]
-        public async Task<IActionResult> Register([FromBody]RegisterDto model)
+        [Route("register/customer")]
+        public async Task<IActionResult> RegisterCustomer([FromBody]RegisterDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
+
+            user.Customer = new Customer() { Id = user.Id };
+
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            return Ok(user);
+            return Ok(_mapper.Map<CustomerDto>(user.Customer));
         }
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("api/[controller]/[action]")]
+        [Route("login")]
         public async Task<IActionResult> Login([FromBody]LoginDto model)
         {
             if (!ModelState.IsValid)
@@ -65,7 +72,7 @@ namespace BankApp.Controllers
 
             var user = await _userManager.FindByEmailAsync(email);
 
-            if (user == null) 
+            if (user == null)
                 return await Task.FromResult<ClaimsIdentity>(null);
 
             if (await _userManager.CheckPasswordAsync(user, password))
