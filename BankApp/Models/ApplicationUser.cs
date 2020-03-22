@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 
 namespace BankApp.Models
 {
@@ -7,6 +6,7 @@ namespace BankApp.Models
     {
         public string Name { get; set; }
         public string Surname { get; set; }
+        public Administrator Administrator { get; set; }
         public Customer Customer { get; set; }
         public Employee Employee { get; set; }
     }

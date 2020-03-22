@@ -1,6 +1,6 @@
 ﻿namespace BankApp.Models
 {
-    public class Employee
+    public class Administrator
     {
         public string Id { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
