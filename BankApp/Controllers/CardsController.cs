@@ -9,6 +9,7 @@ using System.Linq;
 namespace BankApp.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class CardsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -20,7 +21,7 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("api/[controller]")]
+        [HttpGet]
         public IEnumerable<CardDto> GetCards()
         {
             var cards = _context.Cards.ToList();

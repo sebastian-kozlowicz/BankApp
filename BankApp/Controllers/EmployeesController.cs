@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 namespace BankApp.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class EmployeesController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -21,7 +22,7 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("api/[controller]")]
+        [HttpGet]
         public IEnumerable<EmployeeDto> GetEmployees()
         {
             var employees = _context.Employees.Include(c => c.ApplicationUser).ToList();

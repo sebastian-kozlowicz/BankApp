@@ -10,6 +10,7 @@ using System.Linq;
 namespace BankApp.Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class CustomersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
@@ -21,7 +22,7 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet("api/[controller]")]
+        [HttpGet]
         public IEnumerable<CustomerDto> GetCustomers()
         {
             var customers = _context.Customers.Include(c => c.ApplicationUser).ToList();
