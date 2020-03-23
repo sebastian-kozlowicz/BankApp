@@ -14,6 +14,7 @@ namespace BankApp.Mapping
             CreateMap<Administrator, AdministratorDto>();
             CreateMap<Customer, CustomerDto>();
             CreateMap<Employee, EmployeeDto>();
+            CreateMap<Manager, ManagerDto>();
         }
     }
 }
