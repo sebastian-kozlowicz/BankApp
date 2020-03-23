@@ -28,6 +28,25 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
+        [Route("register/administrator")]
+        public async Task<IActionResult> RegisterAdministrator([FromBody]RegisterDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
+
+            user.Administrator = new Administrator() { Id = user.Id };
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok(_mapper.Map<AdministratorDto>(user.Administrator));
+        }
+
+        [HttpPost]
         [Route("register/customer")]
         public async Task<IActionResult> RegisterCustomer([FromBody]RegisterDto model)
         {
