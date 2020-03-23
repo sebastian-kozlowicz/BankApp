@@ -9,5 +9,6 @@ namespace BankApp.Models
         public Administrator Administrator { get; set; }
         public Customer Customer { get; set; }
         public Employee Employee { get; set; }
+        public Manager Manager { get; set; }
     }
 }
