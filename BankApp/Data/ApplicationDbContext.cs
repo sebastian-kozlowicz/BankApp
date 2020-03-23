@@ -11,6 +11,7 @@ namespace BankApp.Data
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Employee> Employees { get; set; }
+        public DbSet<Manager> Managers { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
@@ -18,8 +19,8 @@ namespace BankApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-             builder.Entity<Administrator>()
-                .HasKey(a => a.Id);
+            builder.Entity<Administrator>()
+               .HasKey(a => a.Id);
 
             builder.Entity<Administrator>()
                 .HasOne(a => a.ApplicationUser)
@@ -31,7 +32,7 @@ namespace BankApp.Data
 
             builder.Entity<Customer>()
                 .HasOne(c => c.ApplicationUser)
-                .WithOne(c => c.Customer)
+                .WithOne(a => a.Customer)
                 .HasForeignKey<Customer>(c => c.Id);
 
             builder.Entity<Employee>()
@@ -39,11 +40,19 @@ namespace BankApp.Data
 
             builder.Entity<Employee>()
                 .HasOne(e => e.ApplicationUser)
-                .WithOne(e => e.Employee)
+                .WithOne(a => a.Employee)
                 .HasForeignKey<Employee>(e => e.Id);
 
+              builder.Entity<Manager>()
+                .HasKey(m => m.Id);
+
+            builder.Entity<Manager>()
+                .HasOne(m => m.ApplicationUser)
+                .WithOne(a => a.Manager)
+                .HasForeignKey<Manager>(m => m.Id);
+
             builder.Entity<BankAccount>()
-                .Property(a => a.Balance)
+                .Property(b => b.Balance)
                 .HasColumnType("decimal(18,2)");
 
             base.OnModelCreating(builder);
