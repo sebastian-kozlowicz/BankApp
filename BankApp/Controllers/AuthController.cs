@@ -85,6 +85,25 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
+        [Route("register/manager")]
+        public async Task<IActionResult> RegisterManager([FromBody]RegisterDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
+
+            user.Manager = new Manager() { Id  = user.Id};
+
+            var result = await _userManager.CreateAsync(user, model.Password);
+
+            if (!result.Succeeded)
+                return BadRequest(result.Errors);
+
+            return Ok(_mapper.Map<ManagerDto>(user.Employee));
+        }
+
+        [HttpPost]
         [AllowAnonymous]
         [Route("login")]
         public async Task<IActionResult> Login([FromBody]LoginDto model)
