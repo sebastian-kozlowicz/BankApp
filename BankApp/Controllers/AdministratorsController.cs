@@ -29,7 +29,7 @@ namespace BankApp.Controllers
             return _mapper.Map<List<Administrator>, List<AdministratorDto>>(administrators);
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("{userId}", Name = "GetAdministrator")]
         public AdministratorDto GetAdministrator(string userId)
         {
             var administrator = _context.Administrators.Include(a => a.ApplicationUser).SingleOrDefault(a => a.Id == userId);

@@ -43,7 +43,9 @@ namespace BankApp.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            return Ok(_mapper.Map<AdministratorDto>(user.Administrator));
+            var administrator = _mapper.Map<AdministratorDto>(user.Administrator);
+
+            return CreatedAtRoute("GetAdministrator", new { userId = administrator.Id }, administrator);
         }
 
         [HttpPost]
@@ -62,9 +64,9 @@ namespace BankApp.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            var customer =  _mapper.Map<CustomerDto>(user.Customer);
+            var customer = _mapper.Map<CustomerDto>(user.Customer);
 
-            return CreatedAtRoute("GetCustomer", new { userId = customer.Id}, customer);
+            return CreatedAtRoute("GetCustomer", new { userId = customer.Id }, customer);
         }
 
         [HttpPost]
@@ -76,7 +78,7 @@ namespace BankApp.Controllers
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
 
-            user.Employee = new Employee() { Id  = user.Id};
+            user.Employee = new Employee() { Id = user.Id };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -95,7 +97,7 @@ namespace BankApp.Controllers
 
             var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
 
-            user.Manager = new Manager() { Id  = user.Id};
+            user.Manager = new Manager() { Id = user.Id };
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
