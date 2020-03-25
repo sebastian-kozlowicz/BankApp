@@ -23,16 +23,24 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<CustomerDto> GetCustomers()
+        public ActionResult<IEnumerable<CustomerDto>> GetCustomers()
         {
             var customers = _context.Customers.Include(c => c.ApplicationUser).ToList();
+
+            if (customers == null)
+                return NotFound();
+
             return _mapper.Map<List<Customer>, List<CustomerDto>>(customers);
         }
 
         [HttpGet("{userId}", Name = "GetCustomer")]
-        public CustomerDto GetCustomer(string userId)
+        public ActionResult<CustomerDto> GetCustomer(string userId)
         {
             var customer = _context.Customers.Include(c => c.ApplicationUser).SingleOrDefault(c => c.Id == userId);
+
+            if (customer == null)
+                return NotFound();
+
             return _mapper.Map<Customer, CustomerDto>(customer);
         }
     }
