@@ -25,7 +25,7 @@ namespace BankApp.Controllers
         [HttpGet]
         public IEnumerable<ManagerDto> GetManagers()
         {
-            var managers = _context.Managers.Include(c => c.ApplicationUser).ToList();
+            var managers = _context.Managers.Include(m => m.ApplicationUser).ToList();
             return _mapper.Map<List<Manager>, List<ManagerDto>>(managers);
         }
 
