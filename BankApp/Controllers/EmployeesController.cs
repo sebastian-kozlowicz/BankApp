@@ -29,7 +29,7 @@ namespace BankApp.Controllers
             return _mapper.Map<List<Employee>, List<EmployeeDto>>(employees);
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("{userId}", Name = "GetEmployee")]
         public EmployeeDto GetEmployee(string userId)
         {
             var employee = _context.Employees.Include(e => e.ApplicationUser).SingleOrDefault(e => e.Id == userId);
