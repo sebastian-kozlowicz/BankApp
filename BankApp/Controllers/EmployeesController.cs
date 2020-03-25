@@ -23,16 +23,24 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<EmployeeDto> GetEmployees()
+        public ActionResult<IEnumerable<EmployeeDto>> GetEmployees()
         {
             var employees = _context.Employees.Include(e => e.ApplicationUser).ToList();
+
+            if (employees == null)
+                return NotFound();
+
             return _mapper.Map<List<Employee>, List<EmployeeDto>>(employees);
         }
 
         [HttpGet("{userId}", Name = "GetEmployee")]
-        public EmployeeDto GetEmployee(string userId)
+        public ActionResult<EmployeeDto> GetEmployee(string userId)
         {
             var employee = _context.Employees.Include(e => e.ApplicationUser).SingleOrDefault(e => e.Id == userId);
+
+            if (employee == null)
+                return NotFound();
+
             return _mapper.Map<Employee, EmployeeDto>(employee);
         }
     }
