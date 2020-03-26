@@ -23,16 +23,24 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<ManagerDto> GetManagers()
+        public ActionResult<IEnumerable<ManagerDto>> GetManagers()
         {
             var managers = _context.Managers.Include(m => m.ApplicationUser).ToList();
+
+            if (managers == null)
+                return NotFound();
+
             return _mapper.Map<List<Manager>, List<ManagerDto>>(managers);
         }
 
         [HttpGet("{userId}", Name = "GetManager")]
-        public ManagerDto GetManager(string userId)
+        public ActionResult<ManagerDto> GetManager(string userId)
         {
             var manager = _context.Managers.Include(m => m.ApplicationUser).SingleOrDefault(m => m.Id == userId);
+
+            if (manager == null)
+                return NotFound();
+
             return _mapper.Map<Manager, ManagerDto>(manager);
         }
     }
