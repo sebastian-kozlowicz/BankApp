@@ -106,7 +106,8 @@ namespace BankApp.Controllers
             if (!result.Succeeded)
                 return BadRequest(result.Errors);
 
-            return Ok(_mapper.Map<ManagerDto>(user.Employee));
+            var manager = _mapper.Map<ManagerDto>(user.Manager);
+            return CreatedAtRoute("GetManager", new { userId = manager.Id }, manager);
         }
 
         [HttpPost]
