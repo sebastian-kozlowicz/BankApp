@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using BankApp.Enumerators;
+using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 
 namespace BankApp.Data
@@ -12,17 +13,17 @@ namespace BankApp.Data
 
         private static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
         {
-            if (!roleManager.RoleExistsAsync("Administrator").Result)
-                await roleManager.CreateAsync(new IdentityRole("Administrator"));
+            if (!roleManager.RoleExistsAsync(UserRoles.Administrator.ToString()).Result)
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.Administrator.ToString()));
 
-            if (!roleManager.RoleExistsAsync("Customer").Result)
-                await roleManager.CreateAsync(new IdentityRole("Customer"));
+            if (!roleManager.RoleExistsAsync(UserRoles.Customer.ToString()).Result)
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.Customer.ToString()));
 
-            if (!roleManager.RoleExistsAsync("Employee").Result)
-                await roleManager.CreateAsync(new IdentityRole("Employee"));
+            if (!roleManager.RoleExistsAsync(UserRoles.Employee.ToString()).Result)
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.Employee.ToString()));
 
-            if (!roleManager.RoleExistsAsync("Manager").Result)
-                await roleManager.CreateAsync(new IdentityRole("Manager"));
+            if (!roleManager.RoleExistsAsync(UserRoles.Manager.ToString()).Result)
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.Manager.ToString()));
         }
     }
 }
