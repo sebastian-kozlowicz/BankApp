@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Dtos;
+using BankApp.Enumerators;
 using BankApp.Helpers;
 using BankApp.Interfaces;
 using BankApp.Models;
@@ -40,7 +41,9 @@ namespace BankApp.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+             if (result.Succeeded)
+                await _userManager.AddToRoleAsync(user, UserRoles.Administrator.ToString());
+            else
                 return BadRequest(result.Errors);
 
             var administrator = _mapper.Map<AdministratorDto>(user.Administrator);
@@ -61,7 +64,9 @@ namespace BankApp.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+           if (result.Succeeded)
+                await _userManager.AddToRoleAsync(user, UserRoles.Customer.ToString());
+            else
                 return BadRequest(result.Errors);
 
             var customer = _mapper.Map<CustomerDto>(user.Customer);
@@ -82,7 +87,9 @@ namespace BankApp.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
+                await _userManager.AddToRoleAsync(user, UserRoles.Employee.ToString());
+            else
                 return BadRequest(result.Errors);
 
             var employee = _mapper.Map<EmployeeDto>(user.Employee);
@@ -103,7 +110,9 @@ namespace BankApp.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+             if (result.Succeeded)
+                await _userManager.AddToRoleAsync(user, UserRoles.Manager.ToString());
+            else
                 return BadRequest(result.Errors);
 
             var manager = _mapper.Map<ManagerDto>(user.Manager);
