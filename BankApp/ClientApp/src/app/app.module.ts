@@ -17,7 +17,7 @@ import { LoginComponent } from './user/login/login.component';
 import { CustomerRegistrationComponent } from "./user/customer/registration/registration.component";
 
 export function tokenGetter() {
-  return localStorage.getItem("token");
+  return sessionStorage.getItem("token");
 }
 
 @NgModule({

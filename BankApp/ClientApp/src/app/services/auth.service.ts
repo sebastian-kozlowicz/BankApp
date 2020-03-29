@@ -35,7 +35,7 @@ export class AuthService {
       .pipe(map(
         (response: any) => {
           if (response && response.token) {
-            localStorage.setItem('token', response.token);
+            sessionStorage.setItem('token', response.token);
             return true;
           }
           return false;
@@ -46,7 +46,7 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
   }
 
   isLoggedIn() {
@@ -54,7 +54,7 @@ export class AuthService {
   }
 
   get currentUser() {
-    let token = localStorage.getItem('token');
+    let token = sessionStorage.getItem('token');
 
     if(!token)
       return null;
