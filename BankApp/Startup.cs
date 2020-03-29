@@ -128,7 +128,7 @@ namespace BankApp
             app.UseAuthentication();
             app.UseAuthorization();
 
-            DataInitializer.SeedData(roleManager);
+            _ = DataInitializer.SeedData(roleManager);
 
             app.UseEndpoints(endpoints =>
             {
