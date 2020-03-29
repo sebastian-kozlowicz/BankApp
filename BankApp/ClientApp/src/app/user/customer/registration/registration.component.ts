@@ -1,16 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../services/auth.service';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
-import { Register } from '../../models/register';
-import { PasswordValidator } from '../../validators/password-validator';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from "../../../services/auth.service";
+import { PasswordValidator } from "../../../validators/password-validator";
+import { Register } from "../../../models/register";
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
-export class RegistrationComponent implements OnInit {
+export class CustomerRegistrationComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService) { }
 

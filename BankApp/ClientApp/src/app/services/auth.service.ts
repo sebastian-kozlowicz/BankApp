@@ -12,7 +12,7 @@ export class AuthService {
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
 
-  private readonly registrationEndpoint = '/api/auth/register';
+  private readonly customerRegistrationEndpoint = '/api/auth/register/customer';
   private readonly loginEndpoint = '/api/auth/login';
 
   errorHandler(error: HttpErrorResponse) {
@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   register(registerModel: Register) {
-    return this.http.post(this.registrationEndpoint, registerModel)
+    return this.http.post(this.customerRegistrationEndpoint, registerModel)
       .pipe(map(
         () => {
           return true;

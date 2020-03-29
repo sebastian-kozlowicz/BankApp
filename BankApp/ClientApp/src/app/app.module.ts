@@ -9,13 +9,12 @@ import { ToastrModule } from 'ngx-toastr';
 import { AppComponent } from './app.component';
 import { NavMenuComponent } from './nav-menu/nav-menu.component';
 import { HomeComponent } from './home/home.component';
-import { AccountComponent } from './account/account.component';
-import { RegistrationComponent } from './account/registration/registration.component';
 import { AuthService } from './services/auth.service';
-import { LoginComponent } from './account/login/login.component';
 import { NavLoginMenuComponent } from './nav-menu/nav-login-menu/nav-login-menu.component';
 import { JwtModule } from '@auth0/angular-jwt';
 import { NavRegistrationMenuComponent } from './nav-menu/nav-registration-menu/nav-registration-menu.component';
+import { LoginComponent } from './user/login/login.component';
+import { CustomerRegistrationComponent } from "./user/customer/registration/registration.component";
 
 export function tokenGetter() {
   return localStorage.getItem("token");
@@ -26,8 +25,7 @@ export function tokenGetter() {
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    AccountComponent,
-    RegistrationComponent,
+    CustomerRegistrationComponent,
     LoginComponent,
     NavLoginMenuComponent,
     NavRegistrationMenuComponent,
@@ -49,19 +47,11 @@ export function tokenGetter() {
         path: '', component: HomeComponent, pathMatch: 'full'
       },
       {
-        path: 'auth', component: AccountComponent,
-        children: [
-          {
-            path: 'registration', component: RegistrationComponent
-          },
-          {
-            path: 'login', component: LoginComponent
-          },
-          {
-            path: 'logout', component: LoginComponent
-          },
-        ]
+        path: 'auth/registration/customer', component: CustomerRegistrationComponent
       },
+      {
+        path: 'auth/login', component: LoginComponent
+      }
     ])
   ],
   providers: [
