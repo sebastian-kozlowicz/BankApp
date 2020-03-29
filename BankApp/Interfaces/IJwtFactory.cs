@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using BankApp.Models;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace BankApp.Interfaces
@@ -6,6 +8,6 @@ namespace BankApp.Interfaces
     public interface IJwtFactory
     {
         Task<string> GenerateEncodedToken(string email, ClaimsIdentity claimsIdentity);
-        ClaimsIdentity GenerateClaimsIdentity(string email, string userId);
+        ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IList<string> roles);
     }
 }

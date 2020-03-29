@@ -41,7 +41,7 @@ namespace BankApp.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-             if (result.Succeeded)
+            if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRoles.Administrator.ToString());
             else
                 return BadRequest(result.Errors);
@@ -64,7 +64,7 @@ namespace BankApp.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-           if (result.Succeeded)
+            if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRoles.Customer.ToString());
             else
                 return BadRequest(result.Errors);
@@ -110,7 +110,7 @@ namespace BankApp.Controllers
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
-             if (result.Succeeded)
+            if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRoles.Manager.ToString());
             else
                 return BadRequest(result.Errors);
@@ -148,8 +148,10 @@ namespace BankApp.Controllers
             if (user == null)
                 return await Task.FromResult<ClaimsIdentity>(null);
 
+            var roles = await _userManager.GetRolesAsync(user);
+
             if (await _userManager.CheckPasswordAsync(user, password))
-                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(email, user.Id));
+                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(user, roles));
 
             return await Task.FromResult<ClaimsIdentity>(null);
         }

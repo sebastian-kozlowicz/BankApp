@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
+using BankApp.Enumerators;
 using BankApp.Interfaces;
+using BankApp.Models;
 using Microsoft.Extensions.Options;
 
 namespace BankApp.Helpers
@@ -26,6 +29,10 @@ namespace BankApp.Helpers
                  new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
                  new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                  claimsIdentity.FindFirst("userId"),
+                 claimsIdentity.FindFirst("administrator"),
+                 claimsIdentity.FindFirst("customer"),
+                 claimsIdentity.FindFirst("employee"),
+                 claimsIdentity.FindFirst("manager"),
              };
 
             var jwt = new JwtSecurityToken(
@@ -39,11 +46,15 @@ namespace BankApp.Helpers
             return new JwtSecurityTokenHandler().WriteToken(jwt);
         }
 
-        public ClaimsIdentity GenerateClaimsIdentity(string email, string userId)
+        public ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IList<string> roles)
         {
-            return new ClaimsIdentity(new GenericIdentity(email, "Token"), new[]
+            return new ClaimsIdentity(new GenericIdentity(user.Email, "Token"), new[]
             {
-                new Claim("userId", userId)
+                new Claim("userId", user.Id),
+                new Claim("administrator", RoleHelper.IsUserInRole(roles, UserRoles.Administrator).ToString(), ClaimValueTypes.Boolean),
+                new Claim("customer", RoleHelper.IsUserInRole(roles, UserRoles.Customer).ToString(), ClaimValueTypes.Boolean),
+                new Claim("employee", RoleHelper.IsUserInRole(roles, UserRoles.Employee).ToString(), ClaimValueTypes.Boolean),
+                new Claim("manager", RoleHelper.IsUserInRole(roles, UserRoles.Manager).ToString(), ClaimValueTypes.Boolean),
             });
         }
 
