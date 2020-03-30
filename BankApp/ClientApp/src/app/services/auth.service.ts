@@ -64,10 +64,37 @@ export class AuthService {
     return this.jwtHelper.decodeToken(token);
   }
 
+  isAdministrator() {
+    let user = this.currentUser;
+
+    if (user && user.administrator === true)
+      return true;
+
+    return false;
+  }
+
   isCustomer() {
     let user = this.currentUser;
 
     if (user && user.customer === true)
+      return true;
+
+    return false;
+  }
+
+  isEmployee() {
+    let user = this.currentUser;
+
+    if (user && user.employee === true)
+      return true;
+
+    return false;
+  }
+
+  isManager() {
+    let user = this.currentUser;
+
+    if (user && user.manager === true)
       return true;
 
     return false;
