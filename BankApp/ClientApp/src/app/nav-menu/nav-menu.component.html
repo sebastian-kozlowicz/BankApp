@@ -14,7 +14,7 @@
       <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse"
            [ngClass]="{ show: isExpanded }">
 
-        <app-nav-customer-menu *ngIf="authService.isLoggedIn()"
+        <app-nav-customer-menu *ngIf="authService.isCustomer()"
                                class="d-sm-inline-flex flex-sm-row-reverse"></app-nav-customer-menu>
 
         <app-nav-login-menu></app-nav-login-menu>
