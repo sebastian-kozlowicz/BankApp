@@ -63,4 +63,13 @@ export class AuthService {
 
     return this.jwtHelper.decodeToken(token);
   }
+
+  isCustomer() {
+    let user = this.currentUser;
+
+    if (user && user.customer === true)
+      return true;
+
+    return false;
+  }
 }
