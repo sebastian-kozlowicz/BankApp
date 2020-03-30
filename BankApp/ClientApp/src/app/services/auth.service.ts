@@ -25,9 +25,10 @@ export class AuthService {
         () => {
           return true;
         }
-      ), catchError(error => {
-        return this.errorHandler(error)
-      }))
+      ),
+        catchError(error => {
+          return this.errorHandler(error);
+        }));
   }
 
   login(loginModel) {
@@ -40,9 +41,10 @@ export class AuthService {
           }
           return false;
         }
-      ), catchError(error => {
-        return this.errorHandler(error)
-      }))
+      ),
+        catchError(error => {
+          return this.errorHandler(error);
+        }));
   }
 
   logout() {
@@ -56,7 +58,7 @@ export class AuthService {
   get currentUser() {
     let token = sessionStorage.getItem('token');
 
-    if(!token)
+    if (!token)
       return null;
 
     return this.jwtHelper.decodeToken(token);
