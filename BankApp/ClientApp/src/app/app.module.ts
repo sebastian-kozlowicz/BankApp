@@ -18,6 +18,7 @@ import { CustomerRegistrationComponent } from "./user/customer/registration/regi
 import { NavCustomerMenuComponent } from './nav-menu/nav-customer-menu/nav-customer-menu.component';
 import { AuthGuard } from "./services/auth-guard.service";
 import { AdminAuthGuard } from "./services/admin-auth-guard.service";
+import { NoAccessComponent } from './user/no-access/no-access.component';
 
 export function tokenGetter() {
   return sessionStorage.getItem("token");
@@ -33,6 +34,7 @@ export function tokenGetter() {
     NavLoginMenuComponent,
     NavRegistrationMenuComponent,
     NavCustomerMenuComponent,
+    NoAccessComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -55,6 +57,9 @@ export function tokenGetter() {
       },
       {
         path: 'auth/login', component: LoginComponent
+      },
+      {
+        path: 'no-access', component: NoAccessComponent
       }
     ])
   ],
