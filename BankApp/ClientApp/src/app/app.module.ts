@@ -16,6 +16,7 @@ import { NavRegistrationMenuComponent } from './nav-menu/nav-registration-menu/n
 import { LoginComponent } from './user/login/login.component';
 import { CustomerRegistrationComponent } from "./user/customer/registration/registration.component";
 import { NavCustomerMenuComponent } from './nav-menu/nav-customer-menu/nav-customer-menu.component';
+import { AuthGuard } from "./services/auth-guard.service";
 
 export function tokenGetter() {
   return sessionStorage.getItem("token");
@@ -57,7 +58,8 @@ export function tokenGetter() {
     ])
   ],
   providers: [
-    AuthService
+    AuthService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })
