@@ -13,6 +13,7 @@ export class AdminAuthGuard implements CanActivate {
     if (this.authService.isAdministrator())
       return true;
 
+    this.router.navigateByUrl('/no-access');
     return false;
   }
 }
