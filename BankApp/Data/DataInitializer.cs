@@ -1,29 +1,87 @@
 ﻿using BankApp.Enumerators;
 using Microsoft.AspNetCore.Identity;
-using System.Threading.Tasks;
+using BankApp.Models;
 
 namespace BankApp.Data
 {
-    public class DataInitializer
+    public static class DataInitializer
     {
-        public static async Task SeedData(RoleManager<IdentityRole> roleManager)
+        public static void SeedData(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            await SeedRoles(roleManager);
+            SeedRoles(roleManager);
+            SeedUsers(userManager);
         }
 
-        private static async Task SeedRoles(RoleManager<IdentityRole> roleManager)
+        private static void SeedRoles(RoleManager<IdentityRole> roleManager)
         {
             if (!roleManager.RoleExistsAsync(UserRoles.Administrator.ToString()).Result)
-                await roleManager.CreateAsync(new IdentityRole(UserRoles.Administrator.ToString()));
+                _ = roleManager.CreateAsync(new IdentityRole(UserRoles.Administrator.ToString())).Result;
 
             if (!roleManager.RoleExistsAsync(UserRoles.Customer.ToString()).Result)
-                await roleManager.CreateAsync(new IdentityRole(UserRoles.Customer.ToString()));
+                _ = roleManager.CreateAsync(new IdentityRole(UserRoles.Customer.ToString())).Result;
 
             if (!roleManager.RoleExistsAsync(UserRoles.Employee.ToString()).Result)
-                await roleManager.CreateAsync(new IdentityRole(UserRoles.Employee.ToString()));
+                _ = roleManager.CreateAsync(new IdentityRole(UserRoles.Employee.ToString())).Result;
 
             if (!roleManager.RoleExistsAsync(UserRoles.Manager.ToString()).Result)
-                await roleManager.CreateAsync(new IdentityRole(UserRoles.Manager.ToString()));
+                _ = roleManager.CreateAsync(new IdentityRole(UserRoles.Manager.ToString())).Result;
+        }
+
+        private static void SeedUsers(UserManager<ApplicationUser> userManager)
+        {
+            if (userManager.FindByEmailAsync("admin@localhost").Result == null)
+            {
+                var user = new ApplicationUser { UserName = "admin@localhost", Email = "admin@localhost" };
+
+                user.Administrator = new Administrator() { Id = user.Id };
+
+                var result = userManager.CreateAsync(user, "Qwerty1@").Result;
+
+                if (result.Succeeded)
+                    _ = userManager.AddToRoleAsync(user, UserRoles.Administrator.ToString()).Result;
+            }
+
+            if (userManager.FindByEmailAsync("customer@localhost").Result == null)
+            {
+                var user = new ApplicationUser { UserName = "customer@localhost", Email = "customer@localhost" };
+
+                user.Customer = new Customer() { Id = user.Id };
+
+                var result = userManager.CreateAsync(user, "Qwerty1@").Result;
+
+                if (result.Succeeded)
+                {
+                    _ = userManager.AddToRoleAsync(user, UserRoles.Customer.ToString()).Result;
+                }
+            }
+
+            if (userManager.FindByEmailAsync("employee@localhost").Result == null)
+            {
+                var user = new ApplicationUser { UserName = "employee@localhost", Email = "employee@localhost" };
+
+                user.Employee = new Employee() { Id = user.Id };
+
+                var result = userManager.CreateAsync(user, "Qwerty1@").Result;
+
+                if (result.Succeeded)
+                {
+                    _ = userManager.AddToRoleAsync(user, UserRoles.Employee.ToString()).Result;
+                }
+            }
+
+            if (userManager.FindByEmailAsync("manager@localhost").Result == null)
+            {
+                var user = new ApplicationUser { UserName = "manager@localhost", Email = "manager@localhost" };
+
+                user.Employee = new Employee() { Id = user.Id };
+
+                var result = userManager.CreateAsync(user, "Qwerty1@").Result;
+
+                if (result.Succeeded)
+                {
+                    _ = userManager.AddToRoleAsync(user, UserRoles.Manager.ToString()).Result;
+                }
+            }
         }
     }
 }
