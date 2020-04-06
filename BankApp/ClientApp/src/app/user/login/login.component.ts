@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 
@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private router: Router) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private router: Router, private route: ActivatedRoute) { }
 
   get email() {
     return this.loginFormModel.get('email');
@@ -31,8 +31,10 @@ export class LoginComponent implements OnInit {
   onSubmit() {
     this.authService.login(this.loginFormModel.value).subscribe(
       response => {
-        if (response)
-          this.router.navigateByUrl('/');
+        if (response) {
+          let returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+          this.router.navigate([returnUrl || '/']);
+        }
       },
       error => {
         if (error.status == 400)
