@@ -20,6 +20,7 @@ import { AuthGuard } from "./services/auth-guard.service";
 import { AdminAuthGuard } from "./services/admin-auth-guard.service";
 import { NoAccessComponent } from './user/no-access/no-access.component';
 import { AdminPanelComponent } from './user/administrator/admin-panel/admin-panel.component';
+import { NavAdministratorMenuComponent } from './nav-menu/nav-administrator-menu/nav-administrator-menu.component';
 
 export function tokenGetter() {
   return sessionStorage.getItem("token");
@@ -37,6 +38,7 @@ export function tokenGetter() {
     NavCustomerMenuComponent,
     NoAccessComponent,
     AdminPanelComponent,
+    NavAdministratorMenuComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
