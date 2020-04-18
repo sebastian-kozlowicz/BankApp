@@ -23,6 +23,11 @@ namespace BankApp.Data
              builder.Entity<Address>()
                .HasKey(a => a.Id);
 
+              builder.Entity<Address>()
+                .HasOne(a => a.ApplicationUser)
+                .WithOne(a => a.Address)
+                .HasForeignKey<Address>(a => a.Id);
+
             builder.Entity<Administrator>()
                .HasKey(a => a.Id);
 

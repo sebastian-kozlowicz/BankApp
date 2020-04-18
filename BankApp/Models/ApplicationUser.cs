@@ -10,5 +10,6 @@ namespace BankApp.Models
         public Customer Customer { get; set; }
         public Employee Employee { get; set; }
         public Manager Manager { get; set; }
+        public Address Address { get; set; }
     }
 }
