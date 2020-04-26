@@ -12,7 +12,10 @@ export class AuthService {
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
 
+  private readonly administratorRegistrationEndpoint = '/api/auth/register/administrator';
   private readonly customerRegistrationEndpoint = '/api/auth/register/customer';
+  private readonly employeeRegistrationEndpoint = '/api/auth/register/employee';
+  private readonly managerRegistrationEndpoint = '/api/auth/register/manager';
   private readonly loginEndpoint = '/api/auth/login';
 
   errorHandler(error: HttpErrorResponse) {
