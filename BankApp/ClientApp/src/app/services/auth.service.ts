@@ -19,7 +19,7 @@ export class AuthService {
     return throwError(error);
   }
 
-  register(registerModel: Register) {
+  registerCustomer(registerModel: Register) {
     return this.http.post(this.customerRegistrationEndpoint, registerModel)
       .pipe(map(
         () => {

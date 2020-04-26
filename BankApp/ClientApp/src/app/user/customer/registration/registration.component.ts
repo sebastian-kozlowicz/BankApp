@@ -70,7 +70,7 @@ export class CustomerRegistrationComponent implements OnInit {
       password: this.password.value,
     };
 
-    this.authService.register(registerModel).subscribe(
+    this.authService.registerCustomer(registerModel).subscribe(
       response => {
         if (response) {
           this.toastr.success('New user created!', 'Registration successful.');
