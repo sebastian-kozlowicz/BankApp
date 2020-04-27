@@ -22,8 +22,44 @@ export class AuthService {
     return throwError(error);
   }
 
+  registerAdministrator(registerModel: Register) {
+    return this.http.post(this.administratorRegistrationEndpoint, registerModel)
+      .pipe(map(
+        () => {
+          return true;
+        }
+      ),
+        catchError(error => {
+          return this.errorHandler(error);
+        }));
+  }
+
   registerCustomer(registerModel: Register) {
     return this.http.post(this.customerRegistrationEndpoint, registerModel)
+      .pipe(map(
+        () => {
+          return true;
+        }
+      ),
+        catchError(error => {
+          return this.errorHandler(error);
+        }));
+  }
+
+  registerEmployee(registerModel: Register) {
+    return this.http.post(this.employeeRegistrationEndpoint, registerModel)
+      .pipe(map(
+        () => {
+          return true;
+        }
+      ),
+        catchError(error => {
+          return this.errorHandler(error);
+        }));
+  }
+
+  registerManager(registerModel: Register) {
+    return this.http.post(this.managerRegistrationEndpoint, registerModel)
       .pipe(map(
         () => {
           return true;
