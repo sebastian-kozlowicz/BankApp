@@ -1,41 +1,50 @@
 <mat-vertical-stepper linear>
-  <mat-step label="User account information" [stepControl]="registerFormModel" [completed]="registerFormModel.valid">
-    <form [formGroup]="registerFormModel" autocomplete="off" (submit)="onSubmit()">
+  <!-- #region Personal information step -->
+  <mat-step label="Personal information" [stepControl]="registerFormModel" [completed]="registerFormModel.valid">
+    <form [formGroup]="registerFormModel" autocomplete="off">
       <div class="form-group">
-        <label for="name">Name</label>
-        <input id="name" class="form-control" formControlName="name" />
-        <div class="alert alert-danger"
-             *ngIf="name.touched
-              && name.errors?.required">
-          The Name field is required.
-        </div>
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input matInput id="name" formControlName="name">
+          <mat-error *ngIf="name.touched && name.errors?.required">
+            The Name field is required
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="form-group">
-        <label for="surname">Surname</label>
-        <input id="surname" class="form-control" formControlName="surname" />
-        <div class="alert alert-danger"
-             *ngIf="surname.touched
-              && surname.errors?.required">
-          The Surname field is required.
-        </div>
+        <mat-form-field>
+          <mat-label>Surname</mat-label>
+          <input matInput id="surname" formControlName="surname">
+          <mat-error *ngIf="surname.touched && surname.errors?.required">
+            The Surname field is required
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="form-group">
-        <label for="email">Email</label>
-        <input id="email" class="form-control" formControlName="email" />
-        <div class="alert alert-danger"
-             *ngIf="email.touched
-              && email.errors?.required">
-          The Email field is required.
-        </div>
-        <div class="alert alert-danger"
-             *ngIf="email.touched
-              && email.errors?.email">
-          The Email field is not a valid e-mail address.
-        </div>
+        <mat-form-field>
+          <mat-label>Email</mat-label>
+          <input matInput id="email" formControlName="email">
+          <mat-error *ngIf="email.touched && email.errors?.required">
+            The Email field is required
+          </mat-error>
+          <mat-error *ngIf="email.touched && email.errors?.email">
+            The Email field is not a valid e-mail address.
+          </mat-error>
+        </mat-form-field>
       </div>
+    </form>
+  </mat-step>
+  <!-- #endregion -->
+  <!-- #region Residential address step -->
+  <mat-step label="Residential address" [completed]="registerFormModel.valid">
 
+  </mat-step>
+  <!-- #endregion -->
+  <!-- #region Password step -->
+  <mat-step label="Password">
+    <form [formGroup]="registerFormModel" autocomplete="off">
       <div class="form-group">
         <label for="password">Password</label>
         <input type="password" id="password" class="form-control" formControlName="password" />
@@ -74,6 +83,5 @@
       <button class="btn btn-primary" [disabled]="!registerFormModel.valid">Sign Up</button>
     </form>
   </mat-step>
-  <mat-step label="Address information" >
-  </mat-step>
+  <!-- #endregion -->
 </mat-vertical-stepper>
