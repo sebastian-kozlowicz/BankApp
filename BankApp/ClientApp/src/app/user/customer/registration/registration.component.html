@@ -39,7 +39,49 @@
   <!-- #endregion -->
   <!-- #region Residential address step -->
   <mat-step label="Residential address" [completed]="registerFormModel.valid">
+    <form [formGroup]="registerFormModel" autocomplete="off">
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Street</mat-label>
+          <input matInput id="street">
+        </mat-form-field>
+      </div>
 
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>House number</mat-label>
+          <input matInput id="house-number">
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Apartment number</mat-label>
+          <input matInput id="apartment-number">
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Postal code</mat-label>
+          <input type="number" matInput id="postal-code" placeholder="Ex. 94105">
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>City</mat-label>
+          <input matInput id="city">
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Country</mat-label>
+          <input matInput id="country">
+        </mat-form-field>
+      </div>
+    </form>
   </mat-step>
   <!-- #endregion -->
   <!-- #region Password step -->
