@@ -1,6 +1,12 @@
-/* You can add global styles to this file, and also import other style files */
+html, body {
+  height: 100%;
+}
 
-/* Provide sufficient contrast against white background */
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
 a {
   color: #0366d6;
 }
@@ -15,9 +21,22 @@ code {
   border-color: #1861ac;
 }
 
-.form-control.ng-touched.ng-invalid {
-  border: 2px solid red;
+mat-form-field.ng-touched.ng-invalid.one-error {
+  transition-duration: 0.7s;
+  margin-bottom: 0;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+mat-form-field.ng-touched.ng-invalid.two-errors {
+  transition-duration: 0.7s;
+  margin-bottom: 30px;
+}
+
+mat-form-field.ng-touched.ng-invalid.three-errors {
+  transition-duration: 0.7s;
+  margin-bottom: 50px;
+}
+
+mat-form-field.ng-touched.ng-invalid.four-errors {
+  transition-duration: 0.7s;
+  margin-bottom: 70px;
+}

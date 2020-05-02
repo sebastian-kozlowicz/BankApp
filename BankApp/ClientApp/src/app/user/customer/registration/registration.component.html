@@ -88,9 +88,9 @@
   <mat-step label="Password">
     <form [formGroup]="registerFormModel" autocomplete="off">
       <div class="form-group">
-        <mat-form-field>
+        <mat-form-field [ngClass]="setErrorClasses()">
           <mat-label>Password</mat-label>
-          <input matInput id="password" formControlName="password">
+          <input matInput id="password" formControlName="password" >
           <mat-error *ngIf="password.touched && password.errors?.required">
             The Password field is required
           </mat-error>
