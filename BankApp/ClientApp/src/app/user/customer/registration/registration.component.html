@@ -1,4 +1,4 @@
-<mat-vertical-stepper linear>
+<mat-vertical-stepper>
   <!-- #region Personal information step -->
   <mat-step label="Personal information" [stepControl]="registerFormModel" [completed]="registerFormModel.valid">
     <form [formGroup]="registerFormModel" autocomplete="off">
@@ -88,38 +88,33 @@
   <mat-step label="Password">
     <form [formGroup]="registerFormModel" autocomplete="off">
       <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" class="form-control" formControlName="password" />
-        <div class="alert alert-danger"
-             *ngIf="password.touched
-              && password.errors?.required">
-          The Password field is required.
-        </div>
-        <div class="alert alert-danger"
-             *ngIf="password.touched
-              && password.errors
-              && !password.errors?.required">
-          <span *ngIf="password.errors?.hasNumber">The Password must include number <br /></span>
-          <span *ngIf="password.errors?.hasCapitalCase">The Password must include capital case letter  <br /></span>
-          <span *ngIf="password.errors?.hasLowerCase">The Password must include lower case letter  <br /></span>
-          <span *ngIf="password.errors?.hasSpecialCharacter">The Password must include special character  <br /></span>
-          <span *ngIf="password.errors?.minlength">The Password must be at least 8 characters  <br /></span>
-        </div>
+        <mat-form-field>
+          <mat-label>Password</mat-label>
+          <input matInput id="password" formControlName="password">
+          <mat-error *ngIf="password.touched && password.errors?.required">
+            The Password field is required
+          </mat-error>
+          <mat-error *ngIf="password.touched && !password.errors?.required">
+            <mat-error *ngIf="password.errors?.hasNumber">The Password must include number</mat-error>
+            <mat-error *ngIf="password.errors?.hasCapitalCase">The Password must include capital case letter</mat-error>
+            <mat-error *ngIf="password.errors?.hasLowerCase">The Password must include lower case letter</mat-error>
+            <mat-error *ngIf="password.errors?.hasSpecialCharacter">The Password must include special character</mat-error>
+            <mat-error *ngIf="password.errors?.minlength">The Password must be at least 8 characters</mat-error>
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <div class="form-group">
-        <label for="confirm-password">Confirm password</label>
-        <input type="password" id="confirm-password" class="form-control" formControlName="confirmPassword" />
-        <div class="alert alert-danger"
-             *ngIf="confirmPassword.touched
-              && confirmPassword.errors?.required">
-          The Confirm password field is required.
-        </div>
-        <div class="alert alert-danger"
-             *ngIf="confirmPassword.touched
-              && confirmPassword.errors?.passwordMismatch">
-          Passwords do not match
-        </div>
+        <mat-form-field>
+          <mat-label>Confirm password</mat-label>
+          <input matInput id="confirm-password" formControlName="confirmPassword">
+          <mat-error *ngIf="confirmPassword.touched && confirmPassword.errors?.required">
+            The Confirm password field is required
+          </mat-error>
+          <mat-error *ngIf="confirmPassword.touched && confirmPassword.errors?.passwordMismatch">
+            Passwords do not match
+          </mat-error>
+        </mat-form-field>
       </div>
 
       <button class="btn btn-primary" [disabled]="!registerFormModel.valid">Sign Up</button>
