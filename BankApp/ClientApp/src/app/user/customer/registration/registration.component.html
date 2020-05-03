@@ -5,7 +5,7 @@
       <div class="form-group">
         <mat-form-field>
           <mat-label>Name</mat-label>
-          <input matInput id="name" formControlName="name">
+          <input matInput id="name" formControlName="name" />
           <mat-error *ngIf="name.touched && name.errors?.required">
             The Name field is required
           </mat-error>
@@ -15,7 +15,7 @@
       <div class="form-group">
         <mat-form-field>
           <mat-label>Surname</mat-label>
-          <input matInput id="surname" formControlName="surname">
+          <input matInput id="surname" formControlName="surname" />
           <mat-error *ngIf="surname.touched && surname.errors?.required">
             The Surname field is required
           </mat-error>
@@ -25,7 +25,7 @@
       <div class="form-group">
         <mat-form-field>
           <mat-label>Email</mat-label>
-          <input matInput id="email" formControlName="email">
+          <input matInput id="email" formControlName="email" />
           <mat-error *ngIf="email.touched && email.errors?.required">
             The Email field is required
           </mat-error>
@@ -43,42 +43,42 @@
       <div class="form-group">
         <mat-form-field>
           <mat-label>Street</mat-label>
-          <input matInput id="street">
+          <input matInput id="street" />
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>House number</mat-label>
-          <input matInput id="house-number">
+          <input matInput id="house-number" />
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>Apartment number</mat-label>
-          <input matInput id="apartment-number">
+          <input matInput id="apartment-number" />
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>Postal code</mat-label>
-          <input type="number" matInput id="postal-code" placeholder="Ex. 94105">
+          <input type="number" matInput id="postal-code" placeholder="Ex. 94105" />
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>City</mat-label>
-          <input matInput id="city">
+          <input matInput id="city" />
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>Country</mat-label>
-          <input matInput id="country">
+          <input matInput id="country" />
         </mat-form-field>
       </div>
     </form>
@@ -90,7 +90,7 @@
       <div class="form-group">
         <mat-form-field [ngClass]="setErrorClasses()">
           <mat-label>Password</mat-label>
-          <input matInput id="password" formControlName="password" >
+          <input type="password" matInput id="password" formControlName="password" />
           <mat-error *ngIf="password.touched && password.errors?.required">
             The Password field is required
           </mat-error>
@@ -107,7 +107,7 @@
       <div class="form-group">
         <mat-form-field>
           <mat-label>Confirm password</mat-label>
-          <input matInput id="confirm-password" formControlName="confirmPassword">
+          <input type="password" matInput id="confirm-password" formControlName="confirmPassword" />
           <mat-error *ngIf="confirmPassword.touched && confirmPassword.errors?.required">
             The Confirm password field is required
           </mat-error>
