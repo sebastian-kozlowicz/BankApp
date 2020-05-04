@@ -21,6 +21,11 @@ code {
   border-color: #1861ac;
 }
 
+mat-form-field.mat-form-field {
+  max-width: 350px;
+  display: block;
+}
+
 mat-form-field.ng-touched.ng-invalid.one-error {
   transition-duration: 0.7s;
   margin-bottom: 0;
@@ -28,15 +33,15 @@ mat-form-field.ng-touched.ng-invalid.one-error {
 
 mat-form-field.ng-touched.ng-invalid.two-errors {
   transition-duration: 0.7s;
-  margin-bottom: 30px;
+  margin-bottom: 35px;
 }
 
 mat-form-field.ng-touched.ng-invalid.three-errors {
   transition-duration: 0.7s;
-  margin-bottom: 50px;
+  margin-bottom: 45px;
 }
 
 mat-form-field.ng-touched.ng-invalid.four-errors {
   transition-duration: 0.7s;
-  margin-bottom: 70px;
+  margin-bottom: 55px;
 }
