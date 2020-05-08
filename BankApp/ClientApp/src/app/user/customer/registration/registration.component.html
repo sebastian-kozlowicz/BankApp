@@ -1,4 +1,4 @@
-<mat-vertical-stepper linear>
+<mat-vertical-stepper >
   <!-- #region Personal information step -->
   <mat-step label="Personal information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
     <form [formGroup]="personalInformationForm" autocomplete="off">
@@ -135,7 +135,7 @@
         </mat-form-field>
       </div>
 
-      <button class="btn btn-primary" [disabled]="!personalInformationForm.valid && !residentialAddressForm.valid && !passwordForm.valid">Sign Up</button>
+      <button class="btn btn-primary" [disabled]="!personalInformationForm.valid || !residentialAddressForm.valid || !passwordForm.valid">Sign Up</button>
     </form>
   </mat-step>
   <!-- #endregion -->
