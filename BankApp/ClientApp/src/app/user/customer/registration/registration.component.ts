@@ -126,7 +126,7 @@ export class CustomerRegistrationComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit() {
+  register() {
     let registerModel: Register = {
       name: this.name.value,
       surname: this.surname.value,
