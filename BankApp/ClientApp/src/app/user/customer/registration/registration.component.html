@@ -1,7 +1,7 @@
 <mat-vertical-stepper>
   <!-- #region Personal information step -->
-  <mat-step label="Personal information" [stepControl]="registerFormModel" [completed]="registerFormModel.valid">
-    <form [formGroup]="registerFormModel" autocomplete="off">
+  <mat-step label="Personal information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
+    <form [formGroup]="personalInformationForm" autocomplete="off">
       <div class="form-group">
         <mat-form-field>
           <mat-label>Name</mat-label>
