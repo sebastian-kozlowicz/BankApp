@@ -85,8 +85,8 @@
   </mat-step>
   <!-- #endregion -->
   <!-- #region Password step -->
-  <mat-step label="Password">
-    <form [formGroup]="registerFormModel" autocomplete="off">
+  <mat-step label="Password" [stepControl]="passwordForm" [completed]="passwordForm.valid">
+    <form [formGroup]="passwordForm" autocomplete="off">
       <div class="form-group">
         <mat-form-field [ngClass]="setErrorClasses()">
           <mat-label>Password</mat-label>

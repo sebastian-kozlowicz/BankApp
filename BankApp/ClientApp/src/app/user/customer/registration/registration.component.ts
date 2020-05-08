@@ -54,10 +54,10 @@ export class CustomerRegistrationComponent implements OnInit {
     return this.personalInformationForm.get('email');
   }
   get password() {
-    return this.registerFormModel.get('password');
+    return this.passwordForm.get('password');
   }
   get confirmPassword() {
-    return this.registerFormModel.get('confirmPassword');
+    return this.passwordForm.get('confirmPassword');
   }
 
   personalInformationForm = this.fb.group({
@@ -66,7 +66,7 @@ export class CustomerRegistrationComponent implements OnInit {
     email: ['', [Validators.required, Validators.email]]
   });
 
-  registerFormModel = this.fb.group({
+  passwordForm = this.fb.group({
     password: ['', Validators.compose([
       Validators.required,
       PasswordValidator.patternValidator(/\d/, { hasNumber: true }),
