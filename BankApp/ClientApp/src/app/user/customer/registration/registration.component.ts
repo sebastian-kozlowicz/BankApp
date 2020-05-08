@@ -53,6 +53,24 @@ export class CustomerRegistrationComponent implements OnInit {
   get email() {
     return this.personalInformationForm.get('email');
   }
+  get street() {
+    return this.residentialAddressForm.get('street');
+  }
+  get houseNumber() {
+    return this.residentialAddressForm.get('houseNumber');
+  }
+  get apartmentNumber() {
+    return this.residentialAddressForm.get('apartmentNumber');
+  }
+  get postalCode() {
+    return this.residentialAddressForm.get('postalCode');
+  }
+  get city() {
+    return this.residentialAddressForm.get('city');
+  }
+  get country() {
+    return this.residentialAddressForm.get('country');
+  }
   get password() {
     return this.passwordForm.get('password');
   }
@@ -64,6 +82,15 @@ export class CustomerRegistrationComponent implements OnInit {
     name: ['', Validators.required],
     surname: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]]
+  });
+
+  residentialAddressForm = this.fb.group({
+    street: ['', Validators.required],
+    houseNumber: ['', Validators.required],
+    apartmentNumber: ['', Validators.required],
+    postalCode: ['', Validators.required],
+    city: ['', Validators.required],
+    country: ['', Validators.required]
   });
 
   passwordForm = this.fb.group({

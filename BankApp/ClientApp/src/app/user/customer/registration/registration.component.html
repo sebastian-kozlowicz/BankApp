@@ -1,4 +1,4 @@
-<mat-vertical-stepper>
+<mat-vertical-stepper linear>
   <!-- #region Personal information step -->
   <mat-step label="Personal information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
     <form [formGroup]="personalInformationForm" autocomplete="off">
@@ -38,47 +38,65 @@
   </mat-step>
   <!-- #endregion -->
   <!-- #region Residential address step -->
-  <mat-step label="Residential address" [completed]="registerFormModel.valid">
-    <form [formGroup]="registerFormModel" autocomplete="off">
+  <mat-step label="Residential address" [stepControl]="residentialAddressForm" [completed]="residentialAddressForm.valid">
+    <form [formGroup]="residentialAddressForm" autocomplete="off">
       <div class="form-group">
         <mat-form-field>
           <mat-label>Street</mat-label>
-          <input matInput id="street" />
+          <input matInput id="street" formControlName="street" />
+          <mat-error *ngIf="street.touched && street.errors?.required">
+            The Street field is required
+          </mat-error>
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>House number</mat-label>
-          <input matInput id="house-number" />
+          <input matInput id="house-number" formControlName="houseNumber" />
+          <mat-error *ngIf="houseNumber.touched && houseNumber.errors?.required">
+            The House number field is required
+          </mat-error>
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>Apartment number</mat-label>
-          <input matInput id="apartment-number" />
+          <input matInput id="apartment-number" formControlName="apartmentNumber" />
+          <mat-error *ngIf="apartmentNumber.touched && apartmentNumber.errors?.required">
+            The Apartment number field is required
+          </mat-error>
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>Postal code</mat-label>
-          <input type="number" matInput id="postal-code" placeholder="Ex. 94105" />
+          <input type="number" matInput id="postal-code" placeholder="Ex. 94105" formControlName="postalCode" />
+          <mat-error *ngIf="postalCode.touched && postalCode.errors?.required">
+            The Postal code field is required
+          </mat-error>
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>City</mat-label>
-          <input matInput id="city" />
+          <input matInput id="city" formControlName="city" />
+          <mat-error *ngIf="city.touched && city.errors?.required">
+            The City code field is required
+          </mat-error>
         </mat-form-field>
       </div>
 
       <div class="form-group">
         <mat-form-field>
           <mat-label>Country</mat-label>
-          <input matInput id="country" />
+          <input matInput id="country" formControlName="country" />
+          <mat-error *ngIf="country.touched && country.errors?.required">
+            The Country code field is required
+          </mat-error>
         </mat-form-field>
       </div>
     </form>
@@ -117,7 +135,7 @@
         </mat-form-field>
       </div>
 
-      <button class="btn btn-primary" [disabled]="!registerFormModel.valid">Sign Up</button>
+      <button class="btn btn-primary" [disabled]="!personalInformationForm.valid && !residentialAddressForm.valid && !passwordForm.valid">Sign Up</button>
     </form>
   </mat-step>
   <!-- #endregion -->
