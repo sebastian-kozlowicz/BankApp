@@ -1,4 +1,4 @@
-<mat-vertical-stepper linear>
+<mat-vertical-stepper>
   <!-- #region Personal information step -->
   <mat-step label="Personal information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
     <form [formGroup]="personalInformationForm" autocomplete="off">
@@ -93,7 +93,11 @@
       <div class="form-group">
         <mat-form-field>
           <mat-label>Country</mat-label>
-          <input matInput id="country" formControlName="country" />
+          <mat-select id="country" formControlName="country">
+            <mat-option *ngFor="let country of countries" [value]="country">
+              {{country}}
+            </mat-option>
+          </mat-select>
           <mat-error *ngIf="country.invalid && country.errors?.required">
             The Country code field is required
           </mat-error>
