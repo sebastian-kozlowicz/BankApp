@@ -1,4 +1,23 @@
 <mat-vertical-stepper>
+  <!-- #region Account information step -->
+  <mat-step label="Account information" [stepControl]="accountInformationForm" [completed]="accountInformationForm.valid">
+    <form [formGroup]="accountInformationForm" autocomplete="off">
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>Currency</mat-label>
+          <mat-select id="currency" formControlName="currency">
+            <mat-option *ngFor="let currency of currencies" [value]="currency.code">
+              {{currency.name}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="currency.errors?.required">
+            The Currency field is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-step>
+  <!-- #endregion -->
   <!-- #region Personal information step -->
   <mat-step label="Personal information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
     <form [formGroup]="personalInformationForm" autocomplete="off">
