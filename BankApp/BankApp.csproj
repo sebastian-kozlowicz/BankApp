@@ -83,16 +83,17 @@
   <ItemGroup>
     <None Remove="ClientApp\src\app\enumerators\accountType.ts" />
     <None Remove="ClientApp\src\app\enumerators\currency.ts" />
+    <None Remove="ClientApp\src\app\validators\number-limit-validator.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="ClientApp\src\app\models\" />
-    <Folder Include="ClientApp\src\app\validators\" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\accountType.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\currency.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\validators\number-limit-validator.ts" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

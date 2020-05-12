@@ -60,6 +60,9 @@
           <mat-error *ngIf="phoneNumber.errors?.required">
             The Phone number field is required
           </mat-error>
+          <mat-error *ngIf="!phoneNumber.errors?.required && phoneNumber.errors?.invalidLimit">
+            Provide valid phone number
+          </mat-error>
         </mat-form-field>
       </div>
 

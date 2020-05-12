@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, AbstractControl } from '@angular/forms';
+import { FormBuilder, Validators, FormGroup, AbstractControl, FormControl } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from "../../../services/auth.service";
 import { PasswordValidator } from "../../../validators/password-validator";
 import { Register } from "../../../models/register";
 import { Currency } from '../../../enumerators/currency';
 import { AccountType } from '../../../enumerators/accountType';
+import { NumberLimitValidator } from '../../../validators/number-limit-validator';
 
 @Component({
   selector: 'app-registration',
@@ -75,6 +76,7 @@ export class CustomerRegistrationComponent implements OnInit {
     return this.personalInformationForm.get('surname');
   }
   get phoneNumber() {
+    console.log(this.personalInformationForm.get('phoneNumber').errors);
     return this.personalInformationForm.get('phoneNumber');
   }
   get email() {
@@ -113,7 +115,7 @@ export class CustomerRegistrationComponent implements OnInit {
   personalInformationForm = this.fb.group({
     name: ['', Validators.required],
     surname: ['', Validators.required],
-    phoneNumber: ['', Validators.required],
+    phoneNumber: ['', [Validators.required, NumberLimitValidator.limitValidator(100000, 100000000000, {invalidLimit: true })]],
     email: ['', [Validators.required, Validators.email]]
   });
 
