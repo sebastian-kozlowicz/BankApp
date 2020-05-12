@@ -1,6 +1,6 @@
 export enum Currency {
-  Pln,
-  Eur,
-  Usd,
-  Gbp
+  Pln = "Pln",
+  Eur = "Eur",
+  Usd = "Usd",
+  Gbp = "Gbp"
 }

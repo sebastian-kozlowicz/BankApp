@@ -1,4 +1,4 @@
-export enum Currency {
-  Savings,
-  Checking
+export enum AccountType {
+  Savings = "Savings",
+  Checking = "Checking"
 }

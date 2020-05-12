@@ -81,6 +81,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\enumerators\accountType.ts" />
     <None Remove="ClientApp\src\app\enumerators\currency.ts" />
   </ItemGroup>
 
@@ -90,6 +91,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <TypeScriptCompile Include="ClientApp\src\app\enumerators\accountType.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\currency.ts" />
   </ItemGroup>
 

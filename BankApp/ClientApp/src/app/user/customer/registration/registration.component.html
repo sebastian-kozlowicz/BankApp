@@ -4,6 +4,18 @@
     <form [formGroup]="accountInformationForm" autocomplete="off">
       <div class="form-group">
         <mat-form-field>
+          <mat-label>Account type</mat-label>
+          <mat-select id="account-type" formControlName="accountType">
+            <mat-option *ngFor="let accountType of accountTypes" [value]="accountType">
+              {{accountType}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="accountType.errors?.required">
+            The Account type field is required
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
           <mat-label>Currency</mat-label>
           <mat-select id="currency" formControlName="currency">
             <mat-option *ngFor="let currency of currencies" [value]="currency.code">
