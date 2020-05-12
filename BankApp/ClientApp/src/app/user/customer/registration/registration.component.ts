@@ -74,6 +74,9 @@ export class CustomerRegistrationComponent implements OnInit {
   get surname() {
     return this.personalInformationForm.get('surname');
   }
+  get phoneNumber() {
+    return this.personalInformationForm.get('phoneNumber');
+  }
   get email() {
     return this.personalInformationForm.get('email');
   }
@@ -110,6 +113,7 @@ export class CustomerRegistrationComponent implements OnInit {
   personalInformationForm = this.fb.group({
     name: ['', Validators.required],
     surname: ['', Validators.required],
+    phoneNumber: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]]
   });
 

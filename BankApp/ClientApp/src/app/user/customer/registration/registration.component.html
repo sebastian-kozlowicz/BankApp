@@ -55,6 +55,16 @@
 
       <div class="form-group">
         <mat-form-field>
+          <mat-label>Phone number</mat-label>
+          <input type="number" matInput id="phone-number" formControlName="phoneNumber" />
+          <mat-error *ngIf="phoneNumber.errors?.required">
+            The Phone number field is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="form-group">
+        <mat-form-field>
           <mat-label>Email</mat-label>
           <input matInput id="email" formControlName="email" />
           <mat-error *ngIf="email.errors?.required">
