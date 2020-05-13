@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators, FormGroup, AbstractControl, FormControl } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from "../../../services/auth.service";
 import { PasswordValidator } from "../../../validators/password-validator";
@@ -36,17 +36,17 @@ export class CustomerRegistrationComponent implements OnInit {
   get getPasswordErrorCount() {
     let errorCount = 0;
 
-    if (this.isErrorOccur(this.password, "required"))
+    if (PasswordValidator.isErrorOccur(this.password, "required"))
       errorCount++;
-    if (this.isErrorOccur(this.password, "hasNumber"))
+    if (PasswordValidator.isErrorOccur(this.password, "hasNumber"))
       errorCount++;
-    if (this.isErrorOccur(this.password, "hasCapitalCase"))
+    if (PasswordValidator.isErrorOccur(this.password, "hasCapitalCase"))
       errorCount++;
-    if (this.isErrorOccur(this.password, "hasLowerCase"))
+    if (PasswordValidator.isErrorOccur(this.password, "hasLowerCase"))
       errorCount++;
-    if (this.isErrorOccur(this.password, "hasSpecialCharacter"))
+    if (PasswordValidator.isErrorOccur(this.password, "hasSpecialCharacter"))
       errorCount++;
-    if (this.isErrorOccur(this.password, "minlength"))
+    if (PasswordValidator.isErrorOccur(this.password, "minlength"))
       errorCount++;
 
     return errorCount;
@@ -76,7 +76,6 @@ export class CustomerRegistrationComponent implements OnInit {
     return this.personalInformationForm.get('surname');
   }
   get phoneNumber() {
-    console.log(this.personalInformationForm.get('phoneNumber').errors);
     return this.personalInformationForm.get('phoneNumber');
   }
   get email() {
@@ -115,7 +114,7 @@ export class CustomerRegistrationComponent implements OnInit {
   personalInformationForm = this.fb.group({
     name: ['', Validators.required],
     surname: ['', Validators.required],
-    phoneNumber: ['', [Validators.required, NumberLimitValidator.limitValidator(100000, 100000000000, {invalidLimit: true })]],
+    phoneNumber: ['', [Validators.required, NumberLimitValidator.limitValidator(100000, 100000000000, { invalidLimit: true })]],
     email: ['', [Validators.required, Validators.email]]
   });
 
@@ -139,24 +138,8 @@ export class CustomerRegistrationComponent implements OnInit {
     ],
     confirmPassword: ['', Validators.required]
   }, {
-    validator: this.isPasswordMatch
+    validator: PasswordValidator.isPasswordMatch
   });
-
-  isErrorOccur(ac: AbstractControl, error) {
-    return ac.errors?.[error];
-  }
-
-  isPasswordMatch(fg: FormGroup) {
-    let password = fg.controls['password'];
-    let confirmPassword = fg.controls['confirmPassword'];
-
-    if (confirmPassword.errors == null) {
-      if (password.value == confirmPassword.value)
-        confirmPassword.setErrors(null);
-      else
-        confirmPassword.setErrors({ passwordMismatch: true })
-    }
-  }
 
   ngOnInit(): void {
   }

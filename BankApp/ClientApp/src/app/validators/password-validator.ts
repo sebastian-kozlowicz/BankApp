@@ -1,4 +1,4 @@
-import { AbstractControl, ValidationErrors, ValidatorFn } from "@angular/forms";
+import { AbstractControl, ValidationErrors, ValidatorFn, FormGroup } from "@angular/forms";
 
 export class PasswordValidator {
   static patternValidator(regex: RegExp, error: ValidationErrors): ValidatorFn {
@@ -14,5 +14,21 @@ export class PasswordValidator {
       // if true, return no error (no error), else return error passed in the second parameter
       return valid ? null : error;
     };
+  }
+
+  static isPasswordMatch(fg: FormGroup) {
+    let password = fg.controls['password'];
+    let confirmPassword = fg.controls['confirmPassword'];
+
+    if (confirmPassword.errors == null) {
+      if (password.value == confirmPassword.value)
+        confirmPassword.setErrors(null);
+      else
+        confirmPassword.setErrors({ passwordMismatch: true })
+    }
+  }
+
+  static isErrorOccur(ac: AbstractControl, error) {
+    return ac.errors?.[error];
   }
 }
