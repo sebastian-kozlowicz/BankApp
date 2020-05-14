@@ -23,10 +23,10 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<BankAccountDto> GetAccounts()
+        public ActionResult<IEnumerable<BankAccountDto>> GetAccounts()
         {
             var accounts = _context.BankAccounts.ToList();
-            return _mapper.Map<List<BankAccount>, List<BankAccountDto>>(accounts);
+            return Ok(_mapper.Map<List<BankAccount>, List<BankAccountDto>>(accounts));
         }
     }
 }
