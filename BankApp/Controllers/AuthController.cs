@@ -36,11 +36,11 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
+            var user = new ApplicationUser { UserName = model.User.Email, Email = model.User.Email, PhoneNumber = model.User.PhoneNumber, Name = model.User.Name, Surname = model.User.Surname };
 
             user.Administrator = new Administrator() { Id = user.Id };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.User.Password);
 
             if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRoles.Administrator.ToString());
@@ -59,11 +59,11 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
+            var user = new ApplicationUser { UserName = model.User.Email, Email = model.User.Email, PhoneNumber = model.User.PhoneNumber, Name = model.User.Name, Surname = model.User.Surname };
 
             user.Customer = new Customer() { Id = user.Id };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.User.Password);
 
             if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRoles.Customer.ToString());
@@ -82,11 +82,11 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
+            var user = new ApplicationUser { UserName = model.User.Email, Email = model.User.Email, PhoneNumber = model.User.PhoneNumber, Name = model.User.Name, Surname = model.User.Surname };
 
             user.Employee = new Employee() { Id = user.Id };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.User.Password);
 
             if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRoles.Employee.ToString());
@@ -105,11 +105,11 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Name = model.Name, Surname = model.Surname };
+            var user = new ApplicationUser { UserName = model.User.Email, Email = model.User.Email, PhoneNumber = model.User.PhoneNumber, Name = model.User.Name, Surname = model.User.Surname };
 
             user.Manager = new Manager() { Id = user.Id };
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.User.Password);
 
             if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRoles.Manager.ToString());
