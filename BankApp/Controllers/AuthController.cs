@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Dtos;
+using BankApp.Dtos.Registration;
 using BankApp.Enumerators;
 using BankApp.Helpers;
 using BankApp.Interfaces;
