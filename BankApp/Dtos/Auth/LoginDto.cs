@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BankApp.Dtos
+namespace BankApp.Dtos.Auth
 {
     public class LoginDto
     {

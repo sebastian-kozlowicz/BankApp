@@ -1,6 +1,11 @@
 ﻿using AutoMapper;
-using BankApp.Dtos;
+using BankApp.Dtos.Administrator;
+using BankApp.Dtos.ApplicationUser;
 using BankApp.Dtos.BankAccount;
+using BankApp.Dtos.Card;
+using BankApp.Dtos.Customer;
+using BankApp.Dtos.Employee;
+using BankApp.Dtos.Manager;
 using BankApp.Models;
 
 namespace BankApp.Mapping

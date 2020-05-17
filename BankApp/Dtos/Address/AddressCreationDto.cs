@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace BankApp.Dtos
+namespace BankApp.Dtos.Address
 {
-    public class AddressDto
+    public class AddressCreationDto
     {
         [Required]
         public string Country { get; set; }

@@ -1,4 +1,6 @@
-﻿namespace BankApp.Dtos
+﻿using BankApp.Dtos.ApplicationUser;
+
+namespace BankApp.Dtos.Administrator
 {
     public class AdministratorDto
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using AutoMapper;
 using BankApp.Data;
-using BankApp.Dtos;
+using BankApp.Dtos.Manager;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

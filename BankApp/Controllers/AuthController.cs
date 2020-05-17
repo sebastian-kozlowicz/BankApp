@@ -1,8 +1,11 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using BankApp.Dtos;
-using BankApp.Dtos.Registration;
+using BankApp.Dtos.Administrator;
+using BankApp.Dtos.Auth;
+using BankApp.Dtos.Customer;
+using BankApp.Dtos.Employee;
+using BankApp.Dtos.Manager;
 using BankApp.Enumerators;
 using BankApp.Helpers;
 using BankApp.Interfaces;

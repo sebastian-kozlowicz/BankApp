@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BankApp.Data;
-using BankApp.Dtos;
+using BankApp.Dtos.Administrator;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;

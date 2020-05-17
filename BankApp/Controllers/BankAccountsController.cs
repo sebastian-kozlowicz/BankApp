@@ -2,10 +2,9 @@
 using System.Linq;
 using AutoMapper;
 using BankApp.Data;
-using BankApp.Dtos;
+using BankApp.Dtos.BankAccount;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {

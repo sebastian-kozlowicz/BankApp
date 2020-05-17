@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace BankApp.Dtos
+namespace BankApp.Dtos.ApplicationUser
 {
     public class ApplicationUserDto
     {
