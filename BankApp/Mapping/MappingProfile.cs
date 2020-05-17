@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BankApp.Dtos;
+using BankApp.Dtos.BankAccount;
 using BankApp.Models;
 
 namespace BankApp.Mapping

@@ -1,4 +1,4 @@
-﻿namespace BankApp.Dtos
+﻿namespace BankApp.Dtos.BankAccount
 {
     public class BankAccountDto
     {
