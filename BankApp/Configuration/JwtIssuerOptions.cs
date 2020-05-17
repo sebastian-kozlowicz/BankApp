@@ -2,7 +2,7 @@
 using System;
 using System.Threading.Tasks;
 
-namespace BankApp.Helpers
+namespace BankApp.Configuration
 {
     public class JwtIssuerOptions
     {
