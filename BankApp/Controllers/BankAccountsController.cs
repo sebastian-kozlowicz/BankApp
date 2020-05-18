@@ -21,6 +21,25 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
+        [HttpPost]
+        public ActionResult CreateBankAccount([FromBody]BankAccountCreationDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var bankAccount = new BankAccount
+            {
+                AccountType = model.AccountType,
+                Currency = model.Currency,
+                ApplicationUserId = model.ApplicationUserId
+            };
+
+            _context.BankAccounts.Add(bankAccount);
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
         [HttpGet]
         public ActionResult<IEnumerable<BankAccountDto>> GetAccounts()
         {
