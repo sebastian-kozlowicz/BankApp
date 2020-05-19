@@ -41,6 +41,17 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
+        [Route("{bankAccountId}")]
+        public ActionResult GetBankAccount(int bankAccountId)
+        {
+            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
+            if (bankAccount == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<BankAccount, BankAccountDto>(bankAccount));
+        }
+
+        [HttpGet]
         public ActionResult<IEnumerable<BankAccountDto>> GetAccounts()
         {
             var accounts = _context.BankAccounts.ToList();
