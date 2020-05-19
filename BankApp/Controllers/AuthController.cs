@@ -148,18 +148,16 @@ namespace BankApp.Controllers
 
         private async Task<ClaimsIdentity> GetClaimsIdentity(string email, string password)
         {
-            if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
-                return await Task.FromResult<ClaimsIdentity>(null);
+            if (!string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(password))
+            {
+                if (await _userManager.FindByEmailAsync(email) is var user)
+                {
+                    var roles = await _userManager.GetRolesAsync(user);
 
-            var user = await _userManager.FindByEmailAsync(email);
-
-            if (user == null)
-                return await Task.FromResult<ClaimsIdentity>(null);
-
-            var roles = await _userManager.GetRolesAsync(user);
-
-            if (await _userManager.CheckPasswordAsync(user, password))
-                return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(user, roles));
+                    if (await _userManager.CheckPasswordAsync(user, password))
+                        return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(user, roles));
+                }
+            }
 
             return await Task.FromResult<ClaimsIdentity>(null);
         }
