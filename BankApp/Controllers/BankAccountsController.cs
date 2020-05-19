@@ -37,11 +37,11 @@ namespace BankApp.Controllers
             _context.BankAccounts.Add(bankAccount);
             _context.SaveChanges();
 
-            return Ok();
+            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccount.Id }, bankAccount);
         }
 
         [HttpGet]
-        [Route("{bankAccountId}")]
+        [Route("{bankAccountId}", Name = "GetBankAccount")]
         public ActionResult GetBankAccount(int bankAccountId)
         {
             var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
