@@ -18,10 +18,6 @@ export class AuthService {
   private readonly managerRegistrationEndpoint = '/api/auth/register/manager';
   private readonly loginEndpoint = '/api/auth/login';
 
-  errorHandler(error: HttpErrorResponse) {
-    return throwError(error);
-  }
-
   registerAdministrator(registerModel: Register) {
     return this.http.post(this.administratorRegistrationEndpoint, registerModel)
       .pipe(map(
@@ -29,8 +25,8 @@ export class AuthService {
           return true;
         }
       ),
-        catchError(error => {
-          return this.errorHandler(error);
+        catchError((error: HttpErrorResponse) => {
+          return throwError(error);
         }));
   }
 
@@ -41,8 +37,8 @@ export class AuthService {
           return true;
         }
       ),
-        catchError(error => {
-          return this.errorHandler(error);
+        catchError((error: HttpErrorResponse) => {
+          return throwError(error);
         }));
   }
 
@@ -53,8 +49,8 @@ export class AuthService {
           return true;
         }
       ),
-        catchError(error => {
-          return this.errorHandler(error);
+        catchError((error: HttpErrorResponse) => {
+          return throwError(error);
         }));
   }
 
@@ -65,8 +61,8 @@ export class AuthService {
           return true;
         }
       ),
-        catchError(error => {
-          return this.errorHandler(error);
+        catchError((error: HttpErrorResponse) => {
+          return throwError(error);
         }));
   }
 
@@ -81,8 +77,8 @@ export class AuthService {
           return false;
         }
       ),
-        catchError(error => {
-          return this.errorHandler(error);
+        catchError((error: HttpErrorResponse) => {
+          return throwError(error);
         }));
   }
 
