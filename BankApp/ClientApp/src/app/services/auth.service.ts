@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Register } from '../models/register';
-import { map, catchError } from 'rxjs/operators';
-import { throwError } from 'rxjs';
+import { map } from 'rxjs/operators';
+
 import { JwtHelperService } from '@auth0/angular-jwt';
 
 @Injectable({
@@ -19,51 +19,19 @@ export class AuthService {
   private readonly loginEndpoint = '/api/auth/login';
 
   registerAdministrator(registerModel: Register) {
-    return this.http.post(this.administratorRegistrationEndpoint, registerModel)
-      .pipe(map(
-        () => {
-          return true;
-        }
-      ),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(error);
-        }));
+    return this.http.post(this.administratorRegistrationEndpoint, registerModel);
   }
 
   registerCustomer(registerModel: Register) {
-    return this.http.post(this.customerRegistrationEndpoint, registerModel)
-      .pipe(map(
-        () => {
-          return true;
-        }
-      ),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(error);
-        }));
+    return this.http.post(this.customerRegistrationEndpoint, registerModel);
   }
 
   registerEmployee(registerModel: Register) {
-    return this.http.post(this.employeeRegistrationEndpoint, registerModel)
-      .pipe(map(
-        () => {
-          return true;
-        }
-      ),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(error);
-        }));
+    return this.http.post(this.employeeRegistrationEndpoint, registerModel);
   }
 
   registerManager(registerModel: Register) {
-    return this.http.post(this.managerRegistrationEndpoint, registerModel)
-      .pipe(map(
-        () => {
-          return true;
-        }
-      ),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(error);
-        }));
+    return this.http.post(this.managerRegistrationEndpoint, registerModel);
   }
 
   login(loginModel) {
@@ -76,10 +44,7 @@ export class AuthService {
           }
           return false;
         }
-      ),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(error);
-        }));
+      ));
   }
 
   logout() {

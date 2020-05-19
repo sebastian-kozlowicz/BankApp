@@ -159,6 +159,7 @@ export class CustomerRegistrationComponent implements OnInit {
         }
       },
       badRequest => {
+        console.log(badRequest);
         if (Array.isArray(badRequest.error))
           badRequest.error.forEach(element => {
             if (element.code == 'DuplicateUserName')
