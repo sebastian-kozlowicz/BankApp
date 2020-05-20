@@ -70,7 +70,6 @@ export class CustomerRegistrationComponent implements OnInit {
     return this.accountInformationForm.get('currency');
   }
   get name() {
-    console.log(this.personalInformationForm.get('name'));
     return this.personalInformationForm.get('name');
   }
   get surname() {
