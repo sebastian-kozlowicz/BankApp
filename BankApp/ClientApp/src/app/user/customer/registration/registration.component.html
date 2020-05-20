@@ -40,6 +40,12 @@
           <mat-error *ngIf="name.errors?.required">
             The Name field is required
           </mat-error>
+          <mat-error *ngIf="!name.errors?.required && name.errors?.minlength">
+            The Name field must be at least {{name.errors?.minlength.requiredLength}} characters long
+          </mat-error>
+          <mat-error *ngIf="!name.errors?.required && name.errors?.maxlength">
+            The Name field must be at max {{name.errors?.maxlength.requiredLength}} characters long
+          </mat-error>
         </mat-form-field>
       </div>
 
@@ -49,6 +55,12 @@
           <input matInput id="surname" formControlName="surname" />
           <mat-error *ngIf="surname.errors?.required">
             The Surname field is required
+          </mat-error>
+          <mat-error *ngIf="!surname.errors?.required && surname.errors?.minlength">
+            The Surname field must be at least {{surname.errors?.minlength.requiredLength}} characters long
+          </mat-error>
+          <mat-error *ngIf="!surname.errors?.required && surname.errors?.maxlength">
+            The Surname field must be at max {{surname.errors?.maxlength.requiredLength}} characters long
           </mat-error>
         </mat-form-field>
       </div>

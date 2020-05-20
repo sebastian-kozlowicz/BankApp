@@ -70,6 +70,7 @@ export class CustomerRegistrationComponent implements OnInit {
     return this.accountInformationForm.get('currency');
   }
   get name() {
+    console.log(this.personalInformationForm.get('name'));
     return this.personalInformationForm.get('name');
   }
   get surname() {
@@ -112,8 +113,8 @@ export class CustomerRegistrationComponent implements OnInit {
   });
 
   personalInformationForm = this.fb.group({
-    name: ['', Validators.required],
-    surname: ['', Validators.required],
+    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
+    surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     phoneNumber: ['', [Validators.required, NumberLimitValidator.limitValidator(100000, 100000000000, { invalidLimit: true })]],
     email: ['', [Validators.required, Validators.email]]
   });
@@ -170,7 +171,6 @@ export class CustomerRegistrationComponent implements OnInit {
         }
       },
       badRequest => {
-        console.log(badRequest);
         if (Array.isArray(badRequest.error))
           badRequest.error.forEach(element => {
             if (element.code == 'DuplicateUserName')
