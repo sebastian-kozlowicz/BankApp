@@ -59,7 +59,7 @@ export function tokenGetter() {
         path: '', component: HomeComponent, pathMatch: 'full'
       },
       {
-        path: 'auth/registration/customer', component: CustomerRegistrationComponent
+        path: 'registration/customer', component: CustomerRegistrationComponent
       },
       {
         path: 'auth/login', component: LoginComponent
