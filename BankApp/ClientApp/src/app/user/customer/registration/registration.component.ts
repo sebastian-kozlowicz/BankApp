@@ -146,10 +146,21 @@ export class CustomerRegistrationComponent implements OnInit {
 
   register() {
     let registerModel: Register = {
-      name: this.name.value,
-      surname: this.surname.value,
-      email: this.email.value,
-      password: this.password.value,
+      user: {
+        name: this.name.value,
+        surname: this.surname.value,
+        email: this.email.value,
+        phoneNumber: this.phoneNumber.value.toString(),
+        password: this.password.value,
+      },
+      address: {
+        country: this.country.value,
+        city: this.city.value,
+        street: this.street.value,
+        houseNumber: this.houseNumber.value,
+        apartmentNumber: this.apartmentNumber.value,
+        postalCode: this.postalCode.value.toString()
+      }
     };
 
     this.authService.registerCustomer(registerModel).subscribe(
