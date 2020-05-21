@@ -1,7 +1,6 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using BankApp.Dtos.Administrator;
 using BankApp.Dtos.Auth;
 using BankApp.Dtos.Manager;
 using BankApp.Enumerators;
@@ -28,30 +27,6 @@ namespace BankApp.Controllers
             _userManager = userManager;
             _jwtFactory = jwtFactory;
             _mapper = mapper;
-        }
-
-        [HttpPost]
-        [Route("register/administrator")]
-        public async Task<IActionResult> RegisterAdministrator([FromBody]RegisterDto model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = new ApplicationUser { UserName = model.User.Email, Email = model.User.Email, PhoneNumber = model.User.PhoneNumber, Name = model.User.Name, Surname = model.User.Surname };
-
-            user.Administrator = new Administrator() { Id = user.Id };
-            user.Address = new Address() { Id = user.Id, Country = model.Address.Country, City = model.Address.City, Street = model.Address.Street, HouseNumber = model.Address.HouseNumber, ApartmentNumber = model.Address.ApartmentNumber, PostalCode = model.Address.PostalCode };
-
-            var result = await _userManager.CreateAsync(user, model.User.Password);
-
-            if (result.Succeeded)
-                await _userManager.AddToRoleAsync(user, UserRoles.Administrator.ToString());
-            else
-                return BadRequest(result.Errors);
-
-            var administrator = _mapper.Map<AdministratorDto>(user.Administrator);
-
-            return CreatedAtRoute("GetAdministrator", new { userId = administrator.Id }, administrator);
         }
 
         [HttpPost]
