@@ -12,26 +12,26 @@ export class AuthService {
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
 
-  private readonly administratorRegistrationEndpoint = '/api/auth/register/administrator';
-  private readonly customerRegistrationEndpoint = '/api/customers';
-  private readonly employeeRegistrationEndpoint = '/api/auth/register/employee';
-  private readonly managerRegistrationEndpoint = '/api/auth/register/manager';
+  private readonly administratorsEndpoint = '/api/administrators';
+  private readonly customersEndpoint = '/api/customers';
+  private readonly employeesEndpoint = '/api/employees';
+  private readonly managersEndpoint = '/api/managers';
   private readonly loginEndpoint = '/api/auth/login';
 
   registerAdministrator(registerModel: Register) {
-    return this.http.post(this.administratorRegistrationEndpoint, registerModel);
+    return this.http.post(this.administratorsEndpoint, registerModel);
   }
 
   registerCustomer(registerModel: Register) {
-    return this.http.post(this.customerRegistrationEndpoint, registerModel);
+    return this.http.post(this.customersEndpoint, registerModel);
   }
 
   registerEmployee(registerModel: Register) {
-    return this.http.post(this.employeeRegistrationEndpoint, registerModel);
+    return this.http.post(this.employeesEndpoint, registerModel);
   }
 
   registerManager(registerModel: Register) {
-    return this.http.post(this.managerRegistrationEndpoint, registerModel);
+    return this.http.post(this.managersEndpoint, registerModel);
   }
 
   login(loginModel) {
