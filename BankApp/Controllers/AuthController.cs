@@ -3,8 +3,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Dtos.Administrator;
 using BankApp.Dtos.Auth;
-using BankApp.Dtos.Customer;
-using BankApp.Dtos.Employee;
 using BankApp.Dtos.Manager;
 using BankApp.Enumerators;
 using BankApp.Helpers;
@@ -54,32 +52,6 @@ namespace BankApp.Controllers
             var administrator = _mapper.Map<AdministratorDto>(user.Administrator);
 
             return CreatedAtRoute("GetAdministrator", new { userId = administrator.Id }, administrator);
-        }
-
-    
-
-        [HttpPost]
-        [Route("register/employee")]
-        public async Task<IActionResult> RegisterEmployee([FromBody]RegisterDto model)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
-
-            var user = new ApplicationUser { UserName = model.User.Email, Email = model.User.Email, PhoneNumber = model.User.PhoneNumber, Name = model.User.Name, Surname = model.User.Surname };
-
-            user.Employee = new Employee() { Id = user.Id };
-            user.Address = new Address() { Id = user.Id, Country = model.Address.Country, City = model.Address.City, Street = model.Address.Street, HouseNumber = model.Address.HouseNumber, ApartmentNumber = model.Address.ApartmentNumber, PostalCode = model.Address.PostalCode };
-
-            var result = await _userManager.CreateAsync(user, model.User.Password);
-
-            if (result.Succeeded)
-                await _userManager.AddToRoleAsync(user, UserRoles.Employee.ToString());
-            else
-                return BadRequest(result.Errors);
-
-            var employee = _mapper.Map<EmployeeDto>(user.Employee);
-
-            return CreatedAtRoute("GetEmployee", new { userId = employee.Id }, employee);
         }
 
         [HttpPost]
