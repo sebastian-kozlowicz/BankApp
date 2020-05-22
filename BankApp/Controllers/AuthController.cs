@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
-using AutoMapper;
 using BankApp.Dtos.Auth;
 using BankApp.Helpers;
 using BankApp.Interfaces;

@@ -83,16 +83,14 @@
   <ItemGroup>
     <None Remove="ClientApp\src\app\enumerators\accountType.ts" />
     <None Remove="ClientApp\src\app\enumerators\currency.ts" />
+    <None Remove="ClientApp\src\app\models\bank-account\bank-account-creation.ts" />
     <None Remove="ClientApp\src\app\validators\number-limit-validator.ts" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="ClientApp\src\app\models\" />
   </ItemGroup>
 
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\accountType.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\currency.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\models\bank-account\bank-account-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\validators\number-limit-validator.ts" />
   </ItemGroup>
 
