@@ -7,7 +7,7 @@
           <mat-label>Account type</mat-label>
           <mat-select id="account-type" formControlName="accountType">
             <mat-option *ngFor="let accountType of accountTypes" [value]="accountType">
-              {{accountType}}
+              {{AccountType[accountType]}}
             </mat-option>
           </mat-select>
           <mat-error *ngIf="accountType.errors?.required">

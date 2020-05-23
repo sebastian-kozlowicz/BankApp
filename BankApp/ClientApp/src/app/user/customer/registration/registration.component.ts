@@ -19,6 +19,8 @@ export class CustomerRegistrationComponent implements OnInit {
     private authService: AuthService,
     private toastr: ToastrService) { }
 
+  AccountType = AccountType;
+
   accountTypes = [
     AccountType.Savings,
     AccountType.Checking
