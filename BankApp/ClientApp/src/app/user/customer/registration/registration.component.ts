@@ -7,6 +7,8 @@ import { Register } from "../../../models/register";
 import { Currency } from '../../../enumerators/currency';
 import { AccountType } from '../../../enumerators/accountType';
 import { NumberLimitValidator } from '../../../validators/number-limit-validator';
+import { BankAccountCreation } from '../../../models/bank-account/bank-account-creation';
+import { BankAccountService } from '../../../services/bank-account.service';
 
 @Component({
   selector: 'app-registration',
@@ -17,6 +19,7 @@ export class CustomerRegistrationComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
+    private bankAccountService: BankAccountService,
     private toastr: ToastrService) { }
 
   AccountType = AccountType;
@@ -166,9 +169,22 @@ export class CustomerRegistrationComponent implements OnInit {
     };
 
     this.authService.registerCustomer(registerModel).subscribe(
-      response => {
+      (response: any) => {
         if (response) {
-          this.toastr.success('New user created!', 'Registration successful.');
+          let bankAccount: BankAccountCreation = {
+            accountType: this.accountType.value,
+            currency: this.currency.value,
+            applicationUserId: response.id
+          };
+          this.bankAccountService.createBankAccount(bankAccount).subscribe(
+            response => {
+              if (response)
+                this.toastr.success('New user created!', 'Registration successful.');
+            },
+            badRequest => {
+              this.toastr.error('Registration failed.');
+            }
+          );
         }
       },
       badRequest => {
