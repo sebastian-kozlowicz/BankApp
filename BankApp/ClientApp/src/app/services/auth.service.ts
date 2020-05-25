@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Register } from '../models/register';
+import { Register } from '../models/auth/register';
 import { map } from 'rxjs/operators';
 
 import { JwtHelperService } from '@auth0/angular-jwt';
