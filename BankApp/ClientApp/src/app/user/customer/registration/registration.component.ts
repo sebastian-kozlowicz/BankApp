@@ -3,7 +3,7 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from "../../../services/auth.service";
 import { PasswordValidator } from "../../../validators/password-validator";
-import { Register } from "../../../models/register";
+import { Register } from "../../../models/auth/register";
 import { Currency } from '../../../enumerators/currency';
 import { AccountType } from '../../../enumerators/accountType';
 import { NumberLimitValidator } from '../../../validators/number-limit-validator';
