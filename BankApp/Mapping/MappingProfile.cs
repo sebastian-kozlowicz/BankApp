@@ -33,7 +33,8 @@ namespace BankApp.Mapping
                 .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Address.Street))
                 .ForPath(dest => dest.Address.HouseNumber, opt => opt.MapFrom(src => src.Address.HouseNumber))
                 .ForPath(dest => dest.Address.ApartmentNumber, opt => opt.MapFrom(src => src.Address.ApartmentNumber))
-                .ForPath(dest => dest.Address.PostalCode, opt => opt.MapFrom(src => src.Address.PostalCode));
+                .ForPath(dest => dest.Address.PostalCode, opt => opt.MapFrom(src => src.Address.PostalCode))
+                .AfterMap((src, dest) => dest.Id = dest.Address.Id);
         }
     }
 }
