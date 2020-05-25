@@ -34,10 +34,8 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = new ApplicationUser { UserName = model.User.Email, Email = model.User.Email, PhoneNumber = model.User.PhoneNumber, Name = model.User.Name, Surname = model.User.Surname };
-
-            user.Customer = new Customer() { Id = user.Id };
-            user.Address = new Address() { Id = user.Id, Country = model.Address.Country, City = model.Address.City, Street = model.Address.Street, HouseNumber = model.Address.HouseNumber, ApartmentNumber = model.Address.ApartmentNumber, PostalCode = model.Address.PostalCode };
+            var user = _mapper.Map<ApplicationUser>(model);
+            user.Customer = new Customer { Id = user.Id };
 
             var result = await _userManager.CreateAsync(user, model.User.Password);
 
