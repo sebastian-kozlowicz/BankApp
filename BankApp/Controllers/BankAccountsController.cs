@@ -27,6 +27,8 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var bankAccountNumber = GenerateBankAccountNumber();
+
             var bankAccount = new BankAccount
             {
                 AccountType = model.AccountType,
@@ -56,6 +58,18 @@ namespace BankApp.Controllers
         {
             var accounts = _context.BankAccounts.ToList();
             return Ok(_mapper.Map<List<BankAccount>, List<BankAccountDto>>(accounts));
+        }
+
+        private string GenerateBankAccountNumber()
+        {
+            var bankAccountNumber = _context.BankAccounts.Select(ba => ba.Number).Max();
+
+            if (!long.TryParse(bankAccountNumber, out long number))
+            {
+                return null;
+            }
+
+            return number++.ToString();
         }
     }
 }
