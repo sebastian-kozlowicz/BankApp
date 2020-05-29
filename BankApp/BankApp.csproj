@@ -78,6 +78,32 @@
     <Compile Remove="Data\Migrations\20200322205127_AddAdministratorsTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20200322205338_AddAdministratorsTable.cs" />
     <Compile Remove="Data\Migrations\20200322205338_AddAdministratorsTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529192820_AddBranchesTable.cs" />
+    <Compile Remove="Data\Migrations\20200529192820_AddBranchesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529193708_AddBranchesTable.cs" />
+    <Compile Remove="Data\Migrations\20200529193708_AddBranchesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529194010_AddBranchesTable.cs" />
+    <Compile Remove="Data\Migrations\20200529194010_AddBranchesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529194149_AddBranchesTable.cs" />
+    <Compile Remove="Data\Migrations\20200529194149_AddBranchesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529200121_AddBranchesTable.cs" />
+    <Compile Remove="Data\Migrations\20200529200121_AddBranchesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529201408_AddBranchesTable.cs" />
+    <Compile Remove="Data\Migrations\20200529201408_AddBranchesTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529204114_AddUserAddressTable.cs" />
+    <Compile Remove="Data\Migrations\20200529204114_AddUserAddressTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529205014_AddUserAddressTable.cs" />
+    <Compile Remove="Data\Migrations\20200529205014_AddUserAddressTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529205931_AddUserAddressTable.cs" />
+    <Compile Remove="Data\Migrations\20200529205931_AddUserAddressTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529210321_AddUserAddressTable.cs" />
+    <Compile Remove="Data\Migrations\20200529210321_AddUserAddressTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529210717_Test.cs" />
+    <Compile Remove="Data\Migrations\20200529210717_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529211050_Test2.cs" />
+    <Compile Remove="Data\Migrations\20200529211050_Test2.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200529211810_AddBranchAndAddressesTables.cs" />
+    <Compile Remove="Data\Migrations\20200529211810_AddBranchAndAddressesTables.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

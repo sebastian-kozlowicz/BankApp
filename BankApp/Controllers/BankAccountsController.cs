@@ -27,8 +27,6 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var accountNumber = GenerateBankAccountNumber();
-
             var bankAccount = new BankAccount
             {
                 AccountType = model.AccountType,

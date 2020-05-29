@@ -28,13 +28,13 @@ namespace BankApp.Mapping
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.User.Name))
                 .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.User.Surname))
-                .ForPath(dest => dest.Address.Country, opt => opt.MapFrom(src => src.Address.Country))
-                .ForPath(dest => dest.Address.City, opt => opt.MapFrom(src => src.Address.City))
-                .ForPath(dest => dest.Address.Street, opt => opt.MapFrom(src => src.Address.Street))
-                .ForPath(dest => dest.Address.HouseNumber, opt => opt.MapFrom(src => src.Address.HouseNumber))
-                .ForPath(dest => dest.Address.ApartmentNumber, opt => opt.MapFrom(src => src.Address.ApartmentNumber))
-                .ForPath(dest => dest.Address.PostalCode, opt => opt.MapFrom(src => src.Address.PostalCode))
-                .AfterMap((src, dest) => dest.Address.Id = dest.Id);
+                .ForPath(dest => dest.UserAddress.Country, opt => opt.MapFrom(src => src.Address.Country))
+                .ForPath(dest => dest.UserAddress.City, opt => opt.MapFrom(src => src.Address.City))
+                .ForPath(dest => dest.UserAddress.Street, opt => opt.MapFrom(src => src.Address.Street))
+                .ForPath(dest => dest.UserAddress.HouseNumber, opt => opt.MapFrom(src => src.Address.HouseNumber))
+                .ForPath(dest => dest.UserAddress.ApartmentNumber, opt => opt.MapFrom(src => src.Address.ApartmentNumber))
+                .ForPath(dest => dest.UserAddress.PostalCode, opt => opt.MapFrom(src => src.Address.PostalCode))
+                .AfterMap((src, dest) => dest.UserAddress.Id = dest.Id);
         }
     }
 }

@@ -6,8 +6,10 @@ namespace BankApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        public DbSet<Address> Addresses { get; set; }
+        public DbSet<UserAddress> UserAddresses { get; set; }
+        public DbSet<BranchAddress> BranchAddresses { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<Branch> Branches { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -20,13 +22,18 @@ namespace BankApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-             builder.Entity<Address>()
-               .HasKey(a => a.Id);
+            builder.Entity<Branch>()
+               .HasKey(b => b.Id);
 
-              builder.Entity<Address>()
+              builder.Entity<UserAddress>()
                 .HasOne(a => a.ApplicationUser)
-                .WithOne(a => a.Address)
-                .HasForeignKey<Address>(a => a.Id);
+                .WithOne(u => u.UserAddress)
+                .HasForeignKey<UserAddress>(a => a.Id);
+
+              builder.Entity<BranchAddress>()
+                .HasOne(a => a.Branch)
+                .WithOne(b => b.BranchAddress)
+                .HasForeignKey<BranchAddress>(a => a.Id);
 
             builder.Entity<Administrator>()
                .HasKey(a => a.Id);
