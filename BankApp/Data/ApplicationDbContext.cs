@@ -10,6 +10,7 @@ namespace BankApp.Data
         public DbSet<BranchAddress> BranchAddresses { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Branch> Branches { get; set; }
+        public DbSet<Headquarters> Headquarters { get; set; }
         public DbSet<Card> Cards { get; set; }
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Customer> Customers { get; set; }
@@ -22,21 +23,29 @@ namespace BankApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            builder.Entity<Headquarters>()
+              .HasKey(h => h.Id);
+
             builder.Entity<Branch>()
                .HasKey(b => b.Id);
 
-              builder.Entity<UserAddress>()
+            builder.Entity<Branch>()
+                .HasOne(b => b.Headquarters)
+                .WithOne(h => h.Branch)
+                .HasForeignKey<Headquarters>(h => h.Id);
+
+            builder.Entity<UserAddress>()
                 .HasOne(a => a.ApplicationUser)
                 .WithOne(u => u.UserAddress)
                 .HasForeignKey<UserAddress>(a => a.Id);
 
-              builder.Entity<BranchAddress>()
+            builder.Entity<BranchAddress>()
                 .HasOne(a => a.Branch)
                 .WithOne(b => b.BranchAddress)
                 .HasForeignKey<BranchAddress>(a => a.Id);
 
             builder.Entity<Administrator>()
-               .HasKey(a => a.Id);
+                .HasKey(a => a.Id);
 
             builder.Entity<Administrator>()
                 .HasOne(a => a.ApplicationUser)
@@ -60,7 +69,7 @@ namespace BankApp.Data
                 .HasForeignKey<Employee>(e => e.Id);
 
             builder.Entity<Manager>()
-              .HasKey(m => m.Id);
+                .HasKey(m => m.Id);
 
             builder.Entity<Manager>()
                 .HasOne(m => m.ApplicationUser)

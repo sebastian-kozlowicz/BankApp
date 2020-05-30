@@ -4,5 +4,6 @@
     {
         public string Id { get; set; }
         public BranchAddress BranchAddress { get; set; }
+        public Headquarters Headquarters { get; set; }
     }
 }
