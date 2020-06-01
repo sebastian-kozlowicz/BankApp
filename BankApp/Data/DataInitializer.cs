@@ -1,15 +1,17 @@
 ﻿using BankApp.Enumerators;
 using Microsoft.AspNetCore.Identity;
 using BankApp.Models;
+using System.Linq;
 
 namespace BankApp.Data
 {
     public static class DataInitializer
     {
-        public static void SeedData(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public static void SeedData(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
+            SeedBankData(context);
         }
 
         private static void SeedRoles(RoleManager<IdentityRole> roleManager)
@@ -81,6 +83,19 @@ namespace BankApp.Data
                 {
                     _ = userManager.AddToRoleAsync(user, UserRoles.Manager.ToString()).Result;
                 }
+            }
+        }
+
+        private static void SeedBankData(ApplicationDbContext context)
+        {
+            var banDataInDb = context.BankData.ToList();
+
+            if (!banDataInDb.Any())
+            {
+                var bankData = new BankData { CountryCode = "PL", NationalBankCode = 1080 };
+
+                context.BankData.Add(bankData);
+                context.SaveChanges();
             }
         }
     }

@@ -103,7 +103,7 @@ namespace BankApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
         {
             if (env.IsDevelopment())
             {
@@ -129,7 +129,7 @@ namespace BankApp
             app.UseAuthentication();
             app.UseAuthorization();
 
-            DataInitializer.SeedData(userManager, roleManager);
+            DataInitializer.SeedData(userManager, roleManager, context);
 
             app.UseEndpoints(endpoints =>
             {
