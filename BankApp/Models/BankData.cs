@@ -1,0 +1,9 @@
+﻿namespace BankApp.Models
+{
+    public class BankData
+    {
+        public int Id { get; set; }
+        public string CountryCode { get; set; }
+        public int NationalBankCode { get; set; }
+    }
+}

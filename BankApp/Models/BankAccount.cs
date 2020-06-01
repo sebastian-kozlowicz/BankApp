@@ -7,7 +7,7 @@ namespace BankApp.Models
         public int Id { get; set; }
         public AccountType AccountType { get; set; }
         public Currency Currency { get; set; }
-        public string CountryCode { get; set; } = "PL";
+        public string CountryCode { get; set; }
         public int CheckNumber { get; set; }
         public int NationalBankCode { get; set; }
         public int BranchCode { get; set; }
