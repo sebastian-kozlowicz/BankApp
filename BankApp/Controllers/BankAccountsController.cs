@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount;
+using BankApp.Helpers;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,6 +27,8 @@ namespace BankApp.Controllers
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            var generatedAccountNumber = new AccountNumberFactory(_context).GenerateAccountNumber(null);
 
             var bankAccount = new BankAccount
             {
