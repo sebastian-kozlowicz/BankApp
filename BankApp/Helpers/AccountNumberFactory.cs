@@ -19,6 +19,7 @@ namespace BankApp.Helpers
             var bankData = GetBankData();
             var branchCode = GetBranchCode(branchId);
             var accountNumber = GetAccountNumber();
+            var accountNumberText = GetAccountNumberText(accountNumber);
 
             return new BankAccount();
         }
@@ -42,6 +43,11 @@ namespace BankApp.Helpers
                 return accountNumber;
 
             return accountNumber++;
+        }
+
+        private string GetAccountNumberText(long accountNumber)
+        {
+            return accountNumber.ToString("D16");
         }
     }
 }
