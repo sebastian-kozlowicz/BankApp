@@ -13,6 +13,7 @@ namespace BankApp.Models
         public int BranchCode { get; set; }
         public int NationalCheckDigit { get; set; }
         public long AccountNumber { get; set; }
+        public string AccountNumberText { get; set; }
         public string Iban { get; set; }
         public decimal Balance { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
