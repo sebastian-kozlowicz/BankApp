@@ -14,14 +14,14 @@ namespace BankApp.Helpers
             _context = context;
         }
 
-        public BankAccount GenerateAccountNumber(string branchId)
+        public BankAccountNumber GenerateAccountNumber(string branchId)
         {
             var bankData = GetBankData();
             var branchCode = GetBranchCode(branchId);
             var accountNumber = GetAccountNumber();
             var accountNumberText = GetAccountNumberText(accountNumber);
 
-            return new BankAccount();
+            return new BankAccountNumber();
         }
 
         private BankData GetBankData()
