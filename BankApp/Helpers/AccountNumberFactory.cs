@@ -18,7 +18,8 @@ namespace BankApp.Helpers
         {
             var bankData = GetBankData();
             var branchCode = GetBranchCode(branchId);
-            var accountNumber = GetAccountNumber();
+            var nationalCheckDigit = GenerateNationalCheckDigit(bankData.NationalBankCode, branchCode);
+            var accountNumber = GenerateAccountNumber();
             var accountNumberText = GetAccountNumberText(accountNumber);
 
             return new BankAccountNumber();
@@ -37,7 +38,25 @@ namespace BankApp.Helpers
             return _context.Branches.SingleOrDefault(b => b.Id == branchId).BranchCode;
         }
 
-        private long GetAccountNumber()
+        private int GenerateNationalCheckDigit(int nationalBankCode, int branchCode)
+        {
+            int sum = 0;
+            var weights = new int[] { 3, 9, 7, 1, 3, 9, 7, 1 };
+            var nationalBankCodeArray = nationalBankCode.ToString().Select(digit => int.Parse(digit.ToString())).ToArray();
+            var branchCodeArray = branchCode.ToString().Select(digit => int.Parse(digit.ToString())).ToArray();
+
+            for (int i = 0; i < weights.Length; i++)
+            {
+                if (i < nationalBankCodeArray.Length)
+                    sum += weights[i] * nationalBankCodeArray[i];
+                else
+                    sum += weights[i] * branchCodeArray[i];
+            }
+
+            return sum;
+        }
+
+        private long GenerateAccountNumber()
         {
             if (_context.BankAccounts.Select(ba => ba.AccountNumber).DefaultIfEmpty(0).Max() is var accountNumber && accountNumber == 0)
                 return accountNumber;
