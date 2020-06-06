@@ -1,6 +1,7 @@
 ﻿using BankApp.Data;
 using BankApp.Interfaces;
 using BankApp.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace BankApp.Helpers
@@ -8,6 +9,35 @@ namespace BankApp.Helpers
     public class AccountNumberFactory : IAccountNumberFactory
     {
         private readonly ApplicationDbContext _context;
+        private readonly Dictionary<string, int> _countryCharactersAssignedToNumbers = new Dictionary<string, int>()
+        {
+            {"A", 10 },
+            {"B", 11 },
+            {"C", 12 },
+            {"D", 13 },
+            {"E", 14 },
+            {"F", 15 },
+            {"G", 16 },
+            {"H", 17 },
+            {"I", 18 },
+            {"J", 19 },
+            {"K", 20 },
+            {"L", 21 },
+            {"M", 22 },
+            {"N", 23 },
+            {"O", 24 },
+            {"P", 25 },
+            {"Q", 26 },
+            {"R", 27 },
+            {"S", 28 },
+            {"T", 29 },
+            {"U", 30 },
+            {"V", 31 },
+            {"W", 32 },
+            {"X", 33 },
+            {"Y", 34 },
+            {"Z", 35 },
+        };
 
         public AccountNumberFactory(ApplicationDbContext context)
         {
@@ -21,6 +51,7 @@ namespace BankApp.Helpers
             var nationalCheckDigit = GenerateNationalCheckDigit(bankData.NationalBankCode, branchCode);
             var accountNumber = GenerateAccountNumber();
             var accountNumberText = GetAccountNumberText(accountNumber);
+            var checkNumber = GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
             return new BankAccountNumber();
         }
@@ -67,6 +98,11 @@ namespace BankApp.Helpers
         private string GetAccountNumberText(long accountNumber)
         {
             return accountNumber.ToString("D16");
+        }
+
+        private int GenerateCheckNumber(BankData bankData, int branchCode, int nationalCheckDigit, string accountNumberText)
+        {
+            return 0;
         }
     }
 }
