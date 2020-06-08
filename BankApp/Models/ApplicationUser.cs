@@ -12,7 +12,6 @@ namespace BankApp.Models
         public Employee Employee { get; set; }
         public Manager Manager { get; set; }
         public UserAddress UserAddress { get; set; }
-        public BranchAddress BranchAddress { get; set; }
         public IList<BankAccount> BankAccounts { get; set; }
     }
 }
