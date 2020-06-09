@@ -69,22 +69,24 @@ namespace BankApp.Helpers
             return _context.Branches.SingleOrDefault(b => b.Id == branchId).BranchCode;
         }
 
-        private int GenerateNationalCheckDigit(int nationalBankCode, int branchCode)
+        public int GenerateNationalCheckDigit(int nationalBankCode, int branchCode)
         {
             int sum = 0;
             var weights = new int[] { 3, 9, 7, 1, 3, 9, 7, 1 };
             var nationalBankCodeArray = nationalBankCode.ToString().Select(digit => int.Parse(digit.ToString())).ToArray();
             var branchCodeArray = branchCode.ToString().Select(digit => int.Parse(digit.ToString())).ToArray();
 
-            for (int i = 0; i < weights.Length; i++)
+            for (int i = 0; i < nationalBankCodeArray.Length; i++)
+                sum += weights[i] * nationalBankCodeArray[i];
+
+            for (int i = nationalBankCodeArray.Length; i < weights.Length; i++)
             {
-                if (i < nationalBankCodeArray.Length)
-                    sum += weights[i] * nationalBankCodeArray[i];
-                else
-                    sum += weights[i] * branchCodeArray[i];
+                int j = 0;
+                sum += weights[i] * branchCodeArray[j];
+                j++;
             }
 
-            return sum;
+            return (10 - sum % 10) % 10;
         }
 
         private long GenerateAccountNumber()
@@ -100,7 +102,7 @@ namespace BankApp.Helpers
             return accountNumber.ToString("D16");
         }
 
-        private int GenerateCheckNumber(BankData bankData, int branchCode, int nationalCheckDigit, string accountNumberText)
+        public int GenerateCheckNumber(BankData bankData, int branchCode, int nationalCheckDigit, string accountNumberText)
         {
             return 0;
         }

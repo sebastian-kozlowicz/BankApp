@@ -29,9 +29,15 @@ namespace BankApp.UnitTests.Helpers
         }
 
         [TestMethod]
-        public void Test()
+        public void GenerateNationalCheckDigit_Should_ReturnValidNationalCheckDigit()
         {
+            var nationalBankCode = 1950;
+            var branchCode = 000;
+            var expectedNationalCheckDigit = 1;
 
+            var result = accountNumberFactory.GenerateNationalCheckDigit(nationalBankCode, branchCode);
+
+            Assert.AreEqual(expectedNationalCheckDigit, result);
         }
     }
 }
