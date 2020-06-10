@@ -102,9 +102,20 @@ namespace BankApp.Helpers
             return accountNumber.ToString("D16");
         }
 
-        public int GenerateCheckNumber(BankData bankData, int branchCode, int nationalCheckDigit, string accountNumberText)
+        public string GenerateCheckNumber(BankData bankData, int branchCode, int nationalCheckDigit, string accountNumberText)
         {
-            return 0;
+            var firstCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
+            var secondCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(1, 1)];
+
+            var formatedAccountNumber = $"{bankData.NationalBankCode}" +
+                                        $"{branchCode}" +
+                                        $"{nationalCheckDigit}" +
+                                        $"{accountNumberText}" +
+                                        $"{firstCountryCharacterAsNumber}" +
+                                        $"{secondCountryCharacterAsNumber}"
+                                        + "00";
+
+            return formatedAccountNumber;
         }
     }
 }
