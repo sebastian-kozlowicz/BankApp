@@ -61,7 +61,7 @@ namespace BankApp.Helpers
             return _context.BankData.LastOrDefault();
         }
 
-        private int GetBranchCode(string branchId)
+        private string GetBranchCode(string branchId)
         {
             if (branchId == null)
                 return _context.Branches.SingleOrDefault(b => b.Id == _context.Headquarters.SingleOrDefault().Id).BranchCode;
@@ -69,19 +69,19 @@ namespace BankApp.Helpers
             return _context.Branches.SingleOrDefault(b => b.Id == branchId).BranchCode;
         }
 
-        public int GenerateNationalCheckDigit(int nationalBankCode, int branchCode)
+        public int GenerateNationalCheckDigit(int nationalBankCode, string branchCode)
         {
             int sum = 0;
-            var weights = new int[] { 3, 9, 7, 1, 3, 9, 7, 1 };
+            var weights = new int[] { 3, 9, 7, 1, 3, 9, 7 };
             var nationalBankCodeArray = nationalBankCode.ToString().Select(digit => int.Parse(digit.ToString())).ToArray();
-            var branchCodeArray = branchCode.ToString().Select(digit => int.Parse(digit.ToString())).ToArray();
+            var branchCodeArray = branchCode.Select(digit => int.Parse(digit.ToString())).ToArray();
 
             for (int i = 0; i < nationalBankCodeArray.Length; i++)
                 sum += weights[i] * nationalBankCodeArray[i];
 
+            int j = 0;
             for (int i = nationalBankCodeArray.Length; i < weights.Length; i++)
             {
-                int j = 0;
                 sum += weights[i] * branchCodeArray[j];
                 j++;
             }
@@ -102,7 +102,7 @@ namespace BankApp.Helpers
             return accountNumber.ToString("D16");
         }
 
-        public string GenerateCheckNumber(BankData bankData, int branchCode, int nationalCheckDigit, string accountNumberText)
+        public string GenerateCheckNumber(BankData bankData, string branchCode, int nationalCheckDigit, string accountNumberText)
         {
             var firstCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
             var secondCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(1, 1)];

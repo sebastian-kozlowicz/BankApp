@@ -33,7 +33,7 @@ namespace BankApp.UnitTests.Helpers
         public void GenerateNationalCheckDigit_Should_ReturnValidNationalCheckDigit()
         {
             var nationalBankCode = 1080;
-            var branchCode = 000;
+            var branchCode = "000";
             var expectedNationalCheckDigit = 1;
 
             var result = accountNumberFactory.GenerateNationalCheckDigit(nationalBankCode, branchCode);
@@ -50,7 +50,7 @@ namespace BankApp.UnitTests.Helpers
                 NationalBankCode = 1080
             };
 
-            var branchCode = 000;
+            var branchCode = "000";
             var nationalCheckDigit = 1;
             var accountNumberText = "9999999999999999";
 
