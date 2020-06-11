@@ -3,6 +3,8 @@ using BankApp.Interfaces;
 using BankApp.Models;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace BankApp.Helpers
 {
@@ -115,7 +117,15 @@ namespace BankApp.Helpers
                                         $"{secondCountryCharacterAsNumber}"
                                         + "00";
 
-            return formatedAccountNumber;
+            var splittedAccountNumber = Regex.Split(formatedAccountNumber, "(?<=\\G.{8})");
+
+            string modResult = string.Empty;
+            foreach (var number in splittedAccountNumber)
+            {
+                modResult = (long.Parse(modResult + number) % 97).ToString();
+            }
+
+            return (98 - int.Parse(modResult)).ToString();
         }
     }
 }
