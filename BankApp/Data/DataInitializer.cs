@@ -92,7 +92,7 @@ namespace BankApp.Data
 
             if (!banDataInDb.Any())
             {
-                var bankData = new BankData { CountryCode = "PL", NationalBankCode = 1080 };
+                var bankData = new BankData { CountryCode = "PL", NationalBankCode = "1080" };
 
                 context.BankData.Add(bankData);
                 context.SaveChanges();

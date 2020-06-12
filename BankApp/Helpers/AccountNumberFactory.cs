@@ -71,11 +71,11 @@ namespace BankApp.Helpers
             return _context.Branches.SingleOrDefault(b => b.Id == branchId).BranchCode;
         }
 
-        public int GenerateNationalCheckDigit(int nationalBankCode, string branchCode)
+        public int GenerateNationalCheckDigit(string nationalBankCode, string branchCode)
         {
             int sum = 0;
             var weights = new int[] { 3, 9, 7, 1, 3, 9, 7 };
-            var nationalBankCodeArray = nationalBankCode.ToString().Select(digit => int.Parse(digit.ToString())).ToArray();
+            var nationalBankCodeArray = nationalBankCode.Select(digit => int.Parse(digit.ToString())).ToArray();
             var branchCodeArray = branchCode.Select(digit => int.Parse(digit.ToString())).ToArray();
 
             for (int i = 0; i < nationalBankCodeArray.Length; i++)

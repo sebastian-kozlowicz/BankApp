@@ -32,7 +32,7 @@ namespace BankApp.UnitTests.Helpers
         [TestMethod]
         public void GenerateNationalCheckDigit_Should_ReturnValidNationalCheckDigit()
         {
-            var nationalBankCode = 1080;
+            var nationalBankCode = "1080";
             var branchCode = "000";
             var expectedNationalCheckDigit = 1;
 
@@ -47,7 +47,7 @@ namespace BankApp.UnitTests.Helpers
             var bankData = new BankData
             {
                 CountryCode = "PL",
-                NationalBankCode = 1080
+                NationalBankCode = "1080"
             };
             var branchCode = "000";
             var nationalCheckDigit = 1;
@@ -65,7 +65,7 @@ namespace BankApp.UnitTests.Helpers
             var bankData = new BankData
             {
                 CountryCode = "PL",
-                NationalBankCode = 2490
+                NationalBankCode = "2490"
             };
             var branchCode = "405";
             var nationalCheckDigit = 8;

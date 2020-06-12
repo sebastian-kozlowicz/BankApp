@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public string CountryCode { get; set; }
-        public int NationalBankCode { get; set; }
+        public string NationalBankCode { get; set; }
     }
 }

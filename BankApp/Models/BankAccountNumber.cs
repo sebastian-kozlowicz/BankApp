@@ -3,8 +3,8 @@
     public class BankAccountNumber
     {
         public string CountryCode { get; set; }
-        public int CheckNumber { get; set; }
-        public int NationalBankCode { get; set; }
+        public string CheckNumber { get; set; }
+        public string NationalBankCode { get; set; }
         public string BranchCode { get; set; }
         public int NationalCheckDigit { get; set; }
         public long AccountNumber { get; set; }
