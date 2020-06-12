@@ -52,11 +52,29 @@ namespace BankApp.UnitTests.Helpers
             var branchCode = "000";
             var nationalCheckDigit = 1;
             var accountNumberText = "9999999999999999";
-            var expectedNationalCheckNumber = 63;
+            var expectedNationalCheckNumber = "63";
 
             var result = accountNumberFactory.GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            Assert.AreEqual(expectedNationalCheckNumber.ToString(), result);
+            Assert.AreEqual(expectedNationalCheckNumber, result);
+        }
+
+        [TestMethod]
+        public void GenerateCheckNumber_Should_ReturnValidCheckNumberWithLeadingZero()
+        {
+            var bankData = new BankData
+            {
+                CountryCode = "PL",
+                NationalBankCode = 2490
+            };
+            var branchCode = "405";
+            var nationalCheckDigit = 8;
+            var accountNumberText = "8540304041736354";
+            string expectedNationalCheckNumber = "04";
+
+            var result = accountNumberFactory.GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
+
+            Assert.AreEqual(expectedNationalCheckNumber, result);
         }
     }
 }

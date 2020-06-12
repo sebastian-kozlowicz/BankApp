@@ -125,7 +125,12 @@ namespace BankApp.Helpers
                 modResult = (long.Parse(modResult + number) % 97).ToString();
             }
 
-            return (98 - int.Parse(modResult)).ToString();
+            var checkNumber = (98 - int.Parse(modResult)).ToString();
+
+            if (checkNumber.Length > 1)
+                return checkNumber;
+
+            return "0" + checkNumber;
         }
     }
 }
