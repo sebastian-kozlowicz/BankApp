@@ -3,7 +3,6 @@ using BankApp.Interfaces;
 using BankApp.Models;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
 
 namespace BankApp.Helpers
@@ -54,6 +53,7 @@ namespace BankApp.Helpers
             var accountNumber = GenerateAccountNumber();
             var accountNumberText = GetAccountNumberText(accountNumber);
             var checkNumber = GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
+            var iban = GetIban(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
 
             return new BankAccountNumber();
         }
@@ -131,6 +131,16 @@ namespace BankApp.Helpers
                 return checkNumber;
 
             return "0" + checkNumber;
+        }
+
+        public string GetIban(BankData bankData, string checkNumber, string branchCode, int nationalCheckDigit,string accountNumberText)
+        {
+            return $"{bankData.CountryCode}" + 
+                   $"{checkNumber}" + 
+                   $"{bankData.NationalBankCode}" +
+                   $"{branchCode}" +
+                   $"{nationalCheckDigit}" +
+                   $"{accountNumberText}";
         }
     }
 }
