@@ -76,5 +76,24 @@ namespace BankApp.UnitTests.Helpers
 
             Assert.AreEqual(expectedNationalCheckNumber, result);
         }
+
+        [TestMethod]
+        public void GetIban_Should_ReturnIban()
+        {
+            var bankData = new BankData
+            {
+                CountryCode = "PL",
+                NationalBankCode = "1080"
+            };
+            var checkNumber = "63";
+            var branchCode = "000";
+            var nationalCheckDigit = 1;
+            var accountNumberText = "9999999999999999";
+            var expectedIban = "PL63108000019999999999999999";
+
+            var result = accountNumberFactory.GetIban(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
+
+            Assert.AreEqual(expectedIban, result);
+        }
     }
 }
