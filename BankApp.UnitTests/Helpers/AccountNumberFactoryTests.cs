@@ -3,10 +3,9 @@ using BankApp.Helpers;
 using BankApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
 using System;
 
-namespace BankApp.UnitTests.Helpers
+namespace BankApp.Tests.Helpers
 {
     [TestClass]
     public class AccountNumberFactoryTests
