@@ -3,6 +3,7 @@ using BankApp.Helpers;
 using BankApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Moq;
 using System;
 
 namespace BankApp.UnitTests.Helpers
@@ -10,6 +11,8 @@ namespace BankApp.UnitTests.Helpers
     [TestClass]
     public class AccountNumberFactoryTests
     {
+        private AccountNumberFactory accountNumberFactory;
+
         private ApplicationDbContext GetMockContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -18,15 +21,45 @@ namespace BankApp.UnitTests.Helpers
 
             var context = new ApplicationDbContext(options);
 
+            context.BankData.Add(new BankData { CountryCode = "PL", NationalBankCode = "1080" });
+            context.Branches.Add(new Branch { Id = "1", BranchCode = "000" });
+            context.SaveChanges();
+
             return context;
         }
 
-        private AccountNumberFactory accountNumberFactory;
 
         [TestInitialize]
         public void ClassInitalize()
         {
             accountNumberFactory = new AccountNumberFactory(GetMockContext());
+        }
+
+        [TestMethod]
+        public void GenerateAccountNumber_Should_ReturnIban()
+        {
+            var expectedBankAccountNumber = new BankAccountNumber
+            {
+                CountryCode = "PL",
+                CheckNumber = "61",
+                NationalBankCode = "1080",
+                BranchCode = "000",
+                NationalCheckDigit = 1,
+                AccountNumber = 0,
+                AccountNumberText = "0000000000000000",
+                Iban = "PL61108000010000000000000000"
+            };
+
+            var result = accountNumberFactory.GenerateAccountNumber("1");
+
+            Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
+            Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
+            Assert.AreEqual(expectedBankAccountNumber.NationalBankCode, result.NationalBankCode);
+            Assert.AreEqual(expectedBankAccountNumber.BranchCode, result.BranchCode);
+            Assert.AreEqual(expectedBankAccountNumber.NationalCheckDigit, result.NationalCheckDigit);
+            Assert.AreEqual(expectedBankAccountNumber.AccountNumber, result.AccountNumber);
+            Assert.AreEqual(expectedBankAccountNumber.AccountNumberText, result.AccountNumberText);
+            Assert.AreEqual(expectedBankAccountNumber.Iban, result.Iban);
         }
 
         [TestMethod]

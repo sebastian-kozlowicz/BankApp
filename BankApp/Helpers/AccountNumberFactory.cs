@@ -142,7 +142,7 @@ namespace BankApp.Helpers
 
         private long GenerateAccountNumber()
         {
-            if (_context.BankAccounts.Select(ba => ba.AccountNumber).DefaultIfEmpty(0).Max() is var accountNumber && accountNumber == 0)
+            if (_context.BankAccounts.Select(ba => ba.AccountNumber).DefaultIfEmpty().Max() is var accountNumber && accountNumber == 0)
                 return accountNumber;
 
             return accountNumber++;
