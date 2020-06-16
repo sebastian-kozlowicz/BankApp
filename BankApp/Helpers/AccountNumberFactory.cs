@@ -68,19 +68,6 @@ namespace BankApp.Helpers
             };
         }
 
-        private BankData GetBankData()
-        {
-            return _context.BankData.LastOrDefault();
-        }
-
-        private string GetBranchCode(string branchId)
-        {
-            if (branchId == null)
-                return _context.Branches.SingleOrDefault(b => b.Id == _context.Headquarters.SingleOrDefault().Id).BranchCode;
-
-            return _context.Branches.SingleOrDefault(b => b.Id == branchId).BranchCode;
-        }
-
         public int GenerateNationalCheckDigit(string nationalBankCode, string branchCode)
         {
             int sum = 0;
@@ -101,20 +88,7 @@ namespace BankApp.Helpers
             return (10 - sum % 10) % 10;
         }
 
-        private long GenerateAccountNumber()
-        {
-            if (_context.BankAccounts.Select(ba => ba.AccountNumber).DefaultIfEmpty(0).Max() is var accountNumber && accountNumber == 0)
-                return accountNumber;
-
-            return accountNumber++;
-        }
-
-        private string GetAccountNumberText(long accountNumber)
-        {
-            return accountNumber.ToString("D16");
-        }
-
-        public string GenerateCheckNumber(BankData bankData, string branchCode, int nationalCheckDigit, string accountNumberText)
+         public string GenerateCheckNumber(BankData bankData, string branchCode, int nationalCheckDigit, string accountNumberText)
         {
             var firstCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
             var secondCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(1, 1)];
@@ -151,6 +125,32 @@ namespace BankApp.Helpers
                    $"{branchCode}" +
                    $"{nationalCheckDigit}" +
                    $"{accountNumberText}";
+        }
+
+        private BankData GetBankData()
+        {
+            return _context.BankData.LastOrDefault();
+        }
+
+        private string GetBranchCode(string branchId)
+        {
+            if (branchId == null)
+                return _context.Branches.SingleOrDefault(b => b.Id == _context.Headquarters.SingleOrDefault().Id).BranchCode;
+
+            return _context.Branches.SingleOrDefault(b => b.Id == branchId).BranchCode;
+        }
+
+        private long GenerateAccountNumber()
+        {
+            if (_context.BankAccounts.Select(ba => ba.AccountNumber).DefaultIfEmpty(0).Max() is var accountNumber && accountNumber == 0)
+                return accountNumber;
+
+            return accountNumber++;
+        }
+
+        private string GetAccountNumberText(long accountNumber)
+        {
+            return accountNumber.ToString("D16");
         }
     }
 }
