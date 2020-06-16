@@ -34,6 +34,14 @@ namespace BankApp.Controllers
             {
                 AccountType = model.AccountType,
                 Currency = model.Currency,
+                CountryCode = generatedAccountNumber.CountryCode,
+                CheckNumber = generatedAccountNumber.CountryCode,
+                NationalBankCode = generatedAccountNumber.NationalBankCode,
+                BranchCode = generatedAccountNumber.BranchCode,
+                NationalCheckDigit = generatedAccountNumber.NationalCheckDigit,
+                AccountNumber = generatedAccountNumber.AccountNumber,
+                AccountNumberText = generatedAccountNumber.AccountNumberText,
+                Iban = generatedAccountNumber.Iban,
                 ApplicationUserId = model.ApplicationUserId
             };
 
