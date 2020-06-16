@@ -55,7 +55,17 @@ namespace BankApp.Helpers
             var checkNumber = GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
             var iban = GetIban(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
 
-            return new BankAccountNumber();
+            return new BankAccountNumber
+            {
+                CountryCode = bankData.CountryCode,
+                CheckNumber = checkNumber,
+                NationalBankCode = bankData.NationalBankCode,
+                BranchCode = branchCode,
+                NationalCheckDigit = nationalCheckDigit,
+                AccountNumber = accountNumber,
+                AccountNumberText = accountNumberText,
+                Iban = iban
+            };
         }
 
         private BankData GetBankData()
@@ -133,10 +143,10 @@ namespace BankApp.Helpers
             return "0" + checkNumber;
         }
 
-        public string GetIban(BankData bankData, string checkNumber, string branchCode, int nationalCheckDigit,string accountNumberText)
+        public string GetIban(BankData bankData, string checkNumber, string branchCode, int nationalCheckDigit, string accountNumberText)
         {
-            return $"{bankData.CountryCode}" + 
-                   $"{checkNumber}" + 
+            return $"{bankData.CountryCode}" +
+                   $"{checkNumber}" +
                    $"{bankData.NationalBankCode}" +
                    $"{branchCode}" +
                    $"{nationalCheckDigit}" +
