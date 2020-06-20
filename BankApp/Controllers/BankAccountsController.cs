@@ -42,6 +42,7 @@ namespace BankApp.Controllers
                 AccountNumber = generatedAccountNumber.AccountNumber,
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
+                IbanSeparated = generatedAccountNumber.IbanSeparated,
                 ApplicationUserId = model.ApplicationUserId
             };
 

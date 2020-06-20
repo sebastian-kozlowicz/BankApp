@@ -54,6 +54,7 @@ namespace BankApp.Helpers
             var accountNumberText = GetAccountNumberText(accountNumber);
             var checkNumber = GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
             var iban = GetIban(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
+            var ibanSeparated = GetIbanSeparated(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
 
             return new BankAccountNumber
             {
@@ -64,7 +65,8 @@ namespace BankApp.Helpers
                 NationalCheckDigit = nationalCheckDigit,
                 AccountNumber = accountNumber,
                 AccountNumberText = accountNumberText,
-                Iban = iban
+                Iban = iban,
+                IbanSeparated = ibanSeparated
             };
         }
 
