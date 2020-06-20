@@ -46,7 +46,9 @@ namespace BankApp.Tests.Helpers
                 NationalCheckDigit = 1,
                 AccountNumber = 0,
                 AccountNumberText = "0000000000000000",
-                Iban = "PL61108000010000000000000000"
+                Iban = "PL61108000010000000000000000",
+                IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
+
             };
 
             var result = accountNumberFactory.GenerateAccountNumber("1");
@@ -59,6 +61,7 @@ namespace BankApp.Tests.Helpers
             Assert.AreEqual(expectedBankAccountNumber.AccountNumber, result.AccountNumber);
             Assert.AreEqual(expectedBankAccountNumber.AccountNumberText, result.AccountNumberText);
             Assert.AreEqual(expectedBankAccountNumber.Iban, result.Iban);
+            Assert.AreEqual(expectedBankAccountNumber.IbanSeparated, result.IbanSeparated);
         }
 
         [TestMethod]
