@@ -161,7 +161,7 @@ namespace BankApp.Helpers
             if (_context.BankAccounts.Select(ba => ba.AccountNumber).DefaultIfEmpty().Max() is var accountNumber && accountNumber == 0)
                 return accountNumber;
 
-            return accountNumber++;
+            return accountNumber + 1;
         }
 
         private string GetAccountNumberText(long accountNumber)

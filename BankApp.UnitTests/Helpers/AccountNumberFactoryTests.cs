@@ -1,6 +1,7 @@
 ﻿using BankApp.Data;
 using BankApp.Helpers;
 using BankApp.Models;
+using Castle.DynamicProxy.Generators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -27,7 +28,6 @@ namespace BankApp.Tests.Helpers
             return context;
         }
 
-
         [TestInitialize]
         public void ClassInitalize()
         {
@@ -48,6 +48,42 @@ namespace BankApp.Tests.Helpers
                 AccountNumberText = "0000000000000000",
                 Iban = "PL61108000010000000000000000",
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
+
+            };
+
+            var result = accountNumberFactory.GenerateAccountNumber("1");
+
+            Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
+            Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
+            Assert.AreEqual(expectedBankAccountNumber.NationalBankCode, result.NationalBankCode);
+            Assert.AreEqual(expectedBankAccountNumber.BranchCode, result.BranchCode);
+            Assert.AreEqual(expectedBankAccountNumber.NationalCheckDigit, result.NationalCheckDigit);
+            Assert.AreEqual(expectedBankAccountNumber.AccountNumber, result.AccountNumber);
+            Assert.AreEqual(expectedBankAccountNumber.AccountNumberText, result.AccountNumberText);
+            Assert.AreEqual(expectedBankAccountNumber.Iban, result.Iban);
+            Assert.AreEqual(expectedBankAccountNumber.IbanSeparated, result.IbanSeparated);
+        }
+
+        [TestMethod]
+        public void GenerateAccountNumber_Should_ReturnIbanWithIteratedAccountNumber_When_SomeAccountNumberExistsInDb()
+        {
+            var context = GetMockContext();
+            context.BankAccounts.Add(new BankAccount{ AccountNumber = 1});
+            context.SaveChanges();
+
+            accountNumberFactory = new AccountNumberFactory(context);
+
+            var expectedBankAccountNumber = new BankAccountNumber
+            {
+                CountryCode = "PL",
+                CheckNumber = "07",
+                NationalBankCode = "1080",
+                BranchCode = "000",
+                NationalCheckDigit = 1,
+                AccountNumber = 2,
+                AccountNumberText = "0000000000000002",
+                Iban = "PL07108000010000000000000002",
+                IbanSeparated = "PL 07 1080 0001 0000 0000 0000 0002"
 
             };
 
