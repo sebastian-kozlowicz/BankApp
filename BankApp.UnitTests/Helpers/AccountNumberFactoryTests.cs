@@ -127,5 +127,24 @@ namespace BankApp.Tests.Helpers
 
             Assert.AreEqual(expectedIban, result);
         }
+
+        [TestMethod]
+        public void GetSeparatedIban_Should_ReturnSeparatedIbanText()
+        {
+            var bankData = new BankData
+            {
+                CountryCode = "PL",
+                NationalBankCode = "1080"
+            };
+            var checkNumber = "63";
+            var branchCode = "000";
+            var nationalCheckDigit = 1;
+            var accountNumberText = "9999999999999999";
+            var expectedIbanSeparated = "PL 63 1080 0001 9999 9999 9999 9999";
+
+            var result = accountNumberFactory.GetIbanSeparated(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
+
+            Assert.AreEqual(expectedIbanSeparated, result);
+        }
     }
 }
