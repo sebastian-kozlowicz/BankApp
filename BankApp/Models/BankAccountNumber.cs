@@ -10,5 +10,6 @@
         public long AccountNumber { get; set; }
         public string AccountNumberText { get; set; }
         public string Iban { get; set; }
+        public string IbanSeparated { get; set; }
     }
 }

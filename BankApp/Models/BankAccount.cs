@@ -15,6 +15,7 @@ namespace BankApp.Models
         public long AccountNumber { get; set; }
         public string AccountNumberText { get; set; }
         public string Iban { get; set; }
+        public string IbanSeparated { get; set; }
         public decimal Balance { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public string ApplicationUserId { get; set; }
