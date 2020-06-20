@@ -29,7 +29,7 @@ namespace BankApp.Tests.Helpers
         }
 
         [TestInitialize]
-        public void ClassInitalize()
+        public void TestInitalize()
         {
             accountNumberFactory = new AccountNumberFactory(GetMockContext());
         }
