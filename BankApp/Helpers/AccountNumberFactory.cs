@@ -88,7 +88,7 @@ namespace BankApp.Helpers
             return (10 - sum % 10) % 10;
         }
 
-         public string GenerateCheckNumber(BankData bankData, string branchCode, int nationalCheckDigit, string accountNumberText)
+        public string GenerateCheckNumber(BankData bankData, string branchCode, int nationalCheckDigit, string accountNumberText)
         {
             var firstCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
             var secondCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(1, 1)];
@@ -101,10 +101,10 @@ namespace BankApp.Helpers
                                         $"{secondCountryCharacterAsNumber}"
                                         + "00";
 
-            var splittedAccountNumber = Regex.Split(formatedAccountNumber, "(?<=\\G.{8})");
+            var splittedAccountNumberArray = Regex.Split(formatedAccountNumber, "(?<=\\G.{8})");
 
             string modResult = string.Empty;
-            foreach (var number in splittedAccountNumber)
+            foreach (var number in splittedAccountNumberArray)
             {
                 modResult = (long.Parse(modResult + number) % 97).ToString();
             }
@@ -125,6 +125,20 @@ namespace BankApp.Helpers
                    $"{branchCode}" +
                    $"{nationalCheckDigit}" +
                    $"{accountNumberText}";
+        }
+
+        public string GetIbanSeparated(BankData bankData, string checkNumber, string branchCode, int nationalCheckDigit, string accountNumberText)
+        {
+            var splittedAccountNumberArray = Regex.Split(accountNumberText, "(?<=\\G.{4})");
+            splittedAccountNumberArray = splittedAccountNumberArray.Where(an => !string.IsNullOrEmpty(an)).ToArray();
+            var separatedAccountNumber = string.Join(" ", splittedAccountNumberArray);
+
+            return $"{bankData.CountryCode} " +
+                   $"{checkNumber} " +
+                   $"{bankData.NationalBankCode} " +
+                   $"{branchCode}" +
+                   $"{nationalCheckDigit} " +
+                   $"{separatedAccountNumber}";
         }
 
         private BankData GetBankData()
