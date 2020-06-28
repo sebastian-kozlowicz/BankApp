@@ -35,7 +35,7 @@ namespace BankApp.Controllers
                 AccountType = model.AccountType,
                 Currency = model.Currency,
                 CountryCode = generatedAccountNumber.CountryCode,
-                CheckNumber = generatedAccountNumber.CountryCode,
+                CheckNumber = generatedAccountNumber.CheckNumber,
                 NationalBankCode = generatedAccountNumber.NationalBankCode,
                 BranchCode = generatedAccountNumber.BranchCode,
                 NationalCheckDigit = generatedAccountNumber.NationalCheckDigit,
@@ -68,13 +68,6 @@ namespace BankApp.Controllers
         {
             var accounts = _context.BankAccounts.ToList();
             return Ok(_mapper.Map<List<BankAccount>, List<BankAccountDto>>(accounts));
-        }
-
-        private long GenerateBankAccountNumber()
-        {
-            var accountNumber = _context.BankAccounts.Select(ba => ba.AccountNumber).Max();
-
-            return accountNumber++;
         }
     }
 }

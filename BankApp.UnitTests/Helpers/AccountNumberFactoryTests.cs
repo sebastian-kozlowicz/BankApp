@@ -1,7 +1,6 @@
 ﻿using BankApp.Data;
 using BankApp.Helpers;
 using BankApp.Models;
-using Castle.DynamicProxy.Generators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -11,7 +10,7 @@ namespace BankApp.Tests.Helpers
     [TestClass]
     public class AccountNumberFactoryTests
     {
-        private AccountNumberFactory accountNumberFactory;
+        private AccountNumberFactory _accountNumberFactory;
 
         private ApplicationDbContext GetMockContext()
         {
@@ -31,7 +30,7 @@ namespace BankApp.Tests.Helpers
         [TestInitialize]
         public void TestInitalize()
         {
-            accountNumberFactory = new AccountNumberFactory(GetMockContext());
+            _accountNumberFactory = new AccountNumberFactory(GetMockContext());
         }
 
         [TestMethod]
@@ -48,10 +47,9 @@ namespace BankApp.Tests.Helpers
                 AccountNumberText = "0000000000000000",
                 Iban = "PL61108000010000000000000000",
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
-
             };
 
-            var result = accountNumberFactory.GenerateAccountNumber("1");
+            var result = _accountNumberFactory.GenerateAccountNumber("1");
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
             Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
@@ -71,7 +69,7 @@ namespace BankApp.Tests.Helpers
             context.BankAccounts.Add(new BankAccount{ AccountNumber = 1});
             context.SaveChanges();
 
-            accountNumberFactory = new AccountNumberFactory(context);
+            _accountNumberFactory = new AccountNumberFactory(context);
 
             var expectedBankAccountNumber = new BankAccountNumber
             {
@@ -87,7 +85,7 @@ namespace BankApp.Tests.Helpers
 
             };
 
-            var result = accountNumberFactory.GenerateAccountNumber("1");
+            var result = _accountNumberFactory.GenerateAccountNumber("1");
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
             Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
@@ -107,7 +105,7 @@ namespace BankApp.Tests.Helpers
             var branchCode = "000";
             var expectedNationalCheckDigit = 1;
 
-            var result = accountNumberFactory.GenerateNationalCheckDigit(nationalBankCode, branchCode);
+            var result = _accountNumberFactory.GenerateNationalCheckDigit(nationalBankCode, branchCode);
 
             Assert.AreEqual(expectedNationalCheckDigit, result);
         }
@@ -125,7 +123,7 @@ namespace BankApp.Tests.Helpers
             var accountNumberText = "9999999999999999";
             var expectedNationalCheckNumber = "63";
 
-            var result = accountNumberFactory.GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
+            var result = _accountNumberFactory.GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
             Assert.AreEqual(expectedNationalCheckNumber, result);
         }
@@ -143,7 +141,7 @@ namespace BankApp.Tests.Helpers
             var accountNumberText = "8540304041736354";
             string expectedNationalCheckNumber = "04";
 
-            var result = accountNumberFactory.GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
+            var result = _accountNumberFactory.GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
             Assert.AreEqual(expectedNationalCheckNumber, result);
         }
@@ -162,7 +160,7 @@ namespace BankApp.Tests.Helpers
             var accountNumberText = "9999999999999999";
             var expectedIban = "PL63108000019999999999999999";
 
-            var result = accountNumberFactory.GetIban(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
+            var result = _accountNumberFactory.GetIban(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
 
             Assert.AreEqual(expectedIban, result);
         }
@@ -181,7 +179,7 @@ namespace BankApp.Tests.Helpers
             var accountNumberText = "9999999999999999";
             var expectedIbanSeparated = "PL 63 1080 0001 9999 9999 9999 9999";
 
-            var result = accountNumberFactory.GetIbanSeparated(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
+            var result = _accountNumberFactory.GetIbanSeparated(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
 
             Assert.AreEqual(expectedIbanSeparated, result);
         }
