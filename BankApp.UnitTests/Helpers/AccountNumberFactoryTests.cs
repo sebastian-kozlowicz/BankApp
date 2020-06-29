@@ -22,6 +22,8 @@ namespace BankApp.Tests.Helpers
 
             context.BankData.Add(new BankData { CountryCode = "PL", NationalBankCode = "1080" });
             context.Branches.Add(new Branch { Id = "1", BranchCode = "000" });
+            context.Branches.Add(new Branch { Id = "2", BranchCode = "001" });
+            context.Headquarters.Add(new Headquarters { Id = "2" });
             context.SaveChanges();
 
             return context;
@@ -63,9 +65,38 @@ namespace BankApp.Tests.Helpers
         }
 
         [TestMethod]
+        public void GenerateAccountNumber_Should_ReturnIbanWithHeadquaterBranchCode_When_NoBranchIdIsPassedToMethod()
+        {
+            var expectedBankAccountNumber = new BankAccountNumber
+            {
+                CountryCode = "PL",
+                CheckNumber = "27",
+                NationalBankCode = "1080",
+                BranchCode = "001",
+                NationalCheckDigit = 4,
+                AccountNumber = 0,
+                AccountNumberText = "0000000000000000",
+                Iban = "PL27108000140000000000000000",
+                IbanSeparated = "PL 27 1080 0014 0000 0000 0000 0000"
+            };
+
+            var result = _accountNumberFactory.GenerateAccountNumber();
+
+            Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
+            Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
+            Assert.AreEqual(expectedBankAccountNumber.NationalBankCode, result.NationalBankCode);
+            Assert.AreEqual(expectedBankAccountNumber.BranchCode, result.BranchCode);
+            Assert.AreEqual(expectedBankAccountNumber.NationalCheckDigit, result.NationalCheckDigit);
+            Assert.AreEqual(expectedBankAccountNumber.AccountNumber, result.AccountNumber);
+            Assert.AreEqual(expectedBankAccountNumber.AccountNumberText, result.AccountNumberText);
+            Assert.AreEqual(expectedBankAccountNumber.Iban, result.Iban);
+            Assert.AreEqual(expectedBankAccountNumber.IbanSeparated, result.IbanSeparated);
+        }
+
+        [TestMethod]
         public void GenerateAccountNumber_Should_ReturnIbanWithIteratedAccountNumber_When_SomeAccountNumberExistsInDb()
         {
-            var context = GetMockContext();
+           var context = GetMockContext();
             context.BankAccounts.Add(new BankAccount{ AccountNumber = 1});
             context.SaveChanges();
 
