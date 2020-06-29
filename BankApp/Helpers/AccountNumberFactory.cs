@@ -158,10 +158,10 @@ namespace BankApp.Helpers
 
         private long GenerateAccountNumber()
         {
-            if (_context.BankAccounts.Select(ba => ba.AccountNumber).DefaultIfEmpty().Max() is var accountNumber && accountNumber == 0)
-                return accountNumber;
+            if (_context.BankAccounts.Select(ba => ba.AccountNumber).ToList() is var result && !result.Any())
+                return 0;
 
-            return accountNumber + 1;
+            return result.Max() + 1;
         }
 
         private string GetAccountNumberText(long accountNumber)
