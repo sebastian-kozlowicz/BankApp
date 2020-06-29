@@ -11,6 +11,7 @@ namespace BankApp.Tests.Helpers
     public class AccountNumberFactoryTests
     {
         private AccountNumberFactory _accountNumberFactory;
+        private ApplicationDbContext _context;
 
         private ApplicationDbContext GetMockContext()
         {
@@ -32,7 +33,8 @@ namespace BankApp.Tests.Helpers
         [TestInitialize]
         public void TestInitalize()
         {
-            _accountNumberFactory = new AccountNumberFactory(GetMockContext());
+            _context = GetMockContext();
+            _accountNumberFactory = new AccountNumberFactory(_context);
         }
 
         [TestMethod]
@@ -96,11 +98,8 @@ namespace BankApp.Tests.Helpers
         [TestMethod]
         public void GenerateAccountNumber_Should_ReturnIbanWithIteratedAccountNumber_When_SomeAccountNumberExistsInDb()
         {
-            var context = GetMockContext();
-            context.BankAccounts.Add(new BankAccount { AccountNumber = 0 });
-            context.SaveChanges();
-
-            _accountNumberFactory = new AccountNumberFactory(context);
+            _context.BankAccounts.Add(new BankAccount { AccountNumber = 0 });
+            _context.SaveChanges();
 
             var expectedBankAccountNumber = new BankAccountNumber
             {

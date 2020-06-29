@@ -42,8 +42,9 @@ namespace BankApp.Tests.Controllers
         [TestInitialize]
         public void TestInitalize()
         {
-            _accountNumberFactoryMock = new Mock<AccountNumberFactory>();
             _context = GetMockContext();
+            _bankAccountsController = new BankAccountsController(_context, _mapper);
+            _accountNumberFactoryMock = new Mock<AccountNumberFactory>();
         }
 
         [TestMethod]
@@ -80,7 +81,6 @@ namespace BankApp.Tests.Controllers
             };
 
             _accountNumberFactoryMock.Setup(anf => anf.GenerateAccountNumber(null)).Returns(bankAccountNumber);
-            _bankAccountsController = new BankAccountsController(_context, _mapper);
 
             // Act
             _bankAccountsController.CreateBankAccount(new BankAccountCreationDto { AccountType = AccountType.Checking, Currency = Currency.Eur, ApplicationUserId = "1" });
