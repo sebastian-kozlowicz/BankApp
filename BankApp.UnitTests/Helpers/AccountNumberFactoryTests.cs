@@ -96,8 +96,8 @@ namespace BankApp.Tests.Helpers
         [TestMethod]
         public void GenerateAccountNumber_Should_ReturnIbanWithIteratedAccountNumber_When_SomeAccountNumberExistsInDb()
         {
-           var context = GetMockContext();
-            context.BankAccounts.Add(new BankAccount{ AccountNumber = 1});
+            var context = GetMockContext();
+            context.BankAccounts.Add(new BankAccount { AccountNumber = 0 });
             context.SaveChanges();
 
             _accountNumberFactory = new AccountNumberFactory(context);
@@ -105,15 +105,14 @@ namespace BankApp.Tests.Helpers
             var expectedBankAccountNumber = new BankAccountNumber
             {
                 CountryCode = "PL",
-                CheckNumber = "07",
+                CheckNumber = "34",
                 NationalBankCode = "1080",
                 BranchCode = "000",
                 NationalCheckDigit = 1,
-                AccountNumber = 2,
-                AccountNumberText = "0000000000000002",
-                Iban = "PL07108000010000000000000002",
-                IbanSeparated = "PL 07 1080 0001 0000 0000 0000 0002"
-
+                AccountNumber = 1,
+                AccountNumberText = "0000000000000001",
+                Iban = "PL34108000010000000000000001",
+                IbanSeparated = "PL 34 1080 0001 0000 0000 0000 0001"
             };
 
             var result = _accountNumberFactory.GenerateAccountNumber("1");
