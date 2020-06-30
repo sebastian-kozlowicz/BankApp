@@ -11,6 +11,7 @@ using BankApp.Helpers;
 using BankApp.Dtos.BankAccount;
 using System.Linq;
 using BankApp.Enumerators;
+using Microsoft.AspNetCore.Identity;
 
 namespace BankApp.Tests.Controllers
 {
@@ -21,6 +22,7 @@ namespace BankApp.Tests.Controllers
         private readonly IMapper _mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
         private Mock<AccountNumberFactory> _accountNumberFactoryMock;
         private ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         private ApplicationDbContext GetMockContext()
         {
@@ -43,7 +45,7 @@ namespace BankApp.Tests.Controllers
         public void TestInitalize()
         {
             _context = GetMockContext();
-            _bankAccountsController = new BankAccountsController(_context, _mapper);
+            _bankAccountsController = new BankAccountsController(_userManager, _context, _mapper);
             _accountNumberFactoryMock = new Mock<AccountNumberFactory>();
         }
 

@@ -145,7 +145,7 @@ namespace BankApp.Helpers
 
         private BankData GetBankData()
         {
-            return _context.BankData.LastOrDefault();
+            return _context.BankData.FirstOrDefault();
         }
 
         private string GetBranchCode(string branchId)
