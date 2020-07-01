@@ -33,7 +33,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var generatedAccountNumber = new AccountNumberFactory(_context).GenerateAccountNumber(null);
+            var generatedAccountNumber = new AccountNumberFactory(_context).GenerateAccountNumber();
 
             var bankAccount = new BankAccount
             {
@@ -64,7 +64,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var generatedAccountNumber = new AccountNumberFactory(_context).GenerateAccountNumber(null);
+            var generatedAccountNumber = new AccountNumberFactory(_context).GenerateAccountNumber();
 
             var user = _mapper.Map<ApplicationUser>(model.RegisterDto);
             user.Customer = new Customer { Id = user.Id };
