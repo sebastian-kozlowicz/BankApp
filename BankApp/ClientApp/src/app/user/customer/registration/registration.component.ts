@@ -9,6 +9,7 @@ import { AccountType } from '../../../enumerators/accountType';
 import { NumberLimitValidator } from '../../../validators/number-limit-validator';
 import { BankAccountCreation } from '../../../models/bank-account/bank-account-creation';
 import { BankAccountService } from '../../../services/bank-account.service';
+import { BankAccountWithCustomerCreation } from '../../../models/bank-account/with-customer/bank-account-with-customer-creation';
 
 @Component({
   selector: 'app-registration',
@@ -150,42 +151,34 @@ export class CustomerRegistrationComponent implements OnInit {
   }
 
   register() {
-    let registerModel: Register = {
-      user: {
-        name: this.name.value,
-        surname: this.surname.value,
-        email: this.email.value,
-        phoneNumber: this.phoneNumber.value.toString(),
-        password: this.password.value,
+    let registerModel: BankAccountWithCustomerCreation = {
+      register: {
+        user: {
+          name: this.name.value,
+          surname: this.surname.value,
+          email: this.email.value,
+          phoneNumber: this.phoneNumber.value.toString(),
+          password: this.password.value,
+        },
+        address: {
+          country: this.country.value,
+          city: this.city.value,
+          street: this.street.value,
+          houseNumber: this.houseNumber.value,
+          apartmentNumber: this.apartmentNumber.value,
+          postalCode: this.postalCode.value.toString()
+        }
       },
-      address: {
-        country: this.country.value,
-        city: this.city.value,
-        street: this.street.value,
-        houseNumber: this.houseNumber.value,
-        apartmentNumber: this.apartmentNumber.value,
-        postalCode: this.postalCode.value.toString()
+      bankAccount: {
+        accountType: this.accountType.value,
+        currency: this.currency.value
       }
     };
 
-    this.authService.registerCustomer(registerModel).subscribe(
-      (response: any) => {
-        if (response) {
-          let bankAccount: BankAccountCreation = {
-            accountType: this.accountType.value,
-            currency: this.currency.value,
-            applicationUserId: response.id
-          };
-          this.bankAccountService.createBankAccount(bankAccount).subscribe(
-            response => {
-              if (response)
-                this.toastr.success('New user created!', 'Registration successful.');
-            },
-            badRequest => {
-              this.toastr.error('Registration failed.');
-            }
-          );
-        }
+    this.bankAccountService.createBankAccountWithCustomer(registerModel).subscribe(
+      response => {
+        if (response)
+          this.toastr.success('New user created!', 'Registration successful.');
       },
       badRequest => {
         if (Array.isArray(badRequest.error))
