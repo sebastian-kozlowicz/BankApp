@@ -13,4 +13,8 @@ export class BankAccountService {
   createBankAccount(bankAccount) {
     return this.http.post(this.bankAccountEndpoint, bankAccount);
   }
+
+  createBankAccountWithCustomer(bankAccountWithCustomer) {
+    return this.http.post(this.bankAccountEndpoint + '/create-with-customer', bankAccountWithCustomer);
+  }
 }
