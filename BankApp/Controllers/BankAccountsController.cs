@@ -94,9 +94,8 @@ namespace BankApp.Controllers
             else
                 return BadRequest(result.Errors);
 
-            bankAccount.ApplicationUser = null;
-
-            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccount.Id }, bankAccount);
+            var bankAccountDto = _mapper.Map<BankAccount, BankAccountDto>(bankAccount);
+            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccount.Id }, bankAccountDto);
         }
 
         [HttpGet]
