@@ -1,7 +1,7 @@
 ﻿using BankApp.Dtos.Auth;
 using System.ComponentModel.DataAnnotations;
 
-namespace BankApp.Dtos.BankAccount
+namespace BankApp.Dtos.BankAccount.WithCustomer
 {
     public class BankAccountWithCustomerCreationDto
     {

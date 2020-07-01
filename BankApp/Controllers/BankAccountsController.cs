@@ -3,6 +3,7 @@ using System.Linq;
 using AutoMapper;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount;
+using BankApp.Dtos.BankAccount.WithCustomer;
 using BankApp.Enumerators;
 using BankApp.Helpers;
 using BankApp.Models;
@@ -27,7 +28,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateBankAccount([FromBody] BankAccountCreationDto model)
+        public ActionResult CreateBankAccount([FromBody] Dtos.BankAccount.BankAccountCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
