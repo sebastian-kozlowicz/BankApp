@@ -45,7 +45,7 @@ namespace BankApp.Helpers
             _context = context;
         }
 
-        public virtual BankAccountNumber GenerateAccountNumber(string branchId = null)
+        public virtual BankAccountNumber GenerateAccountNumber(int? branchId = null)
         {
             var bankData = GetBankData();
             var branchCode = GetBranchCode(branchId);
@@ -148,7 +148,7 @@ namespace BankApp.Helpers
             return _context.BankData.FirstOrDefault();
         }
 
-        private string GetBranchCode(string branchId)
+        private string GetBranchCode(int? branchId)
         {
             if (branchId == null)
                 return _context.Branches.SingleOrDefault(b => b.Id == _context.Headquarters.SingleOrDefault().Id).BranchCode;

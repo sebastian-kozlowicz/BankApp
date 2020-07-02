@@ -33,9 +33,9 @@ namespace BankApp.Tests.Controllers
             var context = new ApplicationDbContext(options);
 
             context.BankData.Add(new BankData { CountryCode = "PL", NationalBankCode = "1080" });
-            context.Branches.Add(new Branch { Id = "1", BranchCode = "000" });
-            context.Headquarters.Add(new Headquarters { Id = "1" });
-            context.Users.Add(new ApplicationUser { Id = "1" });
+            context.Branches.Add(new Branch { Id = 1, BranchCode = "000" });
+            context.Headquarters.Add(new Headquarters { Id = 1 });
+            context.Users.Add(new ApplicationUser { Id = 1 });
             context.SaveChanges();
 
             return context;
@@ -66,7 +66,7 @@ namespace BankApp.Tests.Controllers
                 AccountNumberText = "0000000000000000",
                 Iban = "PL61108000010000000000000000",
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000",
-                ApplicationUserId = "1"
+                ApplicationUserId = 1
             };
 
             var bankAccountNumber = new BankAccountNumber
@@ -85,7 +85,7 @@ namespace BankApp.Tests.Controllers
             _accountNumberFactoryMock.Setup(anf => anf.GenerateAccountNumber(null)).Returns(bankAccountNumber);
 
             // Act
-            _bankAccountsController.CreateBankAccount(new BankAccountCreationDto { AccountType = AccountType.Checking, Currency = Currency.Eur, ApplicationUserId = "1" });
+            _bankAccountsController.CreateBankAccount(new BankAccountCreationDto { AccountType = AccountType.Checking, Currency = Currency.Eur, ApplicationUserId = 1 });
 
             // Assert
             var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == 1);

@@ -61,7 +61,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet("{userId}", Name = "GetEmployee")]
-        public ActionResult<EmployeeDto> GetEmployee(string userId)
+        public ActionResult<EmployeeDto> GetEmployee(int userId)
         {
             var employee = _context.Employees.Include(e => e.ApplicationUser).SingleOrDefault(e => e.Id == userId);
 

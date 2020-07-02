@@ -60,7 +60,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet("{userId}", Name = "GetManager")]
-        public ActionResult<ManagerDto> GetManager(string userId)
+        public ActionResult<ManagerDto> GetManager(int userId)
         {
             var manager = _context.Managers.Include(m => m.ApplicationUser).SingleOrDefault(m => m.Id == userId);
 

@@ -22,9 +22,9 @@ namespace BankApp.Tests.Helpers
             var context = new ApplicationDbContext(options);
 
             context.BankData.Add(new BankData { CountryCode = "PL", NationalBankCode = "1080" });
-            context.Branches.Add(new Branch { Id = "1", BranchCode = "000" });
-            context.Branches.Add(new Branch { Id = "2", BranchCode = "001" });
-            context.Headquarters.Add(new Headquarters { Id = "2" });
+            context.Branches.Add(new Branch { Id = 1, BranchCode = "000" });
+            context.Branches.Add(new Branch { Id = 2, BranchCode = "001" });
+            context.Headquarters.Add(new Headquarters { Id = 2 });
             context.SaveChanges();
 
             return context;
@@ -53,7 +53,7 @@ namespace BankApp.Tests.Helpers
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
             };
 
-            var result = _accountNumberFactory.GenerateAccountNumber("1");
+            var result = _accountNumberFactory.GenerateAccountNumber(1);
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
             Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
@@ -114,7 +114,7 @@ namespace BankApp.Tests.Helpers
                 IbanSeparated = "PL 34 1080 0001 0000 0000 0000 0001"
             };
 
-            var result = _accountNumberFactory.GenerateAccountNumber("1");
+            var result = _accountNumberFactory.GenerateAccountNumber(1);
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
             Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);

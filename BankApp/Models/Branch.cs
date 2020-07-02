@@ -2,7 +2,7 @@
 {
     public class Branch
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         public string BranchCode { get; set; }
         public BranchAddress BranchAddress { get; set; }
         public Headquarters Headquarters { get; set; }

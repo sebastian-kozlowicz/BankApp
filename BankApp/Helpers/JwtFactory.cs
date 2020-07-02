@@ -51,7 +51,7 @@ namespace BankApp.Helpers
         {
             return new ClaimsIdentity(new GenericIdentity(user.Email, "Token"), new[]
             {
-                new Claim("userId", user.Id),
+                new Claim("userId", user.Id.ToString()),
                 new Claim("administrator", RoleHelper.IsUserInRole(roles, UserRoles.Administrator).ToString(), ClaimValueTypes.Boolean),
                 new Claim("customer", RoleHelper.IsUserInRole(roles, UserRoles.Customer).ToString(), ClaimValueTypes.Boolean),
                 new Claim("employee", RoleHelper.IsUserInRole(roles, UserRoles.Employee).ToString(), ClaimValueTypes.Boolean),
