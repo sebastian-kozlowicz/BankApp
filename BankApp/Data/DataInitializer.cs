@@ -7,26 +7,26 @@ namespace BankApp.Data
 {
     public static class DataInitializer
     {
-        public static void SeedData(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, ApplicationDbContext context)
+        public static void SeedData(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<int>> roleManager, ApplicationDbContext context)
         {
             SeedRoles(roleManager);
             SeedUsers(userManager);
             SeedBankData(context);
         }
 
-        private static void SeedRoles(RoleManager<IdentityRole> roleManager)
+        private static void SeedRoles(RoleManager<IdentityRole<int>> roleManager)
         {
             if (!roleManager.RoleExistsAsync(UserRoles.Administrator.ToString()).Result)
-                _ = roleManager.CreateAsync(new IdentityRole(UserRoles.Administrator.ToString())).Result;
+                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRoles.Administrator.ToString())).Result;
 
             if (!roleManager.RoleExistsAsync(UserRoles.Customer.ToString()).Result)
-                _ = roleManager.CreateAsync(new IdentityRole(UserRoles.Customer.ToString())).Result;
+                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRoles.Customer.ToString())).Result;
 
             if (!roleManager.RoleExistsAsync(UserRoles.Employee.ToString()).Result)
-                _ = roleManager.CreateAsync(new IdentityRole(UserRoles.Employee.ToString())).Result;
+                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRoles.Employee.ToString())).Result;
 
             if (!roleManager.RoleExistsAsync(UserRoles.Manager.ToString()).Result)
-                _ = roleManager.CreateAsync(new IdentityRole(UserRoles.Manager.ToString())).Result;
+                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRoles.Manager.ToString())).Result;
         }
 
         private static void SeedUsers(UserManager<ApplicationUser> userManager)
