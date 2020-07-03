@@ -51,6 +51,7 @@ namespace BankApp
                 .AddResourceStore<InMemoryResourcesStore>();
 
             services.AddSingleton<IJwtFactory, JwtFactory>();
+            services.AddTransient<IAccountNumberFactory, AccountNumberFactory>();
 
             services.Configure<IdentityOptions>(options =>
             {

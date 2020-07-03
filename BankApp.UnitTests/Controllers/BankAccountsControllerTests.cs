@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using Moq;
-using BankApp.Helpers;
+using BankApp.Interfaces;
 using BankApp.Dtos.BankAccount;
 using System.Linq;
 using BankApp.Enumerators;
@@ -20,7 +20,7 @@ namespace BankApp.Tests.Controllers
     {
         private BankAccountsController _bankAccountsController;
         private readonly IMapper _mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
-        private Mock<AccountNumberFactory> _accountNumberFactoryMock;
+        private Mock<IAccountNumberFactory> _accountNumberFactoryMock;
         private ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -45,8 +45,8 @@ namespace BankApp.Tests.Controllers
         public void TestInitalize()
         {
             _context = GetMockContext();
-            _bankAccountsController = new BankAccountsController(_userManager, _context, _mapper);
-            _accountNumberFactoryMock = new Mock<AccountNumberFactory>();
+            _accountNumberFactoryMock = new Mock<IAccountNumberFactory>();
+            _bankAccountsController = new BankAccountsController(_userManager, _context, _mapper, _accountNumberFactoryMock.Object);
         }
 
         [TestMethod]

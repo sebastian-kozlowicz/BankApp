@@ -45,7 +45,7 @@ namespace BankApp.Helpers
             _context = context;
         }
 
-        public virtual BankAccountNumber GenerateAccountNumber(int? branchId = null)
+        public BankAccountNumber GenerateAccountNumber(int? branchId = null)
         {
             var bankData = GetBankData();
             var branchCode = GetBranchCode(branchId);

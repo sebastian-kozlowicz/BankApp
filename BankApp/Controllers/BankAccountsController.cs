@@ -5,7 +5,7 @@ using BankApp.Data;
 using BankApp.Dtos.BankAccount;
 using BankApp.Dtos.BankAccount.WithCustomer;
 using BankApp.Enumerators;
-using BankApp.Helpers;
+using BankApp.Interfaces;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +19,14 @@ namespace BankApp.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IAccountNumberFactory _accountNumberFactory;
 
-        public BankAccountsController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper)
+        public BankAccountsController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper, IAccountNumberFactory accountNumberFactory)
         {
             _userManager = userManager;
             _context = context;
             _mapper = mapper;
+            _accountNumberFactory = accountNumberFactory;
         }
 
         [HttpPost]
@@ -33,7 +35,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var generatedAccountNumber = new AccountNumberFactory(_context).GenerateAccountNumber();
+            var generatedAccountNumber = _accountNumberFactory.GenerateAccountNumber();
 
             var bankAccount = new BankAccount
             {
@@ -64,7 +66,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var generatedAccountNumber = new AccountNumberFactory(_context).GenerateAccountNumber();
+            var generatedAccountNumber = _accountNumberFactory.GenerateAccountNumber();
 
             var user = _mapper.Map<ApplicationUser>(model.RegisterDto);
             user.Customer = new Customer { Id = user.Id };
