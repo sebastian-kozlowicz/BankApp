@@ -10,7 +10,7 @@ namespace BankApp.Helpers
     public class AccountNumberFactory : IAccountNumberFactory
     {
         private readonly ApplicationDbContext _context;
-        private readonly Dictionary<string, int> _countryCharactersAssignedToNumbers = new Dictionary<string, int>()
+        private static readonly Dictionary<string, int> _countryCharactersAssignedToNumbers = new Dictionary<string, int>()
         {
             {"A", 10 },
             {"B", 11 },
