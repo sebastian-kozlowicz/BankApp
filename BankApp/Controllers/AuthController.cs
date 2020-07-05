@@ -27,7 +27,7 @@ namespace BankApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody]LoginDto model)
+        public async Task<IActionResult> Login([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -47,7 +47,7 @@ namespace BankApp.Controllers
         {
             if (!string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(password))
             {
-                if (await _userManager.FindByEmailAsync(email) is var user)
+                if (await _userManager.FindByEmailAsync(email) is var user && user != null)
                 {
                     var roles = await _userManager.GetRolesAsync(user);
 
