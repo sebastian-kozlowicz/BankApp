@@ -34,7 +34,7 @@ namespace BankApp.Controllers
 
             if (await GetClaimsIdentity(model.Email, model.Password) is ClaimsIdentity claimsIdentity && claimsIdentity != null)
             {
-                var jwt = await JwtTokenHelper.GenerateJwt(claimsIdentity, _jwtFactory, model.Email, new JsonSerializerSettings { Formatting = Formatting.Indented });
+                var jwt = JwtTokenHelper.GenerateJwt(claimsIdentity, _jwtFactory, model.Email, new JsonSerializerSettings { Formatting = Formatting.Indented });
 
                 return Ok(jwt);
             }

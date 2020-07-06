@@ -4,9 +4,9 @@ using System.Linq;
 
 namespace BankApp.Attributes
 {
-    public class AuthorizeRoleEnumAttritubte : AuthorizeAttribute
+    public class AuthorizeRoleEnumAttribute : AuthorizeAttribute
     {
-        public AuthorizeRoleEnumAttritubte(params object[] roles)
+        public AuthorizeRoleEnumAttribute(params object[] roles)
         {
             if (roles.Any(r => r.GetType().BaseType != typeof(Enum)))
                 throw new ArgumentException("roles");

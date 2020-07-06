@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
+using BankApp.Attributes;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount;
 using BankApp.Dtos.BankAccount.WithCustomer;
@@ -60,6 +61,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
+        [AuthorizeRoleEnum(UserRoles.Customer)]
         [Route("create-with-customer")]
         public ActionResult CreateBankAccountWithCustomer([FromBody] BankAccountWithCustomerCreationDto model)
         {

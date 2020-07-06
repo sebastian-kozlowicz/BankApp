@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
-using System.Threading.Tasks;
 using BankApp.Configuration;
-using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
 using Microsoft.Extensions.Options;
@@ -22,24 +21,12 @@ namespace BankApp.Helpers
             ThrowIfInvalidOptions(_jwtOptions);
         }
 
-        public async Task<string> GenerateEncodedToken(string email, ClaimsIdentity claimsIdentity)
+        public string GenerateEncodedToken(string email, ClaimsIdentity claimsIdentity)
         {
-            var claims = new[]
-            {
-                 new Claim(JwtRegisteredClaimNames.Sub, email),
-                 new Claim(JwtRegisteredClaimNames.Jti, await _jwtOptions.JtiGenerator()),
-                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                 claimsIdentity.FindFirst("userId"),
-                 claimsIdentity.FindFirst("administrator"),
-                 claimsIdentity.FindFirst("customer"),
-                 claimsIdentity.FindFirst("employee"),
-                 claimsIdentity.FindFirst("manager"),
-             };
-
             var jwt = new JwtSecurityToken(
                 issuer: _jwtOptions.Issuer,
                 audience: _jwtOptions.Audience,
-                claims: claims,
+                claims: claimsIdentity.Claims,
                 notBefore: _jwtOptions.NotBefore,
                 expires: _jwtOptions.Expiration,
                 signingCredentials: _jwtOptions.SigningCredentials);
@@ -49,14 +36,16 @@ namespace BankApp.Helpers
 
         public ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IList<string> roles)
         {
-            return new ClaimsIdentity(new GenericIdentity(user.Email, "Token"), new[]
+            var claimsIdentity = new ClaimsIdentity(new GenericIdentity(user.Email, "Token"), new[]
             {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                new Claim(JwtRegisteredClaimNames.Jti, _jwtOptions.JtiGenerator().Result),
+                new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                 new Claim("userId", user.Id.ToString()),
-                new Claim("administrator", RoleHelper.IsUserInRole(roles, UserRoles.Administrator).ToString(), ClaimValueTypes.Boolean),
-                new Claim("customer", RoleHelper.IsUserInRole(roles, UserRoles.Customer).ToString(), ClaimValueTypes.Boolean),
-                new Claim("employee", RoleHelper.IsUserInRole(roles, UserRoles.Employee).ToString(), ClaimValueTypes.Boolean),
-                new Claim("manager", RoleHelper.IsUserInRole(roles, UserRoles.Manager).ToString(), ClaimValueTypes.Boolean),
             });
+
+            claimsIdentity.AddClaims(roles.Select(r => new Claim(ClaimTypes.Role, r)));
+            return claimsIdentity;
         }
 
         private static long ToUnixEpochDate(DateTime date)
@@ -66,7 +55,7 @@ namespace BankApp.Helpers
 
         private static void ThrowIfInvalidOptions(JwtIssuerOptions options)
         {
-            if (options == null) 
+            if (options == null)
                 throw new ArgumentNullException(nameof(options));
 
             if (options.ValidFor <= TimeSpan.Zero)
