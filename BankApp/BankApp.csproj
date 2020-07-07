@@ -113,6 +113,7 @@
   <ItemGroup>
     <None Remove="ClientApp\src\app\enumerators\accountType.ts" />
     <None Remove="ClientApp\src\app\enumerators\currency.ts" />
+    <None Remove="ClientApp\src\app\models\auth\jwtToken.ts" />
     <None Remove="ClientApp\src\app\models\bank-account\bank-account-creation.ts" />
     <None Remove="ClientApp\src\app\models\bank-account\with-customer\bank-account-creation.ts" />
     <None Remove="ClientApp\src\app\models\bank-account\with-customer\bank-account-with-customer-creation.ts" />
@@ -122,6 +123,7 @@
   <ItemGroup>
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\accountType.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\currency.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\models\auth\jwtToken.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\bank-account\bank-account-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\bank-account\with-customer\bank-account-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\models\bank-account\with-customer\bank-account-with-customer-creation.ts" />

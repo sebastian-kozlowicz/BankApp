@@ -4,6 +4,7 @@ import { Register } from '../models/auth/register';
 import { map } from 'rxjs/operators';
 
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { JwtToken } from '../models/auth/jwtToken';
 
 @Injectable({
   providedIn: 'root'
@@ -55,19 +56,19 @@ export class AuthService {
     return this.jwtHelper.getTokenExpirationDate();
   }
 
-  get currentUser() {
+  get currentUser():JwtToken {
     let token = sessionStorage.getItem('token');
 
     if (!token)
       return null;
-
+    console.log(this.jwtHelper.decodeToken(token));
     return this.jwtHelper.decodeToken(token);
   }
 
   isAdministrator() {
     let user = this.currentUser;
 
-    if (user && user.administrator === true)
+    if (user && user.role.includes('Administrator'))
       return true;
 
     return false;
@@ -76,7 +77,7 @@ export class AuthService {
   isCustomer() {
     let user = this.currentUser;
 
-    if (user && user.customer === true)
+    if (user && user.role.includes('Customer'))
       return true;
 
     return false;
@@ -85,7 +86,7 @@ export class AuthService {
   isEmployee() {
     let user = this.currentUser;
 
-    if (user && user.employee === true)
+    if (user && user.role.includes('Employee'))
       return true;
 
     return false;
@@ -94,7 +95,7 @@ export class AuthService {
   isManager() {
     let user = this.currentUser;
 
-    if (user && user.manager === true)
+    if (user && user.role.includes('Manager'))
       return true;
 
     return false;
