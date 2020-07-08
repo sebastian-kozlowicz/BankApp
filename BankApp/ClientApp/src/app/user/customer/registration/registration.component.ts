@@ -3,13 +3,11 @@ import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from "../../../services/auth.service";
 import { PasswordValidator } from "../../../validators/password-validator";
-import { Register } from "../../../models/auth/register";
 import { Currency } from '../../../enumerators/currency';
 import { AccountType } from '../../../enumerators/accountType';
 import { NumberLimitValidator } from '../../../validators/number-limit-validator';
-import { BankAccountCreation } from '../../../models/bank-account/bank-account-creation';
 import { BankAccountService } from '../../../services/bank-account.service';
-import { BankAccountWithCustomerCreation } from '../../../models/bank-account/with-customer/bank-account-with-customer-creation';
+import { BankAccountWithCustomerCreation } from '../../../interfaces/bank-account/with-customer/bank-account-with-customer-creation';
 
 @Component({
   selector: 'app-registration',
