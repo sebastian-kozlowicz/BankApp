@@ -8,6 +8,7 @@ using BankApp.Configuration;
 using BankApp.Interfaces;
 using BankApp.Models;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BankApp.Helpers
 {
@@ -23,15 +24,18 @@ namespace BankApp.Helpers
 
         public string GenerateEncodedToken(string email, ClaimsIdentity claimsIdentity)
         {
-            var jwt = new JwtSecurityToken(
-                issuer: _jwtOptions.Issuer,
-                audience: _jwtOptions.Audience,
-                claims: claimsIdentity.Claims,
-                notBefore: _jwtOptions.NotBefore,
-                expires: _jwtOptions.Expiration,
-                signingCredentials: _jwtOptions.SigningCredentials);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = claimsIdentity,
+                NotBefore = _jwtOptions.NotBefore,
+                Expires = DateTime.UtcNow.AddDays(1),
+                SigningCredentials = _jwtOptions.SigningCredentials
+            };
 
-            return new JwtSecurityTokenHandler().WriteToken(jwt);
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.WriteToken(securityToken);
+            return token;
         }
 
         public ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IList<string> roles)
