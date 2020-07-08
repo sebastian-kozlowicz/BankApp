@@ -1,6 +1,6 @@
 ﻿namespace BankApp.Enumerators
 {
-    public enum UserRoles
+    public enum UserRole
     {
         Administrator,
         Customer,

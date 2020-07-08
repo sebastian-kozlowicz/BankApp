@@ -16,17 +16,17 @@ namespace BankApp.Data
 
         private static void SeedRoles(RoleManager<IdentityRole<int>> roleManager)
         {
-            if (!roleManager.RoleExistsAsync(UserRoles.Administrator.ToString()).Result)
-                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRoles.Administrator.ToString())).Result;
+            if (!roleManager.RoleExistsAsync(UserRole.Administrator.ToString()).Result)
+                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRole.Administrator.ToString())).Result;
 
-            if (!roleManager.RoleExistsAsync(UserRoles.Customer.ToString()).Result)
-                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRoles.Customer.ToString())).Result;
+            if (!roleManager.RoleExistsAsync(UserRole.Customer.ToString()).Result)
+                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRole.Customer.ToString())).Result;
 
-            if (!roleManager.RoleExistsAsync(UserRoles.Employee.ToString()).Result)
-                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRoles.Employee.ToString())).Result;
+            if (!roleManager.RoleExistsAsync(UserRole.Employee.ToString()).Result)
+                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRole.Employee.ToString())).Result;
 
-            if (!roleManager.RoleExistsAsync(UserRoles.Manager.ToString()).Result)
-                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRoles.Manager.ToString())).Result;
+            if (!roleManager.RoleExistsAsync(UserRole.Manager.ToString()).Result)
+                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRole.Manager.ToString())).Result;
         }
 
         private static void SeedUsers(UserManager<ApplicationUser> userManager)
@@ -40,7 +40,7 @@ namespace BankApp.Data
                 var result = userManager.CreateAsync(user, "Qwerty1@").Result;
 
                 if (result.Succeeded)
-                    _ = userManager.AddToRoleAsync(user, UserRoles.Administrator.ToString()).Result;
+                    _ = userManager.AddToRoleAsync(user, UserRole.Administrator.ToString()).Result;
             }
 
             if (userManager.FindByEmailAsync("customer@localhost").Result == null)
@@ -53,7 +53,7 @@ namespace BankApp.Data
 
                 if (result.Succeeded)
                 {
-                    _ = userManager.AddToRoleAsync(user, UserRoles.Customer.ToString()).Result;
+                    _ = userManager.AddToRoleAsync(user, UserRole.Customer.ToString()).Result;
                 }
             }
 
@@ -67,7 +67,7 @@ namespace BankApp.Data
 
                 if (result.Succeeded)
                 {
-                    _ = userManager.AddToRoleAsync(user, UserRoles.Employee.ToString()).Result;
+                    _ = userManager.AddToRoleAsync(user, UserRole.Employee.ToString()).Result;
                 }
             }
 
@@ -81,7 +81,7 @@ namespace BankApp.Data
 
                 if (result.Succeeded)
                 {
-                    _ = userManager.AddToRoleAsync(user, UserRoles.Manager.ToString()).Result;
+                    _ = userManager.AddToRoleAsync(user, UserRole.Manager.ToString()).Result;
                 }
             }
         }

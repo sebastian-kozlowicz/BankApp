@@ -40,7 +40,7 @@ namespace BankApp.Controllers
             var result = await _userManager.CreateAsync(user, model.User.Password);
 
             if (result.Succeeded)
-                await _userManager.AddToRoleAsync(user, UserRoles.Customer.ToString());
+                await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());
             else
                 return BadRequest(result.Errors);
 

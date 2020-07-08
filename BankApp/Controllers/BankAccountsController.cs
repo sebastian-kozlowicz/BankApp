@@ -61,7 +61,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        [AuthorizeRoleEnum(UserRoles.Customer)]
+        [AuthorizeRoleEnum(UserRole.Customer)]
         [Route("create-with-customer")]
         public ActionResult CreateBankAccountWithCustomer([FromBody] BankAccountWithCustomerCreationDto model)
         {
@@ -94,7 +94,7 @@ namespace BankApp.Controllers
             var result = _userManager.CreateAsync(user, model.RegisterDto.User.Password).Result;
 
             if (result.Succeeded)
-                _ = _userManager.AddToRoleAsync(user, UserRoles.Customer.ToString()).Result;
+                _ = _userManager.AddToRoleAsync(user, UserRole.Customer.ToString()).Result;
             else
                 return BadRequest(result.Errors);
 
