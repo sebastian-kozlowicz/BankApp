@@ -67,7 +67,7 @@ namespace BankApp.Tests.Helpers
         }
 
         [TestMethod]
-        public void GenerateAccountNumber_Should_ReturnIbanWithHeadquaterBranchCode_When_NoBranchIdIsPassedToMethod()
+        public void GenerateAccountNumber_Should_ReturnIbanWithHeadquartersBranchCode_When_NoBranchIdIsPassedToMethod()
         {
             var expectedBankAccountNumber = new BankAccountNumber
             {
