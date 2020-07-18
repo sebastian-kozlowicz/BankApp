@@ -1,5 +1,7 @@
 ﻿using BankApp.Data;
+using BankApp.Dtos.BankTransfer;
 using Microsoft.AspNetCore.Mvc;
+using System.Linq;
 
 namespace BankApp.Controllers
 {
@@ -15,8 +17,23 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateBankTransfer()
+        public ActionResult CreateBankTransfer([FromBody] BankTransferCreationDto bankTransferCreationDto)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankTransferCreationDto.RequesterBankAccountId);
+
+            if (bankAccount == null)
+                return NotFound();
+
+            var targetBankAccount = _context.BankAccounts.FirstOrDefault(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
+
+            bankAccount.Balance -= bankTransferCreationDto.Value;
+            targetBankAccount.Balance += bankTransferCreationDto.Value;
+
+            _context.SaveChanges();
+
             return Ok();
         }
     }
