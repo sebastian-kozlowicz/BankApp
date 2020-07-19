@@ -29,8 +29,8 @@ namespace BankApp.Controllers
 
             var targetBankAccount = _context.BankAccounts.FirstOrDefault(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
 
-            bankAccount.Balance -= bankTransferCreationDto.Value;
-            targetBankAccount.Balance += bankTransferCreationDto.Value;
+            bankAccount.Balance -= (decimal)bankTransferCreationDto.Value;
+            targetBankAccount.Balance += (decimal)bankTransferCreationDto.Value;
 
             _context.SaveChanges();
 

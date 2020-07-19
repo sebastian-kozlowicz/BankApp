@@ -61,7 +61,6 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        [AuthorizeRoleEnum(UserRole.Customer)]
         [Route("create-with-customer")]
         public ActionResult CreateBankAccountWithCustomer([FromBody] BankAccountWithCustomerCreationDto model)
         {
