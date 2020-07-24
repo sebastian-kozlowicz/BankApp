@@ -82,6 +82,10 @@ namespace BankApp.Data
                 .Property(b => b.Balance)
                 .HasColumnType("decimal(18,2)");
 
+            builder.Entity<BankAccount>()
+                .Property(b => b.DebitLimit)
+                .HasColumnType("decimal(18,2)");
+
             base.OnModelCreating(builder);
         }
     }
