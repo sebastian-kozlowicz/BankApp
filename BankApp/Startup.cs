@@ -17,6 +17,7 @@ using System.Text;
 using BankApp.Helpers;
 using BankApp.Interfaces;
 using BankApp.Configuration;
+using Microsoft.AspNetCore.Localization;
 
 namespace BankApp
 {
@@ -101,6 +102,11 @@ namespace BankApp
             {
                 configuration.RootPath = "ClientApp/dist";
             });
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("en-GB");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,6 +123,8 @@ namespace BankApp
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseRequestLocalization();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -153,6 +161,7 @@ namespace BankApp
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
+
         }
     }
 }
