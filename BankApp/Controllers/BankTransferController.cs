@@ -36,10 +36,13 @@ namespace BankApp.Controllers
             }
             else
             {
-                bankAccount.Balance -= (decimal)bankTransferCreationDto.Value;
-                targetBankAccount.Balance += (decimal)bankTransferCreationDto.Value;
+                if (bankAccount.Currency == targetBankAccount.Currency)
+                {
+                    bankAccount.Balance -= (decimal)bankTransferCreationDto.Value;
+                    targetBankAccount.Balance += (decimal)bankTransferCreationDto.Value;
 
-                _context.SaveChanges();
+                    _context.SaveChanges();
+                }
             }
 
             return Ok();
