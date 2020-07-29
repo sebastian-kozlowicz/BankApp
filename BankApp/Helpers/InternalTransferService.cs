@@ -1,9 +1,10 @@
 ﻿using BankApp.Data;
+using BankApp.Interfaces;
 using BankApp.Models;
 
 namespace BankApp.Helpers
 {
-    public class InternalTransferService
+    public class InternalTransferService : ITransferService<InternalTransferService>
     {
         private readonly ApplicationDbContext _context;
 

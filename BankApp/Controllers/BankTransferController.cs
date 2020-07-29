@@ -31,7 +31,7 @@ namespace BankApp.Controllers
             var targetBankAccount = _context.BankAccounts.FirstOrDefault(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
 
             if (targetBankAccount == null)
-                TransferService.Create();
+                ExternalTransferService.Create();
             else
                new InternalTransferService(_context).Create(bankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
 
