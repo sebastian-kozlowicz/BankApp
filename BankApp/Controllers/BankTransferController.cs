@@ -3,6 +3,7 @@ using BankApp.Dtos.BankTransfer;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using BankApp.Helpers;
+using BankApp.Interfaces;
 
 namespace BankApp.Controllers
 {
@@ -11,10 +12,14 @@ namespace BankApp.Controllers
     public class BankTransferController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ITransferService<InternalTransferService> _internalTransferService;
+        private readonly ITransferService<ExternalTransferService> _externalTransferService;
 
-        public BankTransferController(ApplicationDbContext context)
+        public BankTransferController(ApplicationDbContext context, ITransferService<InternalTransferService> internalTransferService, ITransferService<ExternalTransferService> externalTransferService)
         {
             _context = context;
+            _internalTransferService = internalTransferService;
+            _externalTransferService = externalTransferService;
         }
 
         [HttpPost]
@@ -31,9 +36,9 @@ namespace BankApp.Controllers
             var targetBankAccount = _context.BankAccounts.FirstOrDefault(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
 
             if (targetBankAccount == null)
-                ExternalTransferService.Create();
+                _externalTransferService.Create(bankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
             else
-               new InternalTransferService(_context).Create(bankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
+                _internalTransferService.Create(bankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
 
             return Ok();
         }
