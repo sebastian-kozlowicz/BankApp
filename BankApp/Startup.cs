@@ -53,6 +53,8 @@ namespace BankApp
 
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.AddTransient<IAccountNumberFactory, AccountNumberFactory>();
+            services.AddTransient<ITransferService<InternalTransferService>, InternalTransferService>();
+            services.AddTransient<ITransferService<ExternalTransferService>, ExternalTransferService>();
 
             services.Configure<IdentityOptions>(options =>
             {
