@@ -61,7 +61,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        [Route("create-with-customer")]
+        [Route("CreateWithCustomer")]
         public ActionResult CreateBankAccountWithCustomer([FromBody] BankAccountWithCustomerCreationDto model)
         {
             if (!ModelState.IsValid)
@@ -113,9 +113,10 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<BankAccountDto>> GetAccounts()
+        [Route("GetAllForUser/{applicationUserId}")]
+        public ActionResult<IEnumerable<BankAccountDto>> GetBankAccounts(int applicationUserId)
         {
-            var accounts = _context.BankAccounts.ToList();
+            var accounts = _context.BankAccounts.Where(b => b.ApplicationUserId == applicationUserId).ToList();
             return Ok(_mapper.Map<List<BankAccount>, List<BankAccountDto>>(accounts));
         }
     }

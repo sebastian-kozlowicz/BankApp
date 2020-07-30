@@ -17,6 +17,6 @@ export class BankAccountService {
   }
 
   createBankAccountWithCustomer(bankAccountWithCustomer: BankAccountWithCustomerCreation) {
-    return this.http.post(this.bankAccountEndpoint + '/create-with-customer', bankAccountWithCustomer);
+    return this.http.post(this.bankAccountEndpoint + '/createwithcustomer', bankAccountWithCustomer);
   }
 }
