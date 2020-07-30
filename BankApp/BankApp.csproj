@@ -118,6 +118,7 @@
     <None Remove="ClientApp\src\app\interfaces\bank-account\bank-account-creation.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-creation.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-with-customer-creation.ts" />
+    <None Remove="ClientApp\src\app\interfaces\bank-transfer\bank-transfer-creation.ts" />
     <None Remove="ClientApp\src\app\validators\number-limit-validator.ts" />
   </ItemGroup>
 
@@ -129,6 +130,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\bank-account-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-with-customer-creation.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-transfer\bank-transfer-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\validators\number-limit-validator.ts" />
   </ItemGroup>
 
