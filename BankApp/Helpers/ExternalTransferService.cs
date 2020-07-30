@@ -10,7 +10,6 @@ namespace BankApp.Helpers
         /// </summary>
         public void Create(BankAccount bankAccount, BankAccount targetBankAccount, decimal value)
         {
-            throw new System.NotImplementedException();
         }
     }
 }
