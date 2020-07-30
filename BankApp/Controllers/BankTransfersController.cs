@@ -9,13 +9,13 @@ namespace BankApp.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class BankTransferController : ControllerBase
+    public class BankTransfersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly ITransferService<InternalTransferService> _internalTransferService;
         private readonly ITransferService<ExternalTransferService> _externalTransferService;
 
-        public BankTransferController(ApplicationDbContext context, ITransferService<InternalTransferService> internalTransferService, ITransferService<ExternalTransferService> externalTransferService)
+        public BankTransfersController(ApplicationDbContext context, ITransferService<InternalTransferService> internalTransferService, ITransferService<ExternalTransferService> externalTransferService)
         {
             _context = context;
             _internalTransferService = internalTransferService;
