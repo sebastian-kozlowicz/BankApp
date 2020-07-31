@@ -116,7 +116,7 @@ namespace BankApp.Controllers
         [Route("GetAllForUser/{applicationUserId}")]
         public ActionResult<IEnumerable<BankAccountDto>> GetBankAccounts(int applicationUserId)
         {
-            var bankAccount = _context.BankAccounts.Where(b => b.ApplicationUserId == applicationUserId).ToList();
+            var bankAccount = _context.BankAccounts.Where(ba => ba.ApplicationUserId == applicationUserId).ToList();
             if (bankAccount == null || !bankAccount.Any())
                 return NotFound();
 
