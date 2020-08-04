@@ -23,6 +23,7 @@ import { AdminPanelComponent } from './user/administrator/admin-panel/admin-pane
 import { NavAdministratorMenuComponent } from './nav-menu/nav-administrator-menu/nav-administrator-menu.component';
 import { MaterialModule } from './material/material.module';
 import { BankAccountsComponent } from './user/customer/bank-accounts/bank-accounts.component';
+import { BankAccountSummaryComponent } from './user/customer/bank-account-summary/bank-account-summary.component';
 
 export function tokenGetter() {
   return sessionStorage.getItem("token");
@@ -42,6 +43,7 @@ export function tokenGetter() {
     AdminPanelComponent,
     NavAdministratorMenuComponent,
     BankAccountsComponent,
+    BankAccountSummaryComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

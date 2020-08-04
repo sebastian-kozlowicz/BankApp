@@ -18,7 +18,6 @@ export class BankAccountsComponent implements OnInit {
     this.bankAccountService.getBankAccounts(this.authService.currentUser.userId)
       .subscribe(bankAccounts => {
         this.bankAccounts = bankAccounts
-        console.log(bankAccounts);
       })
   }
 
