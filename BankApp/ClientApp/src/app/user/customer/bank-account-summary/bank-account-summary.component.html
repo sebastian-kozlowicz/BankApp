@@ -1,3 +1,4 @@
 <ul>
   <li>{{ bankAccount.id }}</li>
+  <li><a [routerLink]="['/customer/bank-transfer']" [state]="{ requesterBankAccountId: bankAccount.id }">Bank transfer</a></li>
 </ul>
