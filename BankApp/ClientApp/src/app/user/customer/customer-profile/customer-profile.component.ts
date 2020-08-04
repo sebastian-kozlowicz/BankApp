@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { BankAccountService } from '../../../services/bank-account.service';
 import { AuthService } from '../../../services/auth.service';
+import { BankAccountService } from '../../../services/bank-account.service';
 
 @Component({
-  selector: 'app-bank-accounts',
-  templateUrl: './bank-accounts.component.html',
-  styleUrls: ['./bank-accounts.component.css']
+  selector: 'app-customer-profile',
+  templateUrl: './customer-profile.component.html',
+  styleUrls: ['./customer-profile.component.css']
 })
-export class BankAccountsComponent implements OnInit {
+export class CustomerProfileComponent implements OnInit {
 
   constructor(private bankAccountService: BankAccountService,
     private authService: AuthService) { }
@@ -20,5 +20,4 @@ export class BankAccountsComponent implements OnInit {
         this.bankAccounts = bankAccounts
       })
   }
-
 }

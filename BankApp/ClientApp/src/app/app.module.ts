@@ -22,8 +22,8 @@ import { NoAccessComponent } from './user/no-access/no-access.component';
 import { AdminPanelComponent } from './user/administrator/admin-panel/admin-panel.component';
 import { NavAdministratorMenuComponent } from './nav-menu/nav-administrator-menu/nav-administrator-menu.component';
 import { MaterialModule } from './material/material.module';
-import { BankAccountsComponent } from './user/customer/bank-accounts/bank-accounts.component';
 import { BankAccountSummaryComponent } from './user/customer/bank-account-summary/bank-account-summary.component';
+import { CustomerProfileComponent } from './user/customer/customer-profile/customer-profile.component';
 
 export function tokenGetter() {
   return sessionStorage.getItem("token");
@@ -42,8 +42,8 @@ export function tokenGetter() {
     NoAccessComponent,
     AdminPanelComponent,
     NavAdministratorMenuComponent,
-    BankAccountsComponent,
     BankAccountSummaryComponent,
+    CustomerProfileComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -75,7 +75,7 @@ export function tokenGetter() {
         path: 'admin-panel', component: AdminPanelComponent, canActivate: [AdminAuthGuard, AuthGuard]
       },
       {
-        path: 'customer/bank-accounts', component: BankAccountsComponent
+        path: 'customer/profile', component: CustomerProfileComponent
       },
     ])
   ],
