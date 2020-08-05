@@ -21,7 +21,7 @@ export class BankAccountService {
   }
 
   getBankAccount(bankAccountId: number) {
-    return this.http.get(this.bankAccountEndpoint + bankAccountId);
+    return this.http.get(this.bankAccountEndpoint + '/' + bankAccountId);
   }
 
   getBankAccounts(applicationUserId: number) {
