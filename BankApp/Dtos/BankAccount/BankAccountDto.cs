@@ -19,6 +19,6 @@ namespace BankApp.Dtos.BankAccount
         public string IbanSeparated { get; set; }
         public decimal Balance { get; set; }
         public ApplicationUserDto ApplicationUser { get; set; }
-        public string ApplicationUserId { get; set; }
+        public int ApplicationUserId { get; set; }
     }
 }

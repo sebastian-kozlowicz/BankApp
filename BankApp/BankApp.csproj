@@ -116,6 +116,7 @@
     <None Remove="ClientApp\src\app\enumerators\userRole.ts" />
     <None Remove="ClientApp\src\app\interfaces\auth\jwtToken.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\bank-account-creation.ts" />
+    <None Remove="ClientApp\src\app\interfaces\bank-account\bank-account.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-creation.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-with-customer-creation.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-transfer\bank-transfer-creation.ts" />
@@ -128,6 +129,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\userRole.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\auth\jwtToken.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\bank-account-creation.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\bank-account.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-with-customer-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-transfer\bank-transfer-creation.ts" />
