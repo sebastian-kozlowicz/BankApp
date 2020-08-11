@@ -6,8 +6,8 @@ namespace BankApp.Dtos.BankAccount.WithCustomer
     public class BankAccountWithCustomerCreationDto
     {
         [Required]
-        public RegisterDto RegisterDto { get; set; }
+        public RegisterDto Register { get; set; }
         [Required]
-        public BankAccountCreationDto BankAccountCreationDto { get; set; }
+        public BankAccountCreationDto BankAccount { get; set; }
     }
 }

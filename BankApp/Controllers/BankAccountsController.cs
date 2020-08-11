@@ -69,13 +69,13 @@ namespace BankApp.Controllers
 
             var generatedAccountNumber = _accountNumberFactory.GenerateAccountNumber();
 
-            var user = _mapper.Map<ApplicationUser>(model.RegisterDto);
+            var user = _mapper.Map<ApplicationUser>(model.Register);
             user.Customer = new Customer { Id = user.Id };
 
             var bankAccount = new BankAccount
             {
-                AccountType = model.BankAccountCreationDto.AccountType,
-                Currency = model.BankAccountCreationDto.Currency,
+                AccountType = model.BankAccount.AccountType,
+                Currency = model.BankAccount.Currency,
                 CountryCode = generatedAccountNumber.CountryCode,
                 CheckNumber = generatedAccountNumber.CheckNumber,
                 NationalBankCode = generatedAccountNumber.NationalBankCode,
@@ -90,7 +90,7 @@ namespace BankApp.Controllers
 
             user.BankAccounts = new List<BankAccount>() { bankAccount };
 
-            var result = _userManager.CreateAsync(user, model.RegisterDto.User.Password).Result;
+            var result = _userManager.CreateAsync(user, model.Register.User.Password).Result;
 
             if (result.Succeeded)
                 _ = _userManager.AddToRoleAsync(user, UserRole.Customer.ToString()).Result;
