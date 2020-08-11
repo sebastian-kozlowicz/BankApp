@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { AuthService } from "../../../services/auth.service";
 import { PasswordValidator } from "../../../validators/password-validator";
 import { Currency } from '../../../enumerators/currency';
 import { AccountType } from '../../../enumerators/accountType';
@@ -17,7 +16,6 @@ import { BankAccountWithCustomerCreation } from '../../../interfaces/bank-accoun
 export class CustomerRegistrationComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
-    private authService: AuthService,
     private bankAccountService: BankAccountService,
     private toastr: ToastrService) { }
 

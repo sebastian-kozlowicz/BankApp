@@ -1,1 +1,19 @@
-<p>bank-transfer works!</p>
+<form [formGroup]="bankTransferForm" autocomplete="off">
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Receiver's Iban</mat-label>
+      <input matInput id="receiverIban" formControlName="receiverIban" />
+      <mat-error *ngIf="receiverIban.errors?.required">
+        The Receiver's Iban field is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Value</mat-label>
+      <input matInput id="value" formControlName="value" />
+      <mat-error *ngIf="value.errors?.required">
+        The Value field is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+</form>
