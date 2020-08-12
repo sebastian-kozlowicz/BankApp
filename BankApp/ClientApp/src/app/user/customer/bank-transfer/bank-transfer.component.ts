@@ -3,6 +3,9 @@ import { AuthService } from '../../../services/auth.service';
 import { BankAccountService } from '../../../services/bank-account.service';
 import { Router } from '@angular/router';
 import { FormBuilder, Validators } from '@angular/forms';
+import { BankTransferCreation } from '../../../interfaces/bank-transfer/bank-transfer-creation';
+import { BankTransferService } from '../../../services/bank-transfer.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-bank-transfer',
@@ -14,7 +17,9 @@ export class BankTransferComponent implements OnInit {
   constructor(private authService: AuthService,
     private fb: FormBuilder,
     private bankAccountService: BankAccountService,
-    private router: Router) { }
+    private bankTransferService: BankTransferService,
+    private router: Router,
+    private toastr: ToastrService) { }
 
   requesterBankAccountId: number;
 
@@ -40,8 +45,25 @@ export class BankTransferComponent implements OnInit {
       });
   }
 
-    bankTransferForm = this.fb.group({
-      receiverIban: ['', Validators.required],
-      value: ['', Validators.required]
-    });
+  bankTransferForm = this.fb.group({
+    receiverIban: ['', Validators.required],
+    value: ['', Validators.required]
+  });
+
+  submit() {
+    let bankTransferModel: BankTransferCreation = {
+      requesterBankAccountId: this.requesterBankAccountId,
+      receiverIban: this.receiverIban.value,
+      value: this.value.value
+    };
+
+    this.bankTransferService.createBankTransfer(bankTransferModel).subscribe(
+      response => {
+        this.toastr.success('Bank transfer created');
+      },
+      error => {
+        this.toastr.error('Bank transfer failed.');
+      }
+    );
+  }
 }
