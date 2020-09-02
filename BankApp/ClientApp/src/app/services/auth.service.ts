@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { JwtToken } from '../interfaces/auth/jwtToken';
 import { UserRole } from '../enumerators/userRole';
+import { Login } from '../interfaces/auth/login';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +37,7 @@ export class AuthService {
     return this.http.post(this.managersEndpoint, registerModel);
   }
 
-  login(loginModel) {
+  login(loginModel: Login) {
     return this.http.post(this.loginEndpoint, loginModel)
       .pipe(map(
         (response: any) => {
@@ -57,7 +58,7 @@ export class AuthService {
     return this.jwtHelper.getTokenExpirationDate();
   }
 
-  get currentUser():JwtToken {
+  get currentUser(): JwtToken {
     let token = sessionStorage.getItem('token');
 
     if (!token)
