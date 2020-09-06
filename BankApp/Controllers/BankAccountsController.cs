@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using AutoMapper;
-using BankApp.Attributes;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount;
 using BankApp.Dtos.BankAccount.WithCustomer;

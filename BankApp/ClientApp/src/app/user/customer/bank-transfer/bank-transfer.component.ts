@@ -33,6 +33,11 @@ export class BankTransferComponent implements OnInit {
   ngOnInit(): void {
     this.requesterBankAccountId = history.state.requesterBankAccountId;
 
+    if (!this.requesterBankAccountId) {
+      this.router.navigate(['/no-access'], { skipLocationChange: true })
+      return;
+    }
+
     let user = this.authService.currentUser;
 
     this.bankAccountService.getBankAccount(this.requesterBankAccountId).subscribe(
@@ -41,7 +46,7 @@ export class BankTransferComponent implements OnInit {
           this.router.navigate(['/no-access'], { skipLocationChange: true })
       },
       error => {
-        this.router.navigate(['/no-access'], { skipLocationChange: true })
+        this.router.navigate(['/no-access'], { skipLocationChange: true }) // Todo: Add error page
       });
   }
 
