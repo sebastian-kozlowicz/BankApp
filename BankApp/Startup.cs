@@ -17,7 +17,7 @@ using System.Text;
 using BankApp.Helpers;
 using BankApp.Interfaces;
 using BankApp.Configuration;
-using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 namespace BankApp
 {
@@ -104,11 +104,6 @@ namespace BankApp
             {
                 configuration.RootPath = "ClientApp/dist";
             });
-
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                options.DefaultRequestCulture = new RequestCulture("en-GB");
-            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -127,6 +122,10 @@ namespace BankApp
             }
 
             app.UseRequestLocalization();
+
+            var cultureInfo = new CultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
