@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using BankApp.Helpers;
 using BankApp.Interfaces;
+using System;
 
 namespace BankApp.Controllers
 {
@@ -32,6 +33,12 @@ namespace BankApp.Controllers
 
             if (bankAccount == null)
                 return NotFound();
+
+            if (Math.Abs(bankAccount.Balance - (decimal)bankTransferCreationDto.Value) > bankAccount.DebitLimit)
+            {
+                ModelState.AddModelError("DebitLimit", "Not sufficient founds. Debit limit is exceeded.");
+                return BadRequest(ModelState);
+            }
 
             var targetBankAccount = _context.BankAccounts.FirstOrDefault(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
 
