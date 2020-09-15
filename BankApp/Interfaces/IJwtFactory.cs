@@ -6,7 +6,7 @@ namespace BankApp.Interfaces
 {
     public interface IJwtFactory
     {
-        string GenerateEncodedToken(string email, ClaimsIdentity claimsIdentity);
+        string GenerateEncodedToken(ClaimsIdentity claimsIdentity);
         ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IList<string> roles);
     }
 }

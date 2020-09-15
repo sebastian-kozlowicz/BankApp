@@ -22,7 +22,7 @@ namespace BankApp.Helpers
             ThrowIfInvalidOptions(_jwtOptions);
         }
 
-        public string GenerateEncodedToken(string email, ClaimsIdentity claimsIdentity)
+        public string GenerateEncodedToken(ClaimsIdentity claimsIdentity)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
             {

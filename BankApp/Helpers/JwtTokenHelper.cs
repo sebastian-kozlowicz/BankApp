@@ -6,11 +6,11 @@ namespace BankApp.Helpers
 {
     public class JwtTokenHelper
     {
-        public static string GenerateJwt(ClaimsIdentity claimsIdentity, IJwtFactory jwtFactory, string email, JsonSerializerSettings serializerSettings)
+        public static string GenerateJwt(ClaimsIdentity claimsIdentity, IJwtFactory jwtFactory, JsonSerializerSettings serializerSettings)
         {
             var response = new
             {
-                token =  jwtFactory.GenerateEncodedToken(email, claimsIdentity)
+                token = jwtFactory.GenerateEncodedToken(claimsIdentity)
             };
 
             return JsonConvert.SerializeObject(response, serializerSettings);
