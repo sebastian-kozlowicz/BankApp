@@ -27,8 +27,10 @@ namespace BankApp.Helpers
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = claimsIdentity,
+                Issuer = _jwtOptions.Issuer,
+                Audience = _jwtOptions.Audience,
                 NotBefore = _jwtOptions.NotBefore,
-                Expires = DateTime.UtcNow.AddDays(1),
+                Expires = _jwtOptions.Expiration,
                 SigningCredentials = _jwtOptions.SigningCredentials
             };
 
