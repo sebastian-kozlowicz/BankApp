@@ -25,6 +25,7 @@ import { MaterialModule } from './material/material.module';
 import { BankAccountSummaryComponent } from './user/customer/bank-account-summary/bank-account-summary.component';
 import { CustomerProfileComponent } from './user/customer/customer-profile/customer-profile.component';
 import { BankTransferComponent } from './user/customer/bank-transfer/bank-transfer.component';
+import { NewBranchComponent } from './branch/new-branch/new-branch.component';
 
 export function tokenGetter() {
   return sessionStorage.getItem("token");
@@ -46,6 +47,7 @@ export function tokenGetter() {
     BankAccountSummaryComponent,
     CustomerProfileComponent,
     BankTransferComponent,
+    NewBranchComponent,
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -81,6 +83,9 @@ export function tokenGetter() {
       },
       {
         path: 'customer/bank-transfer', component: BankTransferComponent
+      },
+      {
+        path: 'branch/new', component: NewBranchComponent, canActivate: [AdminAuthGuard, AuthGuard]
       }
     ])
   ],
