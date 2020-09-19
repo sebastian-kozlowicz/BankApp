@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BankApp.Data;
+using BankApp.Dtos.Branch.WithAddress;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankApp.Controllers
@@ -18,7 +19,8 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult CreateBranch()
+        [Route("CreateWithAddress")]
+        public ActionResult CreateBranch([FromBody] BranchWithAddressCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
