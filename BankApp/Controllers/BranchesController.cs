@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using BankApp.Data;
+using BankApp.Dtos.Branch;
 using BankApp.Dtos.Branch.WithAddress;
+using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankApp.Controllers
@@ -25,7 +27,14 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            return Ok();
+            var branch = _mapper.Map<Branch>(model);
+
+            _context.Branches.Add(branch);
+            _context.SaveChanges();
+
+            var branchDto = _mapper.Map<Branch, BranchDto>(branch);
+
+            return Ok(branchDto);
         }
     }
 }

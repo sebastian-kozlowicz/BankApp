@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using BankApp.Dtos.Address;
 using BankApp.Dtos.Administrator;
 using BankApp.Dtos.ApplicationUser;
 using BankApp.Dtos.Auth;
 using BankApp.Dtos.BankAccount;
+using BankApp.Dtos.Branch;
+using BankApp.Dtos.Branch.WithAddress;
 using BankApp.Dtos.Card;
 using BankApp.Dtos.Customer;
 using BankApp.Dtos.Employee;
@@ -22,6 +25,8 @@ namespace BankApp.Mapping
             CreateMap<Customer, CustomerDto>();
             CreateMap<Employee, EmployeeDto>();
             CreateMap<Manager, ManagerDto>();
+            CreateMap<Branch, BranchDto>();
+            CreateMap<BranchAddress, AddressDto>();
             CreateMap<RegisterDto, ApplicationUser>()
                 .ForMember(dest => dest.UserName, opt => opt.MapFrom(src => src.User.Email))
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
@@ -35,6 +40,16 @@ namespace BankApp.Mapping
                 .ForPath(dest => dest.UserAddress.ApartmentNumber, opt => opt.MapFrom(src => src.Address.ApartmentNumber))
                 .ForPath(dest => dest.UserAddress.PostalCode, opt => opt.MapFrom(src => src.Address.PostalCode))
                 .AfterMap((src, dest) => dest.UserAddress.Id = dest.Id);
+
+            CreateMap<BranchWithAddressCreationDto, Branch>()
+              .ForMember(dest => dest.BranchCode, opt => opt.MapFrom(src => src.Branch.BranchCode))
+              .ForPath(dest => dest.BranchAddress.Country, opt => opt.MapFrom(src => src.Address.Country))
+              .ForPath(dest => dest.BranchAddress.City, opt => opt.MapFrom(src => src.Address.City))
+              .ForPath(dest => dest.BranchAddress.Street, opt => opt.MapFrom(src => src.Address.Street))
+              .ForPath(dest => dest.BranchAddress.HouseNumber, opt => opt.MapFrom(src => src.Address.HouseNumber))
+              .ForPath(dest => dest.BranchAddress.ApartmentNumber, opt => opt.MapFrom(src => src.Address.ApartmentNumber))
+              .ForPath(dest => dest.BranchAddress.PostalCode, opt => opt.MapFrom(src => src.Address.PostalCode))
+              .AfterMap((src, dest) => dest.BranchAddress.Id = dest.Id);
         }
     }
 }
