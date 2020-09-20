@@ -4,6 +4,8 @@ using BankApp.Dtos.Branch;
 using BankApp.Dtos.Branch.WithAddress;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BankApp.Controllers
 {
@@ -20,6 +22,17 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("{branchId}", Name = "GetBranch")]
+        public ActionResult<BranchDto> GetBranch(int branchId)
+        {
+            var branch = _context.Branches.Include(b => b.BranchAddress).SingleOrDefault(c => c.Id == branchId);
+
+            if (branch == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<Branch, BranchDto>(branch));
+        }
+
         [HttpPost]
         [Route("CreateWithAddress")]
         public ActionResult CreateBranch([FromBody] BranchWithAddressCreationDto model)
@@ -34,7 +47,7 @@ namespace BankApp.Controllers
 
             var branchDto = _mapper.Map<Branch, BranchDto>(branch);
 
-            return Ok(branchDto);
+            return CreatedAtRoute("GetBranch", new { branchId = branchDto.Id }, branchDto);
         }
     }
 }
