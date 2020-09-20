@@ -114,6 +114,7 @@
     <None Remove="ClientApp\src\app\enumerators\accountType.ts" />
     <None Remove="ClientApp\src\app\enumerators\currency.ts" />
     <None Remove="ClientApp\src\app\enumerators\userRole.ts" />
+    <None Remove="ClientApp\src\app\interfaces\address\address-creation.ts" />
     <None Remove="ClientApp\src\app\interfaces\auth\jwtToken.ts" />
     <None Remove="ClientApp\src\app\interfaces\auth\login.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\bank-account-creation.ts" />
@@ -121,6 +122,7 @@
     <None Remove="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-creation.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-with-customer-creation.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-transfer\bank-transfer-creation.ts" />
+    <None Remove="ClientApp\src\app\interfaces\user\user-creation.ts" />
     <None Remove="ClientApp\src\app\validators\number-limit-validator.ts" />
   </ItemGroup>
 
@@ -128,6 +130,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\accountType.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\currency.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\userRole.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\address\address-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\auth\jwtToken.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\auth\login.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\bank-account-creation.ts" />
@@ -135,6 +138,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-with-customer-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\bank-transfer\bank-transfer-creation.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\user\user-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\validators\number-limit-validator.ts" />
   </ItemGroup>
 

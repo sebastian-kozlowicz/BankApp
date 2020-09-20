@@ -1,18 +1,7 @@
-export interface Register {
-  user: {
-    name: string;
-    surname: string;
-    email: string;
-    phoneNumber: string;
-    password: string;
-  };
+import { AddressCreation } from "../address/address-creation";
+import { UserCreation } from "../user/user-creation";
 
-  address: {
-    country: string;
-    city: string;
-    street: string;
-    houseNumber: string;
-    apartmentNumber: string;
-    postalCode: string;
-  };
+export interface Register {
+  user: UserCreation;
+  address: AddressCreation;
 }
