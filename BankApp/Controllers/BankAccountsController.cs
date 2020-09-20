@@ -80,7 +80,8 @@ namespace BankApp.Controllers
             _context.BankAccounts.Add(bankAccount);
             _context.SaveChanges();
 
-            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccount.Id }, bankAccount);
+            var bankAccountDto = _mapper.Map<BankAccount, BankAccountDto>(bankAccount);
+            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccountDto.Id }, bankAccountDto);
         }
 
         [HttpPost]
@@ -121,7 +122,7 @@ namespace BankApp.Controllers
                 return BadRequest(result.Errors);
 
             var bankAccountDto = _mapper.Map<BankAccount, BankAccountDto>(bankAccount);
-            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccount.Id }, bankAccountDto);
+            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccountDto.Id }, bankAccountDto);
         }
     }
 }
