@@ -28,8 +28,30 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("{userId}", Name = "GetAdministrator")]
+        public ActionResult<AdministratorDto> GetAdministrator(int userId)
+        {
+            var administrator = _context.Administrators.Include(a => a.ApplicationUser).SingleOrDefault(a => a.Id == userId);
+
+            if (administrator == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<Administrator, AdministratorDto>(administrator));
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<AdministratorDto>> GetAdministrators()
+        {
+            var administrators = _context.Administrators.Include(a => a.ApplicationUser).ToList();
+
+            if (administrators == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<List<Administrator>, List<AdministratorDto>>(administrators));
+        }
+
         [HttpPost]
-        public async Task<IActionResult> CreateAdministrator([FromBody]RegisterDto model)
+        public async Task<IActionResult> CreateAdministrator([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -47,28 +69,6 @@ namespace BankApp.Controllers
             var administrator = _mapper.Map<AdministratorDto>(user.Administrator);
 
             return CreatedAtRoute("GetAdministrator", new { userId = administrator.Id }, administrator);
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<AdministratorDto>> GetAdministrators()
-        {
-            var administrators = _context.Administrators.Include(a => a.ApplicationUser).ToList();
-
-            if (administrators == null)
-                return NotFound();
-
-            return _mapper.Map<List<Administrator>, List<AdministratorDto>>(administrators);
-        }
-
-        [HttpGet("{userId}", Name = "GetAdministrator")]
-        public ActionResult<AdministratorDto> GetAdministrator(int userId)
-        {
-            var administrator = _context.Administrators.Include(a => a.ApplicationUser).SingleOrDefault(a => a.Id == userId);
-
-            if (administrator == null)
-                return NotFound();
-
-            return _mapper.Map<Administrator, AdministratorDto>(administrator);
         }
     }
 }

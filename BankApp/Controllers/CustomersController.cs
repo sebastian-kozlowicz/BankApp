@@ -28,8 +28,30 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("{userId}", Name = "GetCustomer")]
+        public ActionResult<CustomerDto> GetCustomer(int userId)
+        {
+            var customer = _context.Customers.Include(c => c.ApplicationUser).SingleOrDefault(c => c.Id == userId);
+
+            if (customer == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<Customer, CustomerDto>(customer));
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<CustomerDto>> GetCustomers()
+        {
+            var customers = _context.Customers.Include(c => c.ApplicationUser).ToList();
+
+            if (customers == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<List<Customer>, List<CustomerDto>>(customers));
+        }
+
         [HttpPost]
-        public async Task<IActionResult> CreateCustomer([FromBody]RegisterDto model)
+        public async Task<IActionResult> CreateCustomer([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -47,28 +69,6 @@ namespace BankApp.Controllers
             var customer = _mapper.Map<CustomerDto>(user.Customer);
 
             return CreatedAtRoute("GetCustomer", new { userId = customer.Id }, customer);
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<CustomerDto>> GetCustomers()
-        {
-            var customers = _context.Customers.Include(c => c.ApplicationUser).ToList();
-
-            if (customers == null)
-                return NotFound();
-
-            return _mapper.Map<List<Customer>, List<CustomerDto>>(customers);
-        }
-
-        [HttpGet("{userId}", Name = "GetCustomer")]
-        public ActionResult<CustomerDto> GetCustomer(int userId)
-        {
-            var customer = _context.Customers.Include(c => c.ApplicationUser).SingleOrDefault(c => c.Id == userId);
-
-            if (customer == null)
-                return NotFound();
-
-            return _mapper.Map<Customer, CustomerDto>(customer);
         }
     }
 }

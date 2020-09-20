@@ -29,6 +29,30 @@ namespace BankApp.Controllers
             _accountNumberFactory = accountNumberFactory;
         }
 
+        [HttpGet]
+        [Route("{bankAccountId}", Name = "GetBankAccount")]
+        public ActionResult GetBankAccount(int bankAccountId)
+        {
+            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
+
+            if (bankAccount == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<BankAccount, BankAccountDto>(bankAccount));
+        }
+
+        [HttpGet]
+        [Route("GetAllForUser/{applicationUserId}")]
+        public ActionResult<IEnumerable<BankAccountDto>> GetBankAccounts(int applicationUserId)
+        {
+            var bankAccounts = _context.BankAccounts.Where(ba => ba.ApplicationUserId == applicationUserId).ToList();
+
+            if (bankAccounts == null || !bankAccounts.Any())
+                return NotFound();
+
+            return Ok(_mapper.Map<List<BankAccount>, List<BankAccountDto>>(bankAccounts));
+        }
+
         [HttpPost]
         public ActionResult CreateBankAccount([FromBody] Dtos.BankAccount.BankAccountCreationDto model)
         {
@@ -98,28 +122,6 @@ namespace BankApp.Controllers
 
             var bankAccountDto = _mapper.Map<BankAccount, BankAccountDto>(bankAccount);
             return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccount.Id }, bankAccountDto);
-        }
-
-        [HttpGet]
-        [Route("{bankAccountId}", Name = "GetBankAccount")]
-        public ActionResult GetBankAccount(int bankAccountId)
-        {
-            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
-            if (bankAccount == null)
-                return NotFound();
-
-            return Ok(_mapper.Map<BankAccount, BankAccountDto>(bankAccount));
-        }
-
-        [HttpGet]
-        [Route("GetAllForUser/{applicationUserId}")]
-        public ActionResult<IEnumerable<BankAccountDto>> GetBankAccounts(int applicationUserId)
-        {
-            var bankAccount = _context.BankAccounts.Where(ba => ba.ApplicationUserId == applicationUserId).ToList();
-            if (bankAccount == null || !bankAccount.Any())
-                return NotFound();
-
-            return Ok(_mapper.Map<List<BankAccount>, List<BankAccountDto>>(bankAccount));
         }
     }
 }

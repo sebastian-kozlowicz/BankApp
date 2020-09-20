@@ -28,8 +28,30 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("{userId}", Name = "GetEmployee")]
+        public ActionResult<EmployeeDto> GetEmployee(int userId)
+        {
+            var employee = _context.Employees.Include(e => e.ApplicationUser).SingleOrDefault(e => e.Id == userId);
+
+            if (employee == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<Employee, EmployeeDto>(employee));
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<EmployeeDto>> GetEmployees()
+        {
+            var employees = _context.Employees.Include(e => e.ApplicationUser).ToList();
+
+            if (employees == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<List<Employee>, List<EmployeeDto>>(employees));
+        }
+
         [HttpPost]
-        public async Task<IActionResult> CreateEmployee([FromBody]RegisterDto model)
+        public async Task<IActionResult> CreateEmployee([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -47,28 +69,6 @@ namespace BankApp.Controllers
             var employee = _mapper.Map<EmployeeDto>(user.Employee);
 
             return CreatedAtRoute("GetEmployee", new { userId = employee.Id }, employee);
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<EmployeeDto>> GetEmployees()
-        {
-            var employees = _context.Employees.Include(e => e.ApplicationUser).ToList();
-
-            if (employees == null)
-                return NotFound();
-
-            return _mapper.Map<List<Employee>, List<EmployeeDto>>(employees);
-        }
-
-        [HttpGet("{userId}", Name = "GetEmployee")]
-        public ActionResult<EmployeeDto> GetEmployee(int userId)
-        {
-            var employee = _context.Employees.Include(e => e.ApplicationUser).SingleOrDefault(e => e.Id == userId);
-
-            if (employee == null)
-                return NotFound();
-
-            return _mapper.Map<Employee, EmployeeDto>(employee);
         }
     }
 }

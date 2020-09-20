@@ -28,8 +28,30 @@ namespace BankApp.Controllers
             _mapper = mapper;
         }
 
+        [HttpGet("{userId}", Name = "GetManager")]
+        public ActionResult<ManagerDto> GetManager(int userId)
+        {
+            var manager = _context.Managers.Include(m => m.ApplicationUser).SingleOrDefault(m => m.Id == userId);
+
+            if (manager == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<Manager, ManagerDto>(manager));
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<ManagerDto>> GetManagers()
+        {
+            var managers = _context.Managers.Include(m => m.ApplicationUser).ToList();
+
+            if (managers == null)
+                return NotFound();
+
+            return Ok(_mapper.Map<List<Manager>, List<ManagerDto>>(managers));
+        }
+
         [HttpPost]
-        public async Task<IActionResult> CreateManager([FromBody]RegisterDto model)
+        public async Task<IActionResult> CreateManager([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -46,28 +68,6 @@ namespace BankApp.Controllers
 
             var manager = _mapper.Map<ManagerDto>(user.Manager);
             return CreatedAtRoute("GetManager", new { userId = manager.Id }, manager);
-        }
-
-        [HttpGet]
-        public ActionResult<IEnumerable<ManagerDto>> GetManagers()
-        {
-            var managers = _context.Managers.Include(m => m.ApplicationUser).ToList();
-
-            if (managers == null)
-                return NotFound();
-
-            return _mapper.Map<List<Manager>, List<ManagerDto>>(managers);
-        }
-
-        [HttpGet("{userId}", Name = "GetManager")]
-        public ActionResult<ManagerDto> GetManager(int userId)
-        {
-            var manager = _context.Managers.Include(m => m.ApplicationUser).SingleOrDefault(m => m.Id == userId);
-
-            if (manager == null)
-                return NotFound();
-
-            return _mapper.Map<Manager, ManagerDto>(manager);
         }
     }
 }
