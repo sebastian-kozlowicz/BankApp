@@ -7,8 +7,11 @@ export interface BankAccount {
   currency: Currency;
   countryCode: string;
   checkNumber: string;
+  nationalBankCode: string;
   branchCode: string;
   nationalCheckDigit: number;
+  accountNumber: number;
+  accountNumberText: string;
   iban: string;
   ibanSeparated: string;
   balance: number;
