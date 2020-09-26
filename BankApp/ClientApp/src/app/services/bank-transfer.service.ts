@@ -9,9 +9,9 @@ export class BankTransferService {
 
   constructor(private http: HttpClient) { }
 
-  private readonly bankBankTransfer = '/api/banktransfers';
+  private readonly bankTransfersEndpoint = '/api/banktransfers';
 
   createBankTransfer(bankTransfer: BankTransferCreation) {
-    return this.http.post(this.bankBankTransfer, bankTransfer);
+    return this.http.post(this.bankTransfersEndpoint, bankTransfer);
   }
 }
