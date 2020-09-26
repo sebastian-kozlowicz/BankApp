@@ -40,6 +40,12 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (_context.Branches.FirstOrDefault(b => b.BranchCode == model.Branch.BranchCode) != null)
+            {
+                ModelState.AddModelError("BranchCode", "Branch code is already in use.");
+                return BadRequest(ModelState);
+            }
+
             var branch = _mapper.Map<Branch>(model);
 
             _context.Branches.Add(branch);
