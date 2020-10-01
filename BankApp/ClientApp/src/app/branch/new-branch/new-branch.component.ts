@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Validators, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-new-branch',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class NewBranchComponent implements OnInit {
 
-  constructor() { }
+  constructor(private fb: FormBuilder) { }
+
+  get branchCode() {
+    return this.branchForm.get('branchCode');
+  }
 
   ngOnInit(): void {
   }
 
+  branchForm = this.fb.group({
+    branchCode: ['', Validators.required]
+  });
 }
