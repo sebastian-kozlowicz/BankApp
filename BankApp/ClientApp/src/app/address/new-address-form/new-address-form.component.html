@@ -1,0 +1,65 @@
+<form [formGroup]="addressForm" autocomplete="off">
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Street</mat-label>
+      <input matInput id="street" formControlName="street" />
+      <mat-error *ngIf="street.errors?.required">
+        The Street field is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>House number</mat-label>
+      <input matInput id="house-number" formControlName="houseNumber" />
+      <mat-error *ngIf="houseNumber.errors?.required">
+        The House number field is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Apartment number</mat-label>
+      <input matInput id="apartment-number" formControlName="apartmentNumber" />
+      <mat-error *ngIf="apartmentNumber.errors?.required">
+        The Apartment number field is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Postal code</mat-label>
+      <input type="number" matInput id="postal-code" placeholder="Ex. 94105" formControlName="postalCode" />
+      <mat-error *ngIf="postalCode.errors?.required">
+        The Postal code field is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>City</mat-label>
+      <input matInput id="city" formControlName="city" />
+      <mat-error *ngIf="city.errors?.required">
+        The City field is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Country</mat-label>
+      <mat-select id="country" formControlName="country">
+        <mat-option *ngFor="let country of countries" [value]="country">
+          {{country}}
+        </mat-option>
+      </mat-select>
+      <mat-error *ngIf="country.errors?.required">
+        The Country field is required
+      </mat-error>
+    </mat-form-field>
+  </div>
+</form>
