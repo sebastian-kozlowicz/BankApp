@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { PasswordValidator } from "../../../validators/password-validator";
@@ -13,7 +13,7 @@ import { BankAccountWithCustomerCreation } from '../../../interfaces/bank-accoun
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
-export class CustomerRegistrationComponent implements OnInit {
+export class CustomerRegistrationComponent {
 
   constructor(private fb: FormBuilder,
     private bankAccountService: BankAccountService,
@@ -83,23 +83,8 @@ export class CustomerRegistrationComponent implements OnInit {
   get email() {
     return this.personalInformationForm.get('email');
   }
-  get street() {
-    return this.residentialAddressForm.get('street');
-  }
-  get houseNumber() {
-    return this.residentialAddressForm.get('houseNumber');
-  }
-  get apartmentNumber() {
-    return this.residentialAddressForm.get('apartmentNumber');
-  }
-  get postalCode() {
-    return this.residentialAddressForm.get('postalCode');
-  }
-  get city() {
-    return this.residentialAddressForm.get('city');
-  }
-  get country() {
-    return this.residentialAddressForm.get('country');
+  get address() {
+    return this.residentialAddressForm.get('address');
   }
   get password() {
     return this.passwordForm.get('password');
@@ -121,12 +106,7 @@ export class CustomerRegistrationComponent implements OnInit {
   });
 
   residentialAddressForm = this.fb.group({
-    street: ['', Validators.required],
-    houseNumber: ['', Validators.required],
-    apartmentNumber: ['', Validators.required],
-    postalCode: ['', Validators.required],
-    city: ['', Validators.required],
-    country: ['', Validators.required]
+    address: [null, Validators.required]
   });
 
   passwordForm = this.fb.group({
@@ -143,9 +123,6 @@ export class CustomerRegistrationComponent implements OnInit {
     validator: PasswordValidator.isPasswordMatch
   });
 
-  ngOnInit(): void {
-  }
-
   register() {
     let registerModel: BankAccountWithCustomerCreation = {
       register: {
@@ -157,12 +134,12 @@ export class CustomerRegistrationComponent implements OnInit {
           password: this.password.value,
         },
         address: {
-          country: this.country.value,
-          city: this.city.value,
-          street: this.street.value,
-          houseNumber: this.houseNumber.value,
-          apartmentNumber: this.apartmentNumber.value,
-          postalCode: this.postalCode.value.toString()
+          country: this.address.value.country,
+          city: this.address.value.city,
+          street: this.address.value.street,
+          houseNumber: this.address.value.houseNumber,
+          apartmentNumber: this.address.value.apartmentNumber,
+          postalCode: this.address.value.postalCode.toString()
         }
       },
       bankAccount: {
