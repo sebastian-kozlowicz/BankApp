@@ -9,5 +9,7 @@
     </mat-form-field>
   </div>
 
-  <button class="btn btn-primary">Add</button>
+  <app-new-address-form formControlName="address"></app-new-address-form>
+
+  <button type="submit" class="btn btn-primary" [disabled]="!branchForm.valid">Add</button>
 </form>

@@ -18,6 +18,7 @@ export class NewBranchComponent implements OnInit {
   }
 
   branchForm = this.fb.group({
-    branchCode: ['', Validators.required]
+    branchCode: ['', Validators.required],
+    address: [null, Validators.required]
   });
 }

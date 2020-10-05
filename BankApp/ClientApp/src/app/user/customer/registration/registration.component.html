@@ -133,7 +133,11 @@
         </mat-form-field>
       </div>
 
-      <button class="btn btn-primary" [disabled]="!personalInformationForm.valid || !residentialAddressForm.valid || !passwordForm.valid">Sign Up</button>
+      <button type="submit"
+              class="btn btn-primary"
+              [disabled]="!accountInformationForm.valid || !personalInformationForm.valid || !residentialAddressForm.valid || !passwordForm.valid">
+        Sign Up
+      </button>
     </form>
   </mat-step>
   <!-- #endregion -->
