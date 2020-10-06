@@ -48,10 +48,11 @@ export class NewBranchComponent implements OnInit {
 
     this.branchService.createBranch(branchModel).subscribe(
       response => {
+        console.log(response);
         this.toastr.success('New branch created!');
       },
       badRequest => {
-        this.toastr.error('Bank transfer failed.');
+        this.toastr.error('Branch creation failed');
       }
     );
   }
