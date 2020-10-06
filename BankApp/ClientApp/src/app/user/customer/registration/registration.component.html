@@ -96,7 +96,7 @@
   <!-- #region Residential address step -->
   <mat-step label="Residential address" [stepControl]="residentialAddressForm" [completed]="residentialAddressForm.valid">
     <form [formGroup]="residentialAddressForm" autocomplete="off">
-      <app-new-address-form formControlName="address"></app-new-address-form>
+      <app-address-form formControlName="address"></app-address-form>
     </form>
   </mat-step>
   <!-- #endregion -->

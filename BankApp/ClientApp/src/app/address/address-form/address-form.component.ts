@@ -3,23 +3,23 @@ import { FormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VA
 import { Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-new-address-form',
-  templateUrl: './new-address-form.component.html',
-  styleUrls: ['./new-address-form.component.css'],
+  selector: 'app-address-form',
+  templateUrl: './address-form.component.html',
+  styleUrls: ['./address-form.component.css'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => NewAddressFormComponent),
+      useExisting: forwardRef(() => AddressFormComponent),
       multi: true
     },
     {
       provide: NG_VALIDATORS,
-      useExisting: forwardRef(() => NewAddressFormComponent),
+      useExisting: forwardRef(() => AddressFormComponent),
       multi: true
     }
   ]
 })
-export class NewAddressFormComponent implements ControlValueAccessor {
+export class AddressFormComponent implements ControlValueAccessor {
 
   constructor(private fb: FormBuilder) {
     this.subscriptions.push(
