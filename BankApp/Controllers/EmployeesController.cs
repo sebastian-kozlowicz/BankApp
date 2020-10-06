@@ -44,14 +44,14 @@ namespace BankApp.Controllers
         {
             var employees = _context.Employees.Include(e => e.ApplicationUser).ToList();
 
-            if (employees == null)
+            if (!employees.Any())
                 return NotFound();
 
             return Ok(_mapper.Map<List<Employee>, List<EmployeeDto>>(employees));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEmployee([FromBody] RegisterDto model)
+        public async Task<ActionResult<EmployeeDto>> CreateEmployee([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

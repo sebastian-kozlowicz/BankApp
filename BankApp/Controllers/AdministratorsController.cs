@@ -44,14 +44,14 @@ namespace BankApp.Controllers
         {
             var administrators = _context.Administrators.Include(a => a.ApplicationUser).ToList();
 
-            if (administrators == null)
+            if (!administrators.Any())
                 return NotFound();
 
             return Ok(_mapper.Map<List<Administrator>, List<AdministratorDto>>(administrators));
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAdministrator([FromBody] RegisterDto model)
+        public async Task<ActionResult<AdministratorDto>> CreateAdministrator([FromBody] RegisterDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

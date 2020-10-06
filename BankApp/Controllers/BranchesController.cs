@@ -35,7 +35,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("CreateWithAddress")]
-        public ActionResult CreateBranch([FromBody] BranchWithAddressCreationDto model)
+        public ActionResult<BranchDto> CreateBranch([FromBody] BranchWithAddressCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

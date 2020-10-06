@@ -31,7 +31,7 @@ namespace BankApp.Controllers
 
         [HttpGet]
         [Route("{bankAccountId}", Name = "GetBankAccount")]
-        public ActionResult GetBankAccount(int bankAccountId)
+        public ActionResult<BankAccountDto> GetBankAccount(int bankAccountId)
         {
             var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
 
@@ -47,14 +47,14 @@ namespace BankApp.Controllers
         {
             var bankAccounts = _context.BankAccounts.Where(ba => ba.ApplicationUserId == applicationUserId).ToList();
 
-            if (bankAccounts == null || !bankAccounts.Any())
+            if (!bankAccounts.Any())
                 return NotFound();
 
             return Ok(_mapper.Map<List<BankAccount>, List<BankAccountDto>>(bankAccounts));
         }
 
         [HttpPost]
-        public ActionResult CreateBankAccount([FromBody] Dtos.BankAccount.BankAccountCreationDto model)
+        public ActionResult<BankAccountDto> CreateBankAccount([FromBody] Dtos.BankAccount.BankAccountCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -86,7 +86,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("CreateWithCustomer")]
-        public ActionResult CreateBankAccountWithCustomer([FromBody] BankAccountWithCustomerCreationDto model)
+        public ActionResult<BankAccountDto> CreateBankAccountWithCustomer([FromBody] BankAccountWithCustomerCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -112,7 +112,7 @@ namespace BankApp.Controllers
                 ApplicationUserId = user.Id
             };
 
-            user.BankAccounts = new List<BankAccount>() { bankAccount };
+            user.BankAccounts = new List<BankAccount> { bankAccount };
 
             var result = _userManager.CreateAsync(user, model.Register.User.Password).Result;
 
