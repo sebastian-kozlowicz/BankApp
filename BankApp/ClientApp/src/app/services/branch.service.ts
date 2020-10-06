@@ -12,6 +12,6 @@ export class BranchService {
   private readonly branchesEndpoint = '/api/branches';
 
   createBranch(branch: BranchWithAddressCreation) {
-    return this.http.post(this.branchesEndpoint, branch);
+    return this.http.post(this.branchesEndpoint + "/CreateWithAddress", branch);
   }
 }
