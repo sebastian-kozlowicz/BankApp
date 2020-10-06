@@ -52,7 +52,14 @@ export class NewBranchComponent implements OnInit {
         this.toastr.success('New branch created!');
       },
       badRequest => {
-        this.toastr.error('Branch creation failed');
+        console.log(badRequest);
+        if (Array.isArray(badRequest.error.BranchCode))
+          badRequest.error.BranchCode.forEach(element => {
+            if (element == 'Branch code is already in use.')
+              this.toastr.error('Branch code is already in use.', 'Branch creation failed.');
+          });
+        else
+          this.toastr.error('Branch creation failed');
       }
     );
   }
