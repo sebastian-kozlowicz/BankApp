@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using BankApp.Helpers;
 using BankApp.Interfaces;
+using BankApp.Models;
 
 namespace BankApp.Controllers
 {
@@ -42,7 +43,7 @@ namespace BankApp.Controllers
             var targetBankAccount = _context.BankAccounts.FirstOrDefault(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
 
             if (targetBankAccount == null)
-                _externalTransferService.Create(bankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
+                _externalTransferService.Create(bankAccount, new BankAccount { Iban = bankTransferCreationDto.ReceiverIban }, (decimal)bankTransferCreationDto.Value);
             else
                 _internalTransferService.Create(bankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
 

@@ -48,7 +48,6 @@ export class NewBranchComponent implements OnInit {
 
     this.branchService.createBranch(branchModel).subscribe(
       response => {
-        console.log(response);
         this.toastr.success('New branch created!');
       },
       badRequest => {
