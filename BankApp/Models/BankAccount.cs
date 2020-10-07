@@ -1,4 +1,6 @@
-﻿using BankApp.Enumerators;
+﻿using System.Collections;
+using System.Collections.Generic;
+using BankApp.Enumerators;
 
 namespace BankApp.Models
 {
@@ -20,5 +22,6 @@ namespace BankApp.Models
         public decimal DebitLimit { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
         public int ApplicationUserId { get; set; }
+        public IList<BankTransfer> BankTransfers { get; set; }
     }
 }
