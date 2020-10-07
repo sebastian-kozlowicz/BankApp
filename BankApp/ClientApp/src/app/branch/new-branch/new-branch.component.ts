@@ -3,6 +3,7 @@ import { Validators, FormBuilder } from '@angular/forms';
 import { BranchService } from "../../services/branch.service";
 import { ToastrService } from 'ngx-toastr';
 import { BranchWithAddressCreation } from "../../interfaces/branch/with-address/branch-with-address-creation";
+import { AddressFormValues } from "../../interfaces/address/address-form-values";
 
 @Component({
   selector: 'app-new-branch',
@@ -23,6 +24,10 @@ export class NewBranchComponent implements OnInit {
     return this.branchForm.get('address');
   }
 
+  get addressValue(): AddressFormValues {
+    return this.address.value;
+  }
+
   ngOnInit(): void {
   }
 
@@ -37,12 +42,12 @@ export class NewBranchComponent implements OnInit {
         branchCode: this.branchCode.value
       },
       address: {
-        country: this.address.value.country,
-        city: this.address.value.city,
-        street: this.address.value.street,
-        houseNumber: this.address.value.houseNumber,
-        apartmentNumber: this.address.value.apartmentNumber,
-        postalCode: this.address.value.postalCode.toString()
+        country: this.addressValue.country,
+        city: this.addressValue.city,
+        street: this.addressValue.street,
+        houseNumber: this.addressValue.houseNumber,
+        apartmentNumber: this.addressValue.apartmentNumber,
+        postalCode: this.addressValue.postalCode.toString()
       }
     };
 

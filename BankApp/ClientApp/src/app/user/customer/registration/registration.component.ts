@@ -7,6 +7,7 @@ import { AccountType } from '../../../enumerators/accountType';
 import { NumberLimitValidator } from '../../../validators/number-limit-validator';
 import { BankAccountService } from '../../../services/bank-account.service';
 import { BankAccountWithCustomerCreation } from '../../../interfaces/bank-account/with-customer/bank-account-with-customer-creation';
+import { AddressFormValues } from "../../../interfaces/address/address-form-values";
 
 @Component({
   selector: 'app-registration',
@@ -86,6 +87,9 @@ export class CustomerRegistrationComponent {
   get address() {
     return this.residentialAddressForm.get('address');
   }
+  get addressValue(): AddressFormValues {
+    return this.address.value;
+  }
   get password() {
     return this.passwordForm.get('password');
   }
@@ -134,12 +138,12 @@ export class CustomerRegistrationComponent {
           password: this.password.value,
         },
         address: {
-          country: this.address.value.country,
-          city: this.address.value.city,
-          street: this.address.value.street,
-          houseNumber: this.address.value.houseNumber,
-          apartmentNumber: this.address.value.apartmentNumber,
-          postalCode: this.address.value.postalCode.toString()
+          country: this.addressValue.country,
+          city: this.addressValue.city,
+          street: this.addressValue.street,
+          houseNumber: this.addressValue.houseNumber,
+          apartmentNumber: this.addressValue.apartmentNumber,
+          postalCode: this.addressValue.postalCode.toString()
         }
       },
       bankAccount: {
