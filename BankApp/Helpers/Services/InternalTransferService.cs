@@ -1,4 +1,5 @@
 ﻿using BankApp.Data;
+using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
 
@@ -21,6 +22,14 @@ namespace BankApp.Helpers.Services
             bankAccount.Balance -= value;
             targetBankAccount.Balance += value;
 
+            var bankTransfer = new BankTransfer
+            {
+                ReceiverIban = targetBankAccount.Iban,
+                BankTransferType = BankTransferType.Internal,
+                BankAccountId = bankAccount.Id
+            };
+
+            _context.BankTransfers.Add(bankTransfer);
             _context.SaveChanges();
         }
     }
