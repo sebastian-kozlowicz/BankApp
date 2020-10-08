@@ -1,4 +1,5 @@
-﻿using BankApp.Data;
+﻿using System;
+using BankApp.Data;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
@@ -17,7 +18,7 @@ namespace BankApp.Helpers.Services
         public void Create(BankAccount bankAccount, BankAccount targetBankAccount, decimal value)
         {
             if (bankAccount.Currency != targetBankAccount.Currency)
-                return;
+                throw new ArgumentException("Currency is different in target bank account.", "Currency");
 
             bankAccount.Balance -= value;
             targetBankAccount.Balance += value;

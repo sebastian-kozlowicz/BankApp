@@ -1,4 +1,5 @@
-﻿using BankApp.Data;
+﻿using System;
+using BankApp.Data;
 using BankApp.Dtos.BankTransfer;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -45,7 +46,17 @@ namespace BankApp.Controllers
             if (targetBankAccount == null)
                 _externalTransferService.Create(bankAccount, new BankAccount { Iban = bankTransferCreationDto.ReceiverIban }, (decimal)bankTransferCreationDto.Value);
             else
-                _internalTransferService.Create(bankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
+            {
+                try
+                {
+                    _internalTransferService.Create(bankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
+                }
+                catch (ArgumentException exception)
+                {
+                    ModelState.AddModelError(exception.ParamName, exception.Message);
+                    return BadRequest(ModelState);
+                }
+            }
 
             return Ok();
         }
