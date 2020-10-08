@@ -1,11 +1,11 @@
-﻿using BankApp.Data;
-using BankApp.Interfaces;
-using BankApp.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BankApp.Data;
+using BankApp.Interfaces;
+using BankApp.Models;
 
-namespace BankApp.Helpers
+namespace BankApp.Helpers.Factories
 {
     public class AccountNumberFactory : IAccountNumberFactory
     {

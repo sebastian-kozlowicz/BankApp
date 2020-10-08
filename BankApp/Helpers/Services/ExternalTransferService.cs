@@ -1,7 +1,7 @@
 ﻿using BankApp.Interfaces;
 using BankApp.Models;
 
-namespace BankApp.Helpers
+namespace BankApp.Helpers.Services
 {
     public class ExternalTransferService : ITransferService<ExternalTransferService>
     {

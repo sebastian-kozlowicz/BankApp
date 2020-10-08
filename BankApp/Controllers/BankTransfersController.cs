@@ -2,7 +2,7 @@
 using BankApp.Dtos.BankTransfer;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
-using BankApp.Helpers;
+using BankApp.Helpers.Services;
 using BankApp.Interfaces;
 using BankApp.Models;
 

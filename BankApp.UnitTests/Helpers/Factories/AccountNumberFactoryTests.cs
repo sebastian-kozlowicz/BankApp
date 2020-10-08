@@ -1,11 +1,11 @@
-﻿using BankApp.Data;
-using BankApp.Helpers;
+﻿using System;
+using BankApp.Data;
+using BankApp.Helpers.Factories;
 using BankApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 
-namespace BankApp.Tests.Helpers
+namespace BankApp.Tests.Helpers.Factories
 {
     [TestClass]
     public class AccountNumberFactoryTests
@@ -13,7 +13,7 @@ namespace BankApp.Tests.Helpers
         private AccountNumberFactory _accountNumberFactory;
         private ApplicationDbContext _context;
 
-        private ApplicationDbContext GetMockContext()
+        private static ApplicationDbContext GetMockContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
@@ -31,7 +31,7 @@ namespace BankApp.Tests.Helpers
         }
 
         [TestInitialize]
-        public void TestInitalize()
+        public void TestInitialize()
         {
             _context = GetMockContext();
             _accountNumberFactory = new AccountNumberFactory(_context);
@@ -195,7 +195,7 @@ namespace BankApp.Tests.Helpers
         }
 
         [TestMethod]
-        public void GetSeparatedIban_Should_ReturnSeparatedIbanText()
+        public void GetSeparatedIban_Should_ReturnSeparatedIban()
         {
             var bankData = new BankData
             {

@@ -24,7 +24,7 @@ namespace BankApp.Tests.Controllers
         private ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        private ApplicationDbContext GetMockContext()
+        private static ApplicationDbContext GetMockContext()
         {
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
@@ -42,7 +42,7 @@ namespace BankApp.Tests.Controllers
         }
 
         [TestInitialize]
-        public void TestInitalize()
+        public void TestInitialize()
         {
             _context = GetMockContext();
             _accountNumberFactoryMock = new Mock<IAccountNumberFactory>();
