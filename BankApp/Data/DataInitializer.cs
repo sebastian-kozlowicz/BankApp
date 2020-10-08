@@ -88,9 +88,9 @@ namespace BankApp.Data
 
         private static void SeedBankData(ApplicationDbContext context)
         {
-            var banDataInDb = context.BankData.ToList();
+            var bankDataInDb = context.BankData.ToList();
 
-            if (!banDataInDb.Any())
+            if (!bankDataInDb.Any())
             {
                 var bankData = new BankData { CountryCode = "PL", NationalBankCode = "1080" };
 

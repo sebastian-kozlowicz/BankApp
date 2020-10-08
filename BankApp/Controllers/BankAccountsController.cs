@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount;
@@ -86,7 +87,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("CreateWithCustomer")]
-        public ActionResult<BankAccountDto> CreateBankAccountWithCustomer([FromBody] BankAccountWithCustomerCreationDto model)
+        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomer([FromBody] BankAccountWithCustomerCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -114,10 +115,10 @@ namespace BankApp.Controllers
 
             user.BankAccounts = new List<BankAccount> { bankAccount };
 
-            var result = _userManager.CreateAsync(user, model.Register.User.Password).Result;
+            var result = await _userManager.CreateAsync(user, model.Register.User.Password);
 
             if (result.Succeeded)
-                _ = _userManager.AddToRoleAsync(user, UserRole.Customer.ToString()).Result;
+                await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());
             else
                 return BadRequest(result.Errors);
 
