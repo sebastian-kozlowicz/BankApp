@@ -62,6 +62,11 @@ export class NewBranchComponent implements OnInit {
             if (element == 'Branch code is already in use.')
               this.toastr.error('Branch code is already in use.', 'Branch creation failed.');
           });
+        else if (Array.isArray(badRequest.error.errors["Branch.BranchCode"]))
+          badRequest.error.errors["Branch.BranchCode"].forEach(element => {
+            if (element == 'String length can only contain digits and must be of length 3 characters.')
+              this.toastr.error('String length can only contain digits and must be of length 3 characters.', 'Branch creation failed.');
+          });
         else
           this.toastr.error('Branch creation failed');
       }
