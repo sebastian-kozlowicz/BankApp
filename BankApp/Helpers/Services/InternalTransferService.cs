@@ -26,6 +26,7 @@ namespace BankApp.Helpers.Services
             var bankTransfer = new BankTransfer
             {
                 ReceiverIban = targetBankAccount.Iban,
+                OrderDate = DateTime.Now,
                 BankTransferType = BankTransferType.Internal,
                 BankAccountId = bankAccount.Id
             };
