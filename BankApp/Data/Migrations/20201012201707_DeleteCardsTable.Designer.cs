@@ -4,14 +4,16 @@ using BankApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BankApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201012201707_DeleteCardsTable")]
+    partial class DeleteCardsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -245,19 +247,6 @@ namespace BankApp.Data.Migrations
                     b.ToTable("BranchAddresses");
                 });
 
-            modelBuilder.Entity("BankApp.Models.Card", b =>
-                {
-                    b.Property<int>("Id")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Number")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Cards");
-                });
-
             modelBuilder.Entity("BankApp.Models.Customer", b =>
                 {
                     b.Property<int>("Id")
@@ -488,15 +477,6 @@ namespace BankApp.Data.Migrations
                     b.HasOne("BankApp.Models.Branch", "Branch")
                         .WithOne("BranchAddress")
                         .HasForeignKey("BankApp.Models.BranchAddress", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("BankApp.Models.Card", b =>
-                {
-                    b.HasOne("BankApp.Models.BankAccount", "BankAccount")
-                        .WithOne("Card")
-                        .HasForeignKey("BankApp.Models.Card", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

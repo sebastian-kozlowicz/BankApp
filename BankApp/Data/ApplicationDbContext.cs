@@ -80,6 +80,11 @@ namespace BankApp.Data
                 .HasForeignKey<Manager>(m => m.Id);
 
             builder.Entity<BankAccount>()
+                .HasOne(b => b.Card)
+                .WithOne(c => c.BankAccount)
+                .HasForeignKey<Card>(c => c.Id);
+
+            builder.Entity<BankAccount>()
                 .Property(b => b.Balance)
                 .HasColumnType("decimal(18,2)");
 
