@@ -1,4 +1,5 @@
-﻿using BankApp.Models;
+﻿using BankApp.Data.EntityConfigurations;
+using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -26,71 +27,9 @@ namespace BankApp.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Headquarters>()
-              .HasKey(h => h.Id);
-
-            builder.Entity<Branch>()
-               .HasKey(b => b.Id);
-
-            builder.Entity<Branch>()
-                .HasOne(b => b.Headquarters)
-                .WithOne(h => h.Branch)
-                .HasForeignKey<Headquarters>(h => h.Id);
-
-            builder.Entity<UserAddress>()
-                .HasOne(a => a.ApplicationUser)
-                .WithOne(u => u.UserAddress)
-                .HasForeignKey<UserAddress>(a => a.Id);
-
-            builder.Entity<BranchAddress>()
-                .HasOne(a => a.Branch)
-                .WithOne(b => b.BranchAddress)
-                .HasForeignKey<BranchAddress>(a => a.Id);
-
-            builder.Entity<Administrator>()
-                .HasKey(a => a.Id);
-
-            builder.Entity<Administrator>()
-                .HasOne(a => a.ApplicationUser)
-                .WithOne(a => a.Administrator)
-                .HasForeignKey<Administrator>(a => a.Id);
-
-            builder.Entity<Customer>()
-                .HasKey(c => c.Id);
-
-            builder.Entity<Customer>()
-                .HasOne(c => c.ApplicationUser)
-                .WithOne(a => a.Customer)
-                .HasForeignKey<Customer>(c => c.Id);
-
-            builder.Entity<Employee>()
-                .HasKey(e => e.Id);
-
-            builder.Entity<Employee>()
-                .HasOne(e => e.ApplicationUser)
-                .WithOne(a => a.Employee)
-                .HasForeignKey<Employee>(e => e.Id);
-
-            builder.Entity<Manager>()
-                .HasKey(m => m.Id);
-
-            builder.Entity<Manager>()
-                .HasOne(m => m.ApplicationUser)
-                .WithOne(a => a.Manager)
-                .HasForeignKey<Manager>(m => m.Id);
-
-            builder.Entity<BankAccount>()
-                .HasOne(b => b.Card)
-                .WithOne(c => c.BankAccount)
-                .HasForeignKey<Card>(c => c.Id);
-
-            builder.Entity<BankAccount>()
-                .Property(b => b.Balance)
-                .HasColumnType("decimal(18,2)");
-
-            builder.Entity<BankAccount>()
-                .Property(b => b.DebitLimit)
-                .HasColumnType("decimal(18,2)");
+            builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            builder.ApplyConfiguration(new BankAccountConfiguration());
+            builder.ApplyConfiguration(new BranchConfiguration());
 
             base.OnModelCreating(builder);
         }
