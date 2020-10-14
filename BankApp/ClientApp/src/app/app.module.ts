@@ -26,7 +26,7 @@ import { BankAccountSummaryComponent } from './user/customer/bank-account-summar
 import { CustomerProfileComponent } from './user/customer/customer-profile/customer-profile.component';
 import { BankTransferComponent } from './user/customer/bank-transfer/bank-transfer.component';
 import { NewBranchComponent } from './branch/new-branch/new-branch.component';
-import { AddressFormComponent } from "./address/address-form/address-form.component";
+import { AddressFormComponent } from "./forms/address-form/address-form.component";
 
 export function tokenGetter() {
   return sessionStorage.getItem("token");
@@ -49,7 +49,7 @@ export function tokenGetter() {
     CustomerProfileComponent,
     BankTransferComponent,
     NewBranchComponent,
-    AddressFormComponent,
+    AddressFormComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

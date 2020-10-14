@@ -4,7 +4,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 
-const MaterialComponents = [
+const materialComponents = [
   MatButtonModule,
   MatStepperModule,
   MatInputModule,
@@ -13,10 +13,10 @@ const MaterialComponents = [
 
 @NgModule({
   imports: [
-    MaterialComponents
+    materialComponents
   ],
   exports: [
-    MaterialComponents
+    materialComponents
   ]
 })
 export class MaterialModule { }
