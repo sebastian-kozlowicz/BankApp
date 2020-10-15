@@ -4,15 +4,15 @@ import { ToastrService } from 'ngx-toastr';
 import { PasswordValidator } from "../../../validators/password-validator";
 import { Currency } from '../../../enumerators/currency';
 import { AccountType } from '../../../enumerators/accountType';
-import { NumberLimitValidator } from '../../../validators/number-limit-validator';
 import { BankAccountService } from '../../../services/bank-account.service';
 import { BankAccountWithCustomerCreation } from '../../../interfaces/bank-account/with-customer/bank-account-with-customer-creation';
 import { AddressFormValues } from "../../../interfaces/forms/address-form-values";
+import { PersonalInformationFormValues } from "../../../interfaces/forms/personal-information-form-values";
 
 @Component({
   selector: 'app-registration',
-  templateUrl: './registration.component.html',
-  styleUrls: ['./registration.component.css']
+  templateUrl: './customer-registration.component.html',
+  styleUrls: ['./customer-registration.component.css']
 })
 export class CustomerRegistrationComponent {
 
@@ -72,17 +72,11 @@ export class CustomerRegistrationComponent {
   get currency() {
     return this.accountInformationForm.get('currency');
   }
-  get name() {
-    return this.personalInformationForm.get('name');
+  get personalInformation() {
+    return this.personalInformationForm.get('personalInformation');
   }
-  get surname() {
-    return this.personalInformationForm.get('surname');
-  }
-  get phoneNumber() {
-    return this.personalInformationForm.get('phoneNumber');
-  }
-  get email() {
-    return this.personalInformationForm.get('email');
+  get personalInformationValue(): PersonalInformationFormValues {
+    return this.personalInformation.value;
   }
   get address() {
     return this.residentialAddressForm.get('address');
@@ -103,10 +97,7 @@ export class CustomerRegistrationComponent {
   });
 
   personalInformationForm = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-    surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-    phoneNumber: ['', [Validators.required, NumberLimitValidator.limitValidator(100000, 100000000000, { invalidLimit: true })]],
-    email: ['', [Validators.required, Validators.email]]
+    personalInformation: [null, Validators.required]
   });
 
   residentialAddressForm = this.fb.group({
@@ -131,10 +122,10 @@ export class CustomerRegistrationComponent {
     let registerModel: BankAccountWithCustomerCreation = {
       register: {
         user: {
-          name: this.name.value,
-          surname: this.surname.value,
-          email: this.email.value,
-          phoneNumber: this.phoneNumber.value.toString(),
+          name: this.personalInformationValue.name,
+          surname: this.personalInformationValue.surname,
+          email: this.personalInformationValue.email,
+          phoneNumber: this.personalInformationValue.phoneNumber.toString(),
           password: this.password.value,
         },
         address: {

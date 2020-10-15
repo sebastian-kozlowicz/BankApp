@@ -3,7 +3,7 @@ import { Validators, FormBuilder } from '@angular/forms';
 import { BranchService } from "../../services/branch.service";
 import { ToastrService } from 'ngx-toastr';
 import { BranchWithAddressCreation } from "../../interfaces/branch/with-address/branch-with-address-creation";
-import { AddressFormValues } from "../../interfaces/address/address-form-values";
+import { AddressFormValues } from "../../interfaces/forms/address-form-values";
 
 @Component({
   selector: 'app-new-branch',

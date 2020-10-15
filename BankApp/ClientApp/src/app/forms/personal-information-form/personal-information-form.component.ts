@@ -2,6 +2,7 @@ import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
 import { NumberLimitValidator } from "../../validators/number-limit-validator";
 import { Subscription } from 'rxjs';
+import { PersonalInformationFormValues } from "../../interfaces/forms/personal-information-form-values";
 
 @Component({
   selector: 'app-personal-information-form',
@@ -33,11 +34,11 @@ export class PersonalInformationFormComponent implements ControlValueAccessor {
 
   subscriptions: Subscription[] = [];
 
-  get personalInformationFormValue() {
+  get personalInformationFormValue(): PersonalInformationFormValues {
     return this.personalInformationForm.value;
   }
 
-  set personalInformationFormValue(value) {
+  set personalInformationFormValue(value: PersonalInformationFormValues) {
     this.personalInformationForm.setValue(value);
     this.onChange(value);
     this.onTouched();
@@ -70,7 +71,7 @@ export class PersonalInformationFormComponent implements ControlValueAccessor {
   onChange: any = () => { };
   onTouched: any = () => { };
 
-  writeValue(value: any): void {
+  writeValue(value: PersonalInformationFormValues): void {
     if (value) {
       this.personalInformationFormValue = value;
     }

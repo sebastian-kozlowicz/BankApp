@@ -79,7 +79,7 @@ export class AddressFormComponent implements ControlValueAccessor {
   onChange: any = () => { };
   onTouched: any = () => { };
 
-  writeValue(value: any): void {
+  writeValue(value: AddressFormValues): void {
     if (value) {
       this.addressFormValue = value;
     }
