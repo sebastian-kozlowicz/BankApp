@@ -1,0 +1,59 @@
+<div [formGroup]="personalInformationForm" autocomplete="off">
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput id="name" formControlName="name" />
+      <mat-error *ngIf="name.errors?.required">
+        The Name field is required
+      </mat-error>
+      <mat-error *ngIf="!name.errors?.required && name.errors?.minlength">
+        The Name field must be at least {{name.errors?.minlength.requiredLength}} characters long
+      </mat-error>
+      <mat-error *ngIf="!name.errors?.required && name.errors?.maxlength">
+        The Name field must be at max {{name.errors?.maxlength.requiredLength}} characters long
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Surname</mat-label>
+      <input matInput id="surname" formControlName="surname" />
+      <mat-error *ngIf="surname.errors?.required">
+        The Surname field is required
+      </mat-error>
+      <mat-error *ngIf="!surname.errors?.required && surname.errors?.minlength">
+        The Surname field must be at least {{surname.errors?.minlength.requiredLength}} characters long
+      </mat-error>
+      <mat-error *ngIf="!surname.errors?.required && surname.errors?.maxlength">
+        The Surname field must be at max {{surname.errors?.maxlength.requiredLength}} characters long
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Phone number</mat-label>
+      <input type="number" matInput id="phone-number" formControlName="phoneNumber" />
+      <mat-error *ngIf="phoneNumber.errors?.required">
+        The Phone number field is required
+      </mat-error>
+      <mat-error *ngIf="!phoneNumber.errors?.required && phoneNumber.errors?.invalidLimit">
+        Provide valid phone number
+      </mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="form-group">
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput id="email" formControlName="email" />
+      <mat-error *ngIf="email.errors?.required">
+        The Email field is required
+      </mat-error>
+      <mat-error *ngIf="email.errors?.email">
+        The Email field is not a valid e-mail address.
+      </mat-error>
+    </mat-form-field>
+  </div>
+</div>
