@@ -7,7 +7,7 @@ import { AccountType } from '../../../enumerators/accountType';
 import { NumberLimitValidator } from '../../../validators/number-limit-validator';
 import { BankAccountService } from '../../../services/bank-account.service';
 import { BankAccountWithCustomerCreation } from '../../../interfaces/bank-account/with-customer/bank-account-with-customer-creation';
-import { AddressFormValues } from "../../../interfaces/address/address-form-values";
+import { AddressFormValues } from "../../../interfaces/forms/address-form-values";
 
 @Component({
   selector: 'app-registration',

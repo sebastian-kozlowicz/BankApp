@@ -1,7 +1,7 @@
 import { Component, forwardRef } from '@angular/core';
 import { FormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { AddressFormValues } from "../../interfaces/address/address-form-values";
+import { AddressFormValues } from "../../interfaces/forms/address-form-values";
 
 @Component({
   selector: 'app-address-form',

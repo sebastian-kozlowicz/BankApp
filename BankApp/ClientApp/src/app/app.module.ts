@@ -14,7 +14,7 @@ import { NavLoginMenuComponent } from './nav-menu/nav-login-menu/nav-login-menu.
 import { JwtModule } from '@auth0/angular-jwt';
 import { NavRegistrationMenuComponent } from './nav-menu/nav-registration-menu/nav-registration-menu.component';
 import { LoginComponent } from './user/login/login.component';
-import { CustomerRegistrationComponent } from "./user/customer/registration/registration.component";
+import { CustomerRegistrationComponent } from "./user/customer/registration/customer-registration.component";
 import { NavCustomerMenuComponent } from './nav-menu/nav-customer-menu/nav-customer-menu.component';
 import { AuthGuard } from "./services/auth-guard.service";
 import { AdminAuthGuard } from "./services/admin-auth-guard.service";
