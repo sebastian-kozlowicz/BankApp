@@ -111,6 +111,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="ClientApp\src\app\constants\app-constants.ts" />
     <None Remove="ClientApp\src\app\enumerators\accountType.ts" />
     <None Remove="ClientApp\src\app\enumerators\currency.ts" />
     <None Remove="ClientApp\src\app\enumerators\userRole.ts" />
@@ -151,6 +152,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\branch\with-address\branch-with-address-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\forms\personal-information-form-values.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\user\user-creation.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\constants\app-constants.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\validators\number-limit-validator.ts" />
   </ItemGroup>
 
