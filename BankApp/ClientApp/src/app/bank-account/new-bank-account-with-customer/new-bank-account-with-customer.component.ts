@@ -1,20 +1,21 @@
 import { Component } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
-import { PasswordValidator } from "../../../validators/password-validator";
-import { Currency } from '../../../enumerators/currency';
-import { AccountType } from '../../../enumerators/accountType';
-import { BankAccountService } from '../../../services/bank-account.service';
-import { BankAccountWithCustomerCreation } from '../../../interfaces/bank-account/with-customer/bank-account-with-customer-creation';
-import { AddressFormValues } from "../../../interfaces/forms/address-form-values";
-import { PersonalInformationFormValues } from "../../../interfaces/forms/personal-information-form-values";
+import { BankAccountService } from "../../services/bank-account.service";
+import { AccountType } from "../../enumerators/accountType";
+import { Currency } from "../../enumerators/currency";
+import { PasswordValidator } from "../../validators/password-validator";
+import { PersonalInformationFormValues } from "../../interfaces/forms/personal-information-form-values";
+import { AddressFormValues } from "../../interfaces/forms/address-form-values";
+import { BankAccountWithCustomerCreation } from "../../interfaces/bank-account/with-customer/bank-account-with-customer-creation";
+
 
 @Component({
   selector: 'app-registration',
-  templateUrl: './customer-registration.component.html',
-  styleUrls: ['./customer-registration.component.css']
+  templateUrl: './new-bank-account-with-customer.component.html',
+  styleUrls: ['./new-bank-account-with-customer.component.css']
 })
-export class CustomerRegistrationComponent {
+export class NewBankAccountWithCustomer {
 
   constructor(private fb: FormBuilder,
     private bankAccountService: BankAccountService,

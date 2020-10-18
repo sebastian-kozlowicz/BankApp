@@ -14,7 +14,7 @@ import { NavLoginMenuComponent } from './nav-menu/nav-login-menu/nav-login-menu.
 import { JwtModule } from '@auth0/angular-jwt';
 import { NavRegistrationMenuComponent } from './nav-menu/nav-registration-menu/nav-registration-menu.component';
 import { LoginComponent } from './user/login/login.component';
-import { CustomerRegistrationComponent } from "./user/customer/registration/customer-registration.component";
+import { NewBankAccountWithCustomer } from "./bank-account/new-bank-account-with-customer/new-bank-account-with-customer.component";
 import { NavCustomerMenuComponent } from './nav-menu/nav-customer-menu/nav-customer-menu.component';
 import { AuthGuard } from "./services/auth-guard.service";
 import { AdminAuthGuard } from "./services/admin-auth-guard.service";
@@ -29,6 +29,7 @@ import { NewBranchComponent } from './branch/new-branch/new-branch.component';
 import { AddressFormComponent } from "./forms/address-form/address-form.component";
 import { PersonalInformationFormComponent } from './forms/personal-information-form/personal-information-form.component';
 
+
 export function tokenGetter() {
   return sessionStorage.getItem("token");
 }
@@ -38,7 +39,7 @@ export function tokenGetter() {
     AppComponent,
     NavMenuComponent,
     HomeComponent,
-    CustomerRegistrationComponent,
+    NewBankAccountWithCustomer,
     LoginComponent,
     NavLoginMenuComponent,
     NavRegistrationMenuComponent,
@@ -71,7 +72,7 @@ export function tokenGetter() {
         path: '', component: HomeComponent, pathMatch: 'full'
       },
       {
-        path: 'registration/customer', component: CustomerRegistrationComponent
+        path: 'registration/customer', component: NewBankAccountWithCustomer
       },
       {
         path: 'auth/login', component: LoginComponent
