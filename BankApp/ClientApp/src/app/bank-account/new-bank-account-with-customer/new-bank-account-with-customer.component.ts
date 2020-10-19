@@ -8,6 +8,7 @@ import { PasswordValidator } from "../../validators/password-validator";
 import { PersonalInformationFormValues } from "../../interfaces/forms/personal-information-form-values";
 import { AddressFormValues } from "../../interfaces/forms/address-form-values";
 import { BankAccountWithCustomerCreation } from "../../interfaces/bank-account/with-customer/bank-account-with-customer-creation";
+import { ACCOUNT_TYPES } from "../../constants/app-constants";
 
 
 @Component({
@@ -23,10 +24,7 @@ export class NewBankAccountWithCustomer {
 
   AccountType = AccountType;
 
-  accountTypes = [
-    AccountType.Savings,
-    AccountType.Checking
-  ];
+  accountTypes = ACCOUNT_TYPES;
 
   currencies = [
     { name: "Polish złoty", code: Currency.Pln },
@@ -58,10 +56,10 @@ export class NewBankAccountWithCustomer {
     let errorCount = this.getPasswordErrorCount;
 
     return {
-      'one-error': errorCount == 1,
-      'two-errors': errorCount == 2,
-      'three-errors': errorCount == 3,
-      'four-errors': errorCount == 4
+      'one-error': errorCount === 1,
+      'two-errors': errorCount === 2,
+      'three-errors': errorCount === 3,
+      'four-errors': errorCount === 4
     };
   }
 
@@ -150,7 +148,7 @@ export class NewBankAccountWithCustomer {
       badRequest => {
         if (Array.isArray(badRequest.error))
           badRequest.error.forEach(element => {
-            if (element.code == 'DuplicateUserName')
+            if (element.code === 'DuplicateUserName')
               this.toastr.error('Username is already taken', 'Registration failed.');
           });
         else
