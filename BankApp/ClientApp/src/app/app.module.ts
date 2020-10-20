@@ -28,6 +28,7 @@ import { BankTransferComponent } from './user/customer/bank-transfer/bank-transf
 import { NewBranchComponent } from './branch/new-branch/new-branch.component';
 import { AddressFormComponent } from "./forms/address-form/address-form.component";
 import { PersonalInformationFormComponent } from './forms/personal-information-form/personal-information-form.component';
+import { NewUserComponent } from './user/new-user/new-user.component';
 
 
 export function tokenGetter() {
@@ -52,7 +53,8 @@ export function tokenGetter() {
     BankTransferComponent,
     NewBranchComponent,
     AddressFormComponent,
-    PersonalInformationFormComponent
+    PersonalInformationFormComponent,
+    NewUserComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -79,6 +81,9 @@ export function tokenGetter() {
       },
       {
         path: 'no-access', component: NoAccessComponent
+      },
+      {
+        path: 'user/new', component: NewUserComponent, canActivate: [AdminAuthGuard, AuthGuard]
       },
       {
         path: 'admin-panel', component: AdminPanelComponent, canActivate: [AdminAuthGuard, AuthGuard]
