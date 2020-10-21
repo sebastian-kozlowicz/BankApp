@@ -4,5 +4,5 @@ import { Currency } from "../../enumerators/currency";
 export interface BankAccountCreation {
   accountType: AccountType;
   currency: Currency;
-  applicationUserId: string;
+  customerId: string;
 }

@@ -10,6 +10,6 @@ namespace BankApp.Dtos.BankAccount
         [Required]
         public Currency Currency { get; set; }
         [Required]
-        public int ApplicationUserId { get; set; }
+        public int CustomerId { get; set; }
     }
 }

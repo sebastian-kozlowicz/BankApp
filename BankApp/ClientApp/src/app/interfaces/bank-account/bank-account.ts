@@ -16,5 +16,5 @@ export interface BankAccount {
   ibanSeparated: string;
   balance: number;
   debitLimit: number;
-  applicationUserId: number;
+  customerId: number;
 }

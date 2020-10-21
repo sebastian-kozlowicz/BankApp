@@ -19,8 +19,8 @@ namespace BankApp.Models
         public string IbanSeparated { get; set; }
         public decimal Balance { get; set; }
         public decimal DebitLimit { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
-        public int ApplicationUserId { get; set; }
+        public Customer Customer { get; set; }
+        public int CustomerId { get; set; }
         public Card Card { get; set; }
         public IList<BankTransfer> BankTransfers { get; set; }
     }

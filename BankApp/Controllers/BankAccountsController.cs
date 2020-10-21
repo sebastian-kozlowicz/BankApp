@@ -46,7 +46,7 @@ namespace BankApp.Controllers
         [Route("GetAllForUser/{applicationUserId}")]
         public ActionResult<IEnumerable<BankAccountDto>> GetBankAccounts(int applicationUserId)
         {
-            var bankAccounts = _context.BankAccounts.Where(ba => ba.ApplicationUserId == applicationUserId).ToList();
+            var bankAccounts = _context.BankAccounts.Where(ba => ba.CustomerId == applicationUserId).ToList();
 
             if (!bankAccounts.Any())
                 return NotFound();
@@ -75,7 +75,7 @@ namespace BankApp.Controllers
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
-                ApplicationUserId = model.ApplicationUserId
+                CustomerId = model.CustomerId
             };
 
             _context.BankAccounts.Add(bankAccount);
@@ -110,10 +110,10 @@ namespace BankApp.Controllers
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
-                ApplicationUserId = user.Id
+                CustomerId = user.Id
             };
 
-            user.BankAccounts = new List<BankAccount> { bankAccount };
+            user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
 
             var result = await _userManager.CreateAsync(user, model.Register.User.Password);
 

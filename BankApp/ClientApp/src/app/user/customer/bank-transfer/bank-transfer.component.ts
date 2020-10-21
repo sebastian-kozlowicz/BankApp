@@ -42,7 +42,7 @@ export class BankTransferComponent implements OnInit {
 
     this.bankAccountService.getBankAccount(this.requesterBankAccountId).subscribe(
       bankAccount => {
-        if (bankAccount.applicationUserId != user.userId)
+        if (bankAccount.customerId != user.userId)
           this.router.navigate(['/no-access'], { skipLocationChange: true })
       },
       error => {
