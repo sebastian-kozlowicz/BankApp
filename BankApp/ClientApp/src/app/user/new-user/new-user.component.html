@@ -1,1 +1,5 @@
-<p>new-user works!</p>
+<form [formGroup]="personalInformationForm" autocomplete="off" (submit)="submit()">
+  <app-personal-information-form formControlName="personalInformation"></app-personal-information-form>
+
+  <button type="submit" class="btn btn-primary" [disabled]="!personalInformationForm.valid">Add</button>
+</form>
