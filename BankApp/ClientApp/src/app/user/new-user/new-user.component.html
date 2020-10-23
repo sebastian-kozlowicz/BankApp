@@ -1,5 +1,11 @@
-<form [formGroup]="personalInformationForm" autocomplete="off" (submit)="submit()">
-  <app-personal-information-form formControlName="personalInformation"></app-personal-information-form>
+<mat-vertical-stepper linear>
+  <!-- #region Account information step -->
+  <mat-step label="Account information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
+    <form [formGroup]="personalInformationForm" autocomplete="off" (submit)="submit()">
+      <app-personal-information-form formControlName="personalInformation"></app-personal-information-form>
 
-  <button type="submit" class="btn btn-primary" [disabled]="!personalInformationForm.valid">Add</button>
-</form>
+      <button type="submit" class="btn btn-primary" [disabled]="!personalInformationForm.valid">Add</button>
+    </form>
+  </mat-step>
+  <!-- #endregion -->
+</mat-vertical-stepper>
