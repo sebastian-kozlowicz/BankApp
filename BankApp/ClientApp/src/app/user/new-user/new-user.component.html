@@ -1,10 +1,17 @@
 <mat-vertical-stepper linear>
   <!-- #region Account information step -->
-  <mat-step label="Account information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
-    <form [formGroup]="personalInformationForm" autocomplete="off" (submit)="submit()">
+  <mat-step label="Personal information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
+    <form [formGroup]="personalInformationForm" autocomplete="off">
       <app-personal-information-form formControlName="personalInformation"></app-personal-information-form>
+    </form>
+  </mat-step>
+  <!-- #endregion -->
+  <!-- #region Residential address step -->
+  <mat-step label="Residential address" [stepControl]="residentialAddressForm" [completed]="residentialAddressForm.valid">
+    <form [formGroup]="residentialAddressForm" autocomplete="off" (submit)="submit()">
+      <app-address-form formControlName="address"></app-address-form>
 
-      <button type="submit" class="btn btn-primary" [disabled]="!personalInformationForm.valid">Add</button>
+      <button type="submit" class="btn btn-primary" [disabled]="!personalInformationForm.valid || !residentialAddressForm.valid">Add</button>
     </form>
   </mat-step>
   <!-- #endregion -->
