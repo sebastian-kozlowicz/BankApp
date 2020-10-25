@@ -4,6 +4,7 @@ import { ToastrService } from "ngx-toastr";
 import { AuthService } from "../../services/auth.service";
 import { PersonalInformationFormValues } from "../../interfaces/forms/personal-information-form-values";
 import { AddressFormValues } from "../../interfaces/forms/address-form-values";
+import { UserRole } from '../../enumerators/userRole';
 
 @Component({
   selector: 'app-new-user',
@@ -15,6 +16,8 @@ export class NewUserComponent {
   constructor(private fb: FormBuilder,
     private authService: AuthService,
     private toastr: ToastrService) { }
+
+  USER_ROLES: Array<UserRole> = [UserRole.Administrator, UserRole.Employee, UserRole.Manager];
 
   get personalInformation() {
     return this.personalInformationForm.get('personalInformation');
