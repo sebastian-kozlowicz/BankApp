@@ -1,5 +1,24 @@
 <mat-vertical-stepper linear>
   <!-- #region Account information step -->
+  <mat-step label="Account information" [stepControl]="accountInformationForm" [completed]="accountInformationForm.valid">
+    <form [formGroup]="accountInformationForm" autocomplete="off">
+      <div class="form-group">
+        <mat-form-field>
+          <mat-label>User role</mat-label>
+          <mat-select id="account-type" formControlName="userRole">
+            <mat-option *ngFor="let userRole of USER_ROLES" [value]="userRole">
+              {{UserRole[userRole]}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="userRole.errors?.required">
+            The User role field is required
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </form>
+  </mat-step>
+  <!-- #endregion -->
+  <!-- #region Personal information step -->
   <mat-step label="Personal information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
     <form [formGroup]="personalInformationForm" autocomplete="off">
       <app-personal-information-form formControlName="personalInformation"></app-personal-information-form>

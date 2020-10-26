@@ -17,8 +17,12 @@ export class NewUserComponent {
     private authService: AuthService,
     private toastr: ToastrService) { }
 
+  UserRole = UserRole;
   USER_ROLES: Array<UserRole> = [UserRole.Administrator, UserRole.Employee, UserRole.Manager];
 
+  get userRole() {
+    return this.accountInformationForm.get('userRole');
+  }
   get personalInformation() {
     return this.personalInformationForm.get('personalInformation');
   }
@@ -31,6 +35,10 @@ export class NewUserComponent {
   get addressValue(): AddressFormValues {
     return this.address.value;
   }
+
+  accountInformationForm = this.fb.group({
+    userRole: ['', Validators.required],
+  });
 
   personalInformationForm = this.fb.group({
     personalInformation: [null, Validators.required]

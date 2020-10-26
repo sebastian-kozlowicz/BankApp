@@ -23,7 +23,6 @@ export class NewBankAccountWithCustomer {
     private toastr: ToastrService) { }
 
   AccountType = AccountType;
-
   accountTypes = ACCOUNT_TYPES;
 
   currencies = [
