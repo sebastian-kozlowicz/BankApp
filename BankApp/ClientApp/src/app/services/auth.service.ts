@@ -70,7 +70,7 @@ export class AuthService {
   isAdministrator() {
     let user = this.currentUser;
 
-    if (user && user.role.includes(UserRole.Administrator))
+    if (user && user.role.includes(UserRole[UserRole.Administrator]))
       return true;
 
     return false;
@@ -79,7 +79,7 @@ export class AuthService {
   isCustomer() {
     let user = this.currentUser;
 
-    if (user && user.role.includes(UserRole.Customer))
+    if (user && user.role.includes(UserRole[UserRole.Customer]))
       return true;
 
     return false;
@@ -88,7 +88,7 @@ export class AuthService {
   isEmployee() {
     let user = this.currentUser;
 
-    if (user && user.role.includes(UserRole.Employee))
+    if (user && user.role.includes(UserRole[UserRole.Employee]))
       return true;
 
     return false;
@@ -97,7 +97,7 @@ export class AuthService {
   isManager() {
     let user = this.currentUser;
 
-    if (user && user.role.includes(UserRole.Manager))
+    if (user && user.role.includes(UserRole[UserRole.Manager]))
       return true;
 
     return false;
