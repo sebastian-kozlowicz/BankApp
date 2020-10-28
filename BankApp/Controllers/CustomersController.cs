@@ -51,7 +51,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CustomerDto>> CreateCustomer([FromBody] RegisterDto model)
+        public async Task<ActionResult<CustomerDto>> CreateCustomer([FromBody] RegisterByAnotherUserDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -59,7 +59,7 @@ namespace BankApp.Controllers
             var user = _mapper.Map<ApplicationUser>(model);
             user.Customer = new Customer { Id = user.Id };
 
-            var result = await _userManager.CreateAsync(user, model.User.Password);
+            var result = await _userManager.CreateAsync(user);
 
             if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());

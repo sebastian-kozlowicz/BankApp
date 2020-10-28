@@ -51,15 +51,15 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<AdministratorDto>> CreateAdministrator([FromBody] RegisterDto model)
+        public async Task<ActionResult<AdministratorDto>> CreateAdministrator([FromBody] RegisterByAnotherUserDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var user = _mapper.Map<ApplicationUser>(model);
-            user.Administrator = new Administrator() { Id = user.Id };
+            user.Administrator = new Administrator { Id = user.Id };
 
-            var result = await _userManager.CreateAsync(user, model.User.Password);
+            var result = await _userManager.CreateAsync(user);
 
             if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRole.Administrator.ToString());
