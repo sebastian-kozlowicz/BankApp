@@ -24,5 +24,8 @@ namespace BankApp.Dtos.ApplicationUser
         [DataType(DataType.PhoneNumber)]
         [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
+
+        [Required]
+        public int CreatedById { get; set; }
     }
 }
