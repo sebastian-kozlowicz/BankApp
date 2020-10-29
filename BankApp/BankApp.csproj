@@ -110,6 +110,14 @@
     <Compile Remove="Data\Migrations\20200529211810_AddBranchAndAddressesTables.Designer.cs" />
     <Compile Remove="Data\Migrations\20201029203354_Test.cs" />
     <Compile Remove="Data\Migrations\20201029203354_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201029203916_Test.cs" />
+    <Compile Remove="Data\Migrations\20201029203916_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201029204920_Test.cs" />
+    <Compile Remove="Data\Migrations\20201029204920_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201029205538_AddCreatedByIdColumnInAspNetUsersTable.cs" />
+    <Compile Remove="Data\Migrations\20201029205538_AddCreatedByIdColumnInAspNetUsersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201029210328_AddCreatedByIdColumnInAspNetUsersTable.cs" />
+    <Compile Remove="Data\Migrations\20201029210328_AddCreatedByIdColumnInAspNetUsersTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

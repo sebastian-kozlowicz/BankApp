@@ -11,5 +11,7 @@ namespace BankApp.Models
         public Employee Employee { get; set; }
         public Manager Manager { get; set; }
         public UserAddress UserAddress { get; set; }
+        public ApplicationUser CreatedBy { get; set; }
+        public int? CreatedById { get; set; }
     }
 }
