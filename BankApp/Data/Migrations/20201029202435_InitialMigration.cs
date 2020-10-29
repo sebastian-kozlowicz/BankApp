@@ -78,19 +78,6 @@ namespace BankApp.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Cards",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Number = table.Column<string>(nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Cards", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -214,37 +201,6 @@ namespace BankApp.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BankAccounts",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AccountType = table.Column<int>(nullable: false),
-                    Currency = table.Column<int>(nullable: false),
-                    CountryCode = table.Column<string>(nullable: true),
-                    CheckNumber = table.Column<string>(nullable: true),
-                    NationalBankCode = table.Column<string>(nullable: true),
-                    BranchCode = table.Column<string>(nullable: true),
-                    NationalCheckDigit = table.Column<int>(nullable: false),
-                    AccountNumber = table.Column<long>(nullable: false),
-                    AccountNumberText = table.Column<string>(nullable: true),
-                    Iban = table.Column<string>(nullable: true),
-                    IbanSeparated = table.Column<string>(nullable: true),
-                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    ApplicationUserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BankAccounts", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_BankAccounts_AspNetUsers_ApplicationUserId",
-                        column: x => x.ApplicationUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Customers",
                 columns: table => new
                 {
@@ -358,6 +314,78 @@ namespace BankApp.Data.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "BankAccounts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AccountType = table.Column<int>(nullable: false),
+                    Currency = table.Column<int>(nullable: false),
+                    CountryCode = table.Column<string>(nullable: true),
+                    CheckNumber = table.Column<string>(nullable: true),
+                    NationalBankCode = table.Column<string>(nullable: true),
+                    BranchCode = table.Column<string>(nullable: true),
+                    NationalCheckDigit = table.Column<int>(nullable: false),
+                    AccountNumber = table.Column<long>(nullable: false),
+                    AccountNumberText = table.Column<string>(nullable: true),
+                    Iban = table.Column<string>(nullable: true),
+                    IbanSeparated = table.Column<string>(nullable: true),
+                    Balance = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    DebitLimit = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CustomerId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankAccounts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BankAccounts_Customers_CustomerId",
+                        column: x => x.CustomerId,
+                        principalTable: "Customers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "BankTransfers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ReceiverIban = table.Column<string>(nullable: true),
+                    OrderDate = table.Column<DateTime>(nullable: false),
+                    BankTransferType = table.Column<int>(nullable: false),
+                    BankAccountId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BankTransfers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BankTransfers_BankAccounts_BankAccountId",
+                        column: x => x.BankAccountId,
+                        principalTable: "BankAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Cards",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false),
+                    Number = table.Column<string>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Cards", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Cards_BankAccounts_Id",
+                        column: x => x.Id,
+                        principalTable: "BankAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -398,9 +426,14 @@ namespace BankApp.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_BankAccounts_ApplicationUserId",
+                name: "IX_BankAccounts_CustomerId",
                 table: "BankAccounts",
-                column: "ApplicationUserId");
+                column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BankTransfers_BankAccountId",
+                table: "BankTransfers",
+                column: "BankAccountId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -424,19 +457,16 @@ namespace BankApp.Data.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "BankAccounts");
+                name: "BankData");
 
             migrationBuilder.DropTable(
-                name: "BankData");
+                name: "BankTransfers");
 
             migrationBuilder.DropTable(
                 name: "BranchAddresses");
 
             migrationBuilder.DropTable(
                 name: "Cards");
-
-            migrationBuilder.DropTable(
-                name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "Employees");
@@ -454,7 +484,13 @@ namespace BankApp.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
+                name: "BankAccounts");
+
+            migrationBuilder.DropTable(
                 name: "Branches");
+
+            migrationBuilder.DropTable(
+                name: "Customers");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

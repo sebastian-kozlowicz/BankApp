@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BankApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20201012201758_AddOneToOneRelationshipBetweenBankAccountsAndCardsTables")]
-    partial class AddOneToOneRelationshipBetweenBankAccountsAndCardsTables
+    [Migration("20201029202435_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -120,9 +120,6 @@ namespace BankApp.Data.Migrations
                     b.Property<int>("AccountType")
                         .HasColumnType("int");
 
-                    b.Property<int>("ApplicationUserId")
-                        .HasColumnType("int");
-
                     b.Property<decimal>("Balance")
                         .HasColumnType("decimal(18,2)");
 
@@ -136,6 +133,9 @@ namespace BankApp.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Currency")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CustomerId")
                         .HasColumnType("int");
 
                     b.Property<decimal>("DebitLimit")
@@ -155,7 +155,7 @@ namespace BankApp.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("BankAccounts");
                 });
@@ -469,9 +469,9 @@ namespace BankApp.Data.Migrations
 
             modelBuilder.Entity("BankApp.Models.BankAccount", b =>
                 {
-                    b.HasOne("BankApp.Models.ApplicationUser", "ApplicationUser")
+                    b.HasOne("BankApp.Models.Customer", "Customer")
                         .WithMany("BankAccounts")
-                        .HasForeignKey("ApplicationUserId")
+                        .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
