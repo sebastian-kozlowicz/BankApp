@@ -139,6 +139,7 @@
     <None Remove="ClientApp\src\app\interfaces\branch\branch.ts" />
     <None Remove="ClientApp\src\app\interfaces\branch\with-address\branch-with-address-creation.ts" />
     <None Remove="ClientApp\src\app\interfaces\forms\personal-information-form-values.ts" />
+    <None Remove="ClientApp\src\app\interfaces\user\user-creation-by-another-user.ts" />
     <None Remove="ClientApp\src\app\interfaces\user\user-creation.ts" />
     <None Remove="ClientApp\src\app\validators\number-limit-validator.ts" />
   </ItemGroup>
@@ -161,6 +162,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\branch\branch.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\branch\with-address\branch-with-address-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\forms\personal-information-form-values.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\user\user-creation-by-another-user.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\user\user-creation.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\constants\app-constants.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\validators\number-limit-validator.ts" />
