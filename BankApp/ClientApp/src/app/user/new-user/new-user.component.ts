@@ -5,7 +5,8 @@ import { AuthService } from "../../services/auth.service";
 import { PersonalInformationFormValues } from "../../interfaces/forms/personal-information-form-values";
 import { AddressFormValues } from "../../interfaces/forms/address-form-values";
 import { UserRole } from '../../enumerators/userRole';
-import { Register } from "../../interfaces/auth/register";
+import { RegisterByAnotherUser } from "../../interfaces/auth/register-by-another-user";
+import { JwtToken } from "../../interfaces/auth/jwtToken";
 
 @Component({
   selector: 'app-new-user',
@@ -23,6 +24,9 @@ export class NewUserComponent {
 
   get userRole() {
     return this.accountInformationForm.get('userRole');
+  }
+  get userRoleValue(): UserRole {
+    return this.userRole.value;
   }
   get personalInformation() {
     return this.personalInformationForm.get('personalInformation');
@@ -50,13 +54,13 @@ export class NewUserComponent {
   });
 
   submit() {
-    let registerModel: Register = {
+    let registerModel: RegisterByAnotherUser = {
       user: {
         name: this.personalInformationValue.name,
         surname: this.personalInformationValue.surname,
         email: this.personalInformationValue.email,
         phoneNumber: this.personalInformationValue.phoneNumber.toString(),
-        password: "",
+        createdById: this.authService.currentUser.userId
       },
       address: {
         country: this.addressValue.country,
@@ -67,5 +71,29 @@ export class NewUserComponent {
         postalCode: this.addressValue.postalCode.toString()
       }
     };
+
+    let serviceMethodName; 
+
+    if (this.userRoleValue === UserRole.Administrator) {
+      serviceMethodName = "registerAdministrator";
+    }
+    else if (this.userRoleValue === UserRole.Customer) {
+      serviceMethodName = "registerCustomer";
+    }
+    else if (this.userRoleValue === UserRole.Employee) {
+      serviceMethodName = "registerEmployee";
+    }
+    else if (this.userRoleValue === UserRole.Manager) {
+      serviceMethodName = "registerManager";
+    }
+
+    this.authService[serviceMethodName](registerModel).subscribe(
+      response => {
+        this.toastr.success('User created');
+      },
+      error => {
+        this.toastr.error('User not created');
+      }
+    );
   }
 }
