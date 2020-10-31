@@ -130,6 +130,7 @@
     <None Remove="ClientApp\src\app\interfaces\address\address.ts" />
     <None Remove="ClientApp\src\app\interfaces\auth\jwtToken.ts" />
     <None Remove="ClientApp\src\app\interfaces\auth\login.ts" />
+    <None Remove="ClientApp\src\app\interfaces\auth\register-by-another-user.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\bank-account-creation.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\bank-account.ts" />
     <None Remove="ClientApp\src\app\interfaces\bank-account\with-customer\bank-account-creation.ts" />
@@ -149,6 +150,7 @@
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\currency.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\enumerators\userRole.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\address\address-creation.ts" />
+    <TypeScriptCompile Include="ClientApp\src\app\interfaces\auth\register-by-another-user.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\forms\address-form-values.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\address\address.ts" />
     <TypeScriptCompile Include="ClientApp\src\app\interfaces\auth\jwtToken.ts" />
