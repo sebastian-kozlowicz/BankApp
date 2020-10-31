@@ -47,7 +47,7 @@ namespace BankApp.Helpers.Factories
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, _jwtOptions.JtiGenerator().Result),
                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
-                new Claim("userId", user.Id.ToString()),
+                new Claim("userId", user.Id.ToString(), ClaimValueTypes.Integer32)
             });
 
             claimsIdentity.AddClaims(roles.Select(r => new Claim(ClaimTypes.Role, r)));
