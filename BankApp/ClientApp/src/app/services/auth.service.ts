@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Register } from '../interfaces/auth/register';
 import { map } from 'rxjs/operators';
 
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { JwtToken } from '../interfaces/auth/jwtToken';
 import { UserRole } from '../enumerators/userRole';
 import { Login } from '../interfaces/auth/login';
+import { RegisterByAnotherUser } from "../interfaces/auth/register-by-another-user";
 
 @Injectable({
   providedIn: 'root'
@@ -21,19 +21,19 @@ export class AuthService {
   private readonly managersEndpoint = '/api/managers';
   private readonly loginEndpoint = '/api/auth/login';
 
-  registerAdministrator(registerModel: Register) {
+  registerAdministrator(registerModel: RegisterByAnotherUser) {
     return this.http.post(this.administratorsEndpoint, registerModel);
   }
 
-  registerCustomer(registerModel: Register) {
+  registerCustomer(registerModel: RegisterByAnotherUser) {
     return this.http.post(this.customersEndpoint, registerModel);
   }
 
-  registerEmployee(registerModel: Register) {
+  registerEmployee(registerModel: RegisterByAnotherUser) {
     return this.http.post(this.employeesEndpoint, registerModel);
   }
 
-  registerManager(registerModel: Register) {
+  registerManager(registerModel: RegisterByAnotherUser) {
     return this.http.post(this.managersEndpoint, registerModel);
   }
 
