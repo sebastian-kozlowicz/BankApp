@@ -75,7 +75,7 @@ namespace BankApp.Data
             {
                 var user = new ApplicationUser { UserName = "manager@localhost", Email = "manager@localhost" };
 
-                user.Employee = new Employee() { Id = user.Id };
+                user.Manager = new Manager() { Id = user.Id };
 
                 var result = userManager.CreateAsync(user, "Qwerty1@").Result;
 
