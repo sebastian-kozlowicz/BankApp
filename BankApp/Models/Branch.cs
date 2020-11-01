@@ -1,4 +1,6 @@
-﻿namespace BankApp.Models
+﻿using System.Collections.Generic;
+
+namespace BankApp.Models
 {
     public class Branch
     {
@@ -6,5 +8,6 @@
         public string BranchCode { get; set; }
         public BranchAddress BranchAddress { get; set; }
         public Headquarters Headquarters { get; set; }
+        public IList<Employee> Employees { get; set; }
     }
 }
