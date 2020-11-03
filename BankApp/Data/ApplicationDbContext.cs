@@ -8,6 +8,7 @@ namespace BankApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
+        public DbSet<EmployeeAtBranchHistory> EmployeeAtBranchHistory { get; set; }
         public DbSet<BankData> BankData { get; set; }
         public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<BranchAddress> BranchAddresses { get; set; }
