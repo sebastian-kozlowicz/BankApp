@@ -44,7 +44,7 @@ namespace BankApp.Controllers
 
             if (_context.Branches.FirstOrDefault(b => b.BranchCode == model.Branch.BranchCode) != null)
             {
-                ModelState.AddModelError("BranchCode", "Branch code is already in use.");
+                ModelState.AddModelError(nameof(model.Branch.BranchCode), "Branch code is already in use.");
                 return BadRequest(ModelState);
             }
 

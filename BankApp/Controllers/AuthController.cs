@@ -32,7 +32,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (await GetClaimsIdentity(model.Email, model.Password) is ClaimsIdentity claimsIdentity && claimsIdentity != null)
+            if (await GetClaimsIdentity(model.Email, model.Password) is { } claimsIdentity)
             {
                 var jwt = JwtTokenHelper.GenerateJwt(claimsIdentity, _jwtFactory, new JsonSerializerSettings { Formatting = Formatting.Indented });
 

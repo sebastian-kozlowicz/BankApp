@@ -30,26 +30,26 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankTransferCreationDto.RequesterBankAccountId);
+            var requesterBankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankTransferCreationDto.RequesterBankAccountId);
 
-            if (bankAccount == null)
+            if (requesterBankAccount == null)
                 return NotFound();
 
-            if (bankAccount.Balance - (decimal)bankTransferCreationDto.Value < bankAccount.DebitLimit * -1)
+            if (requesterBankAccount.Balance - (decimal)bankTransferCreationDto.Value < requesterBankAccount.DebitLimit * -1)
             {
-                ModelState.AddModelError("DebitLimit", "Not sufficient founds. Debit limit is exceeded.");
+                ModelState.AddModelError(nameof(requesterBankAccount.DebitLimit), "Not sufficient founds. Debit limit is exceeded.");
                 return BadRequest(ModelState);
             }
 
             var targetBankAccount = _context.BankAccounts.FirstOrDefault(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
 
             if (targetBankAccount == null)
-                _externalTransferService.Create(bankAccount, new BankAccount { Iban = bankTransferCreationDto.ReceiverIban }, (decimal)bankTransferCreationDto.Value);
+                _externalTransferService.Create(requesterBankAccount, new BankAccount { Iban = bankTransferCreationDto.ReceiverIban }, (decimal)bankTransferCreationDto.Value);
             else
             {
                 try
                 {
-                    _internalTransferService.Create(bankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
+                    _internalTransferService.Create(requesterBankAccount, targetBankAccount, (decimal)bankTransferCreationDto.Value);
                 }
                 catch (ArgumentException exception)
                 {
