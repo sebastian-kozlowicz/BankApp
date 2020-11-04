@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System;
+using AutoMapper;
 using BankApp.Data;
 using BankApp.Dtos.Branch;
 using BankApp.Dtos.Branch.WithAddress;
@@ -6,6 +7,7 @@ using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Text.Json;
 
 namespace BankApp.Controllers
 {
@@ -54,6 +56,41 @@ namespace BankApp.Controllers
             var branchDto = _mapper.Map<Branch, BranchDto>(branch);
 
             return CreatedAtRoute("GetBranch", new { branchId = branchDto.Id }, branchDto);
+        }
+
+        [HttpPost]
+        [Route("AssignEmployeeToBranch")]
+        public ActionResult AssignEmployeeToBranch([FromBody] WorkerAssignToBranch model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var employee = _context.Employees.SingleOrDefault(e => e.Id == model.WorkerId);
+            if (employee == null)
+            {
+                ModelState.AddModelError(nameof(model.WorkerId), $"Employee with id {model.WorkerId} doesn't exist.");
+                return BadRequest(ModelState);
+            }
+
+            var branch = _context.Branches.SingleOrDefault(b => b.Id == model.BranchId);
+            if (branch == null)
+            {
+                ModelState.AddModelError(nameof(model.BranchId), $"Branch with id {model.BranchId} doesn't exist.");
+                return BadRequest(ModelState);
+            }
+
+            employee.WorkAtId = branch.Id;
+            var employeeAtBranch = new EmployeeAtBranchHistory
+            {
+                AssignDate = DateTime.UtcNow,
+                BranchId = branch.Id,
+                EmployeeId = employee.Id
+            };
+
+            _context.EmployeeAtBranchHistory.Add(employeeAtBranch);
+            _context.SaveChanges();
+
+            return Ok();
         }
     }
 }
