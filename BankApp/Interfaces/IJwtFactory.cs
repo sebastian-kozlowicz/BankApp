@@ -7,6 +7,6 @@ namespace BankApp.Interfaces
     public interface IJwtFactory
     {
         string GenerateEncodedToken(ClaimsIdentity claimsIdentity);
-        ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IList<string> roles);
+        ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IEnumerable<string> roles);
     }
 }

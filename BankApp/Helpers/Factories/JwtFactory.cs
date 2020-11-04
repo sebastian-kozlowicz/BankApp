@@ -40,7 +40,7 @@ namespace BankApp.Helpers.Factories
             return token;
         }
 
-        public ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IList<string> roles)
+        public ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IEnumerable<string> roles)
         {
             var claimsIdentity = new ClaimsIdentity(new GenericIdentity(user.Email, "Token"), new[]
             {
