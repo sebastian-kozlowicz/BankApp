@@ -8,7 +8,9 @@ namespace BankApp.Models
         public string BranchCode { get; set; }
         public BranchAddress BranchAddress { get; set; }
         public Headquarters Headquarters { get; set; }
-        public IList<Employee> Employees { get; set; }
+        public IList<Employee> AssignedEmployees { get; set; }
+        public IList<Manager> AssignedManagers { get; set; }
         public IList<EmployeeAtBranchHistory> EmployeeAtBranchHistory { get; set; }
+        public IList<ManagerAtBranchHistory> ManagerAtBranchHistory { get; set; }
     }
 }
