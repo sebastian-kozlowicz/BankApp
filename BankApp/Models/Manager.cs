@@ -2,12 +2,8 @@
 
 namespace BankApp.Models
 {
-    public class Manager
+    public class Manager : Worker
     {
-        public int Id { get; set; }
-        public ApplicationUser ApplicationUser { get; set; }
-        public Branch WorkAt { get; set; }
-        public int? WorkAtId { get; set; }
         public IList<ManagerAtBranchHistory> ManagerAtBranchHistory { get; set; }
     }
 }

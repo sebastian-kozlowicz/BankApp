@@ -118,6 +118,10 @@
     <Compile Remove="Data\Migrations\20201029205538_AddCreatedByIdColumnInAspNetUsersTable.Designer.cs" />
     <Compile Remove="Data\Migrations\20201029210328_AddCreatedByIdColumnInAspNetUsersTable.cs" />
     <Compile Remove="Data\Migrations\20201029210328_AddCreatedByIdColumnInAspNetUsersTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201105203845_Test.cs" />
+    <Compile Remove="Data\Migrations\20201105203845_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201105203935_Test.cs" />
+    <Compile Remove="Data\Migrations\20201105203935_Test.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
