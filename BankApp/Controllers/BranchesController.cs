@@ -91,5 +91,40 @@ namespace BankApp.Controllers
 
             return Ok();
         }
+
+        [HttpPost]
+        [Route("AssignManagerToBranch")]
+        public ActionResult AssignManagerToBranch([FromBody] WorkerAssignToBranch model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var manager = _context.Managers.SingleOrDefault(e => e.Id == model.WorkerId);
+            if (manager == null)
+            {
+                ModelState.AddModelError(nameof(model.WorkerId), $"Manager with id {model.WorkerId} doesn't exist.");
+                return BadRequest(ModelState);
+            }
+
+            var branch = _context.Branches.SingleOrDefault(b => b.Id == model.BranchId);
+            if (branch == null)
+            {
+                ModelState.AddModelError(nameof(model.BranchId), $"Branch with id {model.BranchId} doesn't exist.");
+                return BadRequest(ModelState);
+            }
+
+            manager.WorkAtId = branch.Id;
+            var managerAtBranch = new ManagerAtBranchHistory()
+            {
+                AssignDate = DateTime.UtcNow,
+                BranchId = branch.Id,
+                ManagerId = manager.Id
+            };
+
+            _context.ManagerAtBranchHistory.Add(managerAtBranch);
+            _context.SaveChanges();
+
+            return Ok();
+        }
     }
 }
