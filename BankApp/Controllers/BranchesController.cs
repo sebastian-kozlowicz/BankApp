@@ -123,6 +123,12 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (manager.WorkAtId == model.BranchId)
+            {
+                ModelState.AddModelError(nameof(model.BranchId), $"Manager with id {model.WorkerId} is currently assigned to branch with id {model.BranchId}.");
+                return BadRequest(ModelState);
+            }
+
             manager.WorkAtId = branch.Id;
             var managerAtBranch = new ManagerAtBranchHistory()
             {
