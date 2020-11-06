@@ -129,8 +129,12 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == manager.Id).ToList().LastOrDefault();
+            if (managerAtBranchFromDb != null)
+                managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
+
             manager.WorkAtId = branch.Id;
-            var managerAtBranch = new ManagerAtBranchHistory()
+            var managerAtBranch = new ManagerAtBranchHistory
             {
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
