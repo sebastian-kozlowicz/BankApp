@@ -78,11 +78,15 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if(employee.WorkAtId == model.BranchId)
+            if (employee.WorkAtId == model.BranchId)
             {
                 ModelState.AddModelError(nameof(model.BranchId), $"Employee with id {model.WorkerId} is currently assigned to branch with id {model.BranchId}.");
                 return BadRequest(ModelState);
             }
+
+            var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == employee.Id).ToList().LastOrDefault();
+            if (employeeAtBranchFromDb != null)
+                employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
 
             employee.WorkAtId = branch.Id;
             var employeeAtBranch = new EmployeeAtBranchHistory
