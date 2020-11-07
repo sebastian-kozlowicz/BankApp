@@ -34,9 +34,9 @@ namespace BankApp.Controllers
 
             if (await GetClaimsIdentity(model.Email, model.Password) is { } claimsIdentity)
             {
-                var jwt = JwtTokenHelper.GenerateJwt(claimsIdentity, _jwtFactory, new JsonSerializerSettings { Formatting = Formatting.Indented });
+                var jwt = _jwtFactory.GenerateEncodedToken(claimsIdentity);
 
-                return Ok(jwt);
+                return Ok(new { token = jwt });
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
