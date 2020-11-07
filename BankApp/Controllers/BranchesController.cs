@@ -59,7 +59,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("AssignEmployeeToBranch")]
-        public ActionResult AssignEmployeeToBranch([FromBody] WorkerAssignToBranch model)
+        public ActionResult AssignEmployeeToBranch([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -104,7 +104,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("AssignManagerToBranch")]
-        public ActionResult AssignManagerToBranch([FromBody] WorkerAssignToBranch model)
+        public ActionResult AssignManagerToBranch([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -149,7 +149,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("ExpelEmployeeFromBranch")]
-        public ActionResult ExpelEmployeeFromBranch([FromBody] WorkerAssignToBranch model)
+        public ActionResult ExpelEmployeeFromBranch([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -165,7 +165,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("ExpelManagerFromBranch")]
-        public ActionResult ExpelManagerFromBranch([FromBody] WorkerAssignToBranch model)
+        public ActionResult ExpelManagerFromBranch([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

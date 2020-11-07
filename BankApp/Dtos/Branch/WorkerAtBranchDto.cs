@@ -2,7 +2,7 @@
 
 namespace BankApp.Dtos.Branch
 {
-    public class WorkerAssignToBranch
+    public class WorkerAtBranchDto
     {
         [Required]
         public int? WorkerId { get; set; }
