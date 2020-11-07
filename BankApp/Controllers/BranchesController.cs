@@ -85,7 +85,7 @@ namespace BankApp.Controllers
             }
 
             var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == employee.Id).ToList().LastOrDefault();
-            if (employeeAtBranchFromDb != null)
+            if (employeeAtBranchFromDb != null && employeeAtBranchFromDb.ExpelDate == null)
                 employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
 
             employee.WorkAtId = branch.Id;
@@ -130,7 +130,7 @@ namespace BankApp.Controllers
             }
 
             var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == manager.Id).ToList().LastOrDefault();
-            if (managerAtBranchFromDb != null)
+            if (managerAtBranchFromDb != null && managerAtBranchFromDb.ExpelDate == null)
                 managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
 
             manager.WorkAtId = branch.Id;
