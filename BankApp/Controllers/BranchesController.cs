@@ -84,11 +84,8 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == employee.Id).ToList().LastOrDefault();
-            if (employeeAtBranchFromDb != null && employeeAtBranchFromDb.ExpelDate == null)
-                employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-
             employee.WorkAtId = branch.Id;
+            AssignEmployeeExpelDateFromBranch(model);
             var employeeAtBranch = new EmployeeAtBranchHistory
             {
                 AssignDate = DateTime.UtcNow,
@@ -129,11 +126,8 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == manager.Id).ToList().LastOrDefault();
-            if (managerAtBranchFromDb != null && managerAtBranchFromDb.ExpelDate == null)
-                managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-
             manager.WorkAtId = branch.Id;
+            AssignManagerExpelDateFromBranch(model);
             var managerAtBranch = new ManagerAtBranchHistory
             {
                 AssignDate = DateTime.UtcNow,
@@ -154,10 +148,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == model.WorkerId).ToList().LastOrDefault();
-            if (employeeAtBranchFromDb != null && employeeAtBranchFromDb.ExpelDate == null)
-                employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-
+            AssignEmployeeExpelDateFromBranch(model);
             _context.SaveChanges();
 
             return Ok();
@@ -170,13 +161,24 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == model.WorkerId).ToList().LastOrDefault();
-            if (managerAtBranchFromDb != null && managerAtBranchFromDb.ExpelDate == null)
-                managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-
+            AssignManagerExpelDateFromBranch(model);
             _context.SaveChanges();
 
             return Ok();
+        }
+
+        private void AssignEmployeeExpelDateFromBranch(WorkerAtBranchDto model)
+        {
+            var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == model.WorkerId).ToList().LastOrDefault();
+            if (employeeAtBranchFromDb != null && employeeAtBranchFromDb.ExpelDate == null)
+                employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
+        }
+
+        private void AssignManagerExpelDateFromBranch(WorkerAtBranchDto model)
+        {
+            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == model.WorkerId).ToList().LastOrDefault();
+            if (managerAtBranchFromDb != null && managerAtBranchFromDb.ExpelDate == null)
+                managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
         }
     }
 }
