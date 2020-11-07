@@ -45,7 +45,7 @@ namespace BankApp.Controllers
 
         private async Task<ClaimsIdentity> GetClaimsIdentity(string email, string password)
         {
-            if (!string.IsNullOrEmpty(email) || !string.IsNullOrEmpty(password))
+            if (!string.IsNullOrWhiteSpace(email) || !string.IsNullOrWhiteSpace(password))
             {
                 if (await _userManager.FindByEmailAsync(email) is var user && user != null)
                 {
