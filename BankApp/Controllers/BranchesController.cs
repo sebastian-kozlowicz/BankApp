@@ -146,5 +146,37 @@ namespace BankApp.Controllers
 
             return Ok();
         }
+
+        [HttpPost]
+        [Route("ExpelEmployeeFromBranch")]
+        public ActionResult ExpelEmployeeFromBranch([FromBody] WorkerAssignToBranch model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == model.WorkerId).ToList().LastOrDefault();
+            if (employeeAtBranchFromDb != null && employeeAtBranchFromDb.ExpelDate == null)
+                employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
+
+        [HttpPost]
+        [Route("ExpelManagerFromBranch")]
+        public ActionResult ExpelManagerFromBranch([FromBody] WorkerAssignToBranch model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == model.WorkerId).ToList().LastOrDefault();
+            if (managerAtBranchFromDb != null && managerAtBranchFromDb.ExpelDate == null)
+                managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
+
+            _context.SaveChanges();
+
+            return Ok();
+        }
     }
 }
