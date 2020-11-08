@@ -18,7 +18,7 @@ namespace BankApp.Helpers.Services
         public void Create(BankAccount bankAccount, BankAccount targetBankAccount, decimal value)
         {
             if (bankAccount.Currency != targetBankAccount.Currency)
-                throw new ArgumentException("Currency is different in target bank account.", "Currency");
+                throw new ArgumentException("Currency is different in target bank account.", nameof(targetBankAccount.Currency));
 
             bankAccount.Balance -= value;
             targetBankAccount.Balance += value;
