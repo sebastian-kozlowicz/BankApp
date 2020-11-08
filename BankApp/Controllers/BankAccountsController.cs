@@ -5,6 +5,7 @@ using AutoMapper;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount;
 using BankApp.Dtos.BankAccount.WithCustomerCreation;
+using BankApp.Dtos.BankAccount.WithCustomerCreationByWorker;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
@@ -116,6 +117,49 @@ namespace BankApp.Controllers
             user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
 
             var result = await _userManager.CreateAsync(user, model.Register.User.Password);
+
+            if (result.Succeeded)
+                await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());
+            else
+                return BadRequest(result.Errors);
+
+            var bankAccountDto = _mapper.Map<BankAccount, BankAccountDto>(bankAccount);
+            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccountDto.Id }, bankAccountDto);
+        }
+
+        [HttpPost]
+        [Route("CreateWithCustomerByWorker")]
+        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByWorker([FromBody] BankAccountWithCustomerCreationByWorkerDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var workerBranch = _context.Branches.SingleOrDefault(b => b.Id == model.BankAccount.WorkerBranchId);
+
+            var generatedAccountNumber = _accountNumberFactory.GenerateAccountNumber(workerBranch.Id);
+
+            var user = _mapper.Map<ApplicationUser>(model.Register);
+            user.Customer = new Customer { Id = user.Id };
+
+            var bankAccount = new BankAccount
+            {
+                AccountType = model.BankAccount.AccountType,
+                Currency = model.BankAccount.Currency,
+                CountryCode = generatedAccountNumber.CountryCode,
+                CheckNumber = generatedAccountNumber.CheckNumber,
+                NationalBankCode = generatedAccountNumber.NationalBankCode,
+                BranchCode = generatedAccountNumber.BranchCode,
+                NationalCheckDigit = generatedAccountNumber.NationalCheckDigit,
+                AccountNumber = generatedAccountNumber.AccountNumber,
+                AccountNumberText = generatedAccountNumber.AccountNumberText,
+                Iban = generatedAccountNumber.Iban,
+                IbanSeparated = generatedAccountNumber.IbanSeparated,
+                CustomerId = user.Id
+            };
+
+            user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
+
+            var result = await _userManager.CreateAsync(user);
 
             if (result.Succeeded)
                 await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());

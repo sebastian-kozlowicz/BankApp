@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BankApp.Dtos.Auth;
 
-namespace BankApp.Dtos.BankAccount.WithCustomerCreationByAnotherUser
+namespace BankApp.Dtos.BankAccount.WithCustomerCreationByWorker
 {
-    public class BankAccountWithCustomerCreationByAnotherUserDto
+    public class BankAccountWithCustomerCreationByWorkerDto
     {
         [Required] 
         public RegisterByAnotherUserDto Register { get; set; }

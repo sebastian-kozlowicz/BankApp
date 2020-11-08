@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using BankApp.Enumerators;
 
-namespace BankApp.Dtos.BankAccount.WithCustomerCreationByAnotherUser
+namespace BankApp.Dtos.BankAccount.WithCustomerCreationByWorker
 {
     public class BankAccountCreationDto
     {
