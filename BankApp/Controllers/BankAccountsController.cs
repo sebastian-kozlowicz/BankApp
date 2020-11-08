@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount;
-using BankApp.Dtos.BankAccount.WithCustomer;
+using BankApp.Dtos.BankAccount.WithCustomerCreation;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
