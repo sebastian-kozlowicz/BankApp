@@ -5,7 +5,7 @@ using BankApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BankApp.Tests.Helpers.Factories
+namespace BankApp.UnitTests.Helpers.Factories
 {
     [TestClass]
     public class AccountNumberFactoryTests

@@ -1,19 +1,19 @@
-﻿using AutoMapper;
+﻿using System;
+using System.Linq;
+using AutoMapper;
 using BankApp.Controllers;
 using BankApp.Data;
+using BankApp.Dtos.BankAccount;
+using BankApp.Enumerators;
+using BankApp.Interfaces;
 using BankApp.Mapping;
 using BankApp.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using Moq;
-using BankApp.Interfaces;
-using BankApp.Dtos.BankAccount;
-using System.Linq;
-using BankApp.Enumerators;
-using Microsoft.AspNetCore.Identity;
 
-namespace BankApp.Tests.Controllers
+namespace BankApp.UnitTests.Controllers
 {
     [TestClass]
     public class BankAccountsControllerTests

@@ -5,9 +5,9 @@
 
     <IsPackable>false</IsPackable>
 
-    <AssemblyName>BankApp.Tests</AssemblyName>
+    <AssemblyName>BankApp.UnitTests</AssemblyName>
 
-    <RootNamespace>BankApp.Tests</RootNamespace>
+    <RootNamespace>BankApp.UnitTests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
