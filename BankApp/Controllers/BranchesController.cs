@@ -148,6 +148,27 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var employee = _context.Employees.SingleOrDefault(e => e.Id == model.WorkerId);
+            if (employee == null)
+            {
+                ModelState.AddModelError(nameof(model.WorkerId), $"Employee with id {model.WorkerId} doesn't exist.");
+                return BadRequest(ModelState);
+            }
+
+            var branch = _context.Branches.SingleOrDefault(b => b.Id == model.BranchId);
+            if (branch == null)
+            {
+                ModelState.AddModelError(nameof(model.BranchId), $"Branch with id {model.BranchId} doesn't exist.");
+                return BadRequest(ModelState);
+            }
+
+            if (employee.WorkAtId != model.BranchId)
+            {
+                ModelState.AddModelError(nameof(model.BranchId), $"Employee with id {model.WorkerId} is currently not assigned to branch with id {model.BranchId}.");
+                return BadRequest(ModelState);
+            }
+
+            employee.WorkAtId = null;
             AssignEmployeeExpelDateFromBranch(model);
             _context.SaveChanges();
 
@@ -161,6 +182,27 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            var manager = _context.Managers.SingleOrDefault(e => e.Id == model.WorkerId);
+            if (manager == null)
+            {
+                ModelState.AddModelError(nameof(model.WorkerId), $"Manager with id {model.WorkerId} doesn't exist.");
+                return BadRequest(ModelState);
+            }
+
+            var branch = _context.Branches.SingleOrDefault(b => b.Id == model.BranchId);
+            if (branch == null)
+            {
+                ModelState.AddModelError(nameof(model.BranchId), $"Branch with id {model.BranchId} doesn't exist.");
+                return BadRequest(ModelState);
+            }
+
+            if (manager.WorkAtId != model.BranchId)
+            {
+                ModelState.AddModelError(nameof(model.BranchId), $"Manager with id {model.WorkerId} is currently not assigned to branch with id {model.BranchId}.");
+                return BadRequest(ModelState);
+            }
+
+            manager.WorkAtId = null;
             AssignManagerExpelDateFromBranch(model);
             _context.SaveChanges();
 
