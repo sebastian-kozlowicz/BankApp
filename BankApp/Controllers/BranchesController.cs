@@ -162,7 +162,7 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (employee.WorkAtId != model.BranchId)
+            if (employee.WorkAtId != branch.Id)
             {
                 ModelState.AddModelError(nameof(model.BranchId), $"Employee with id {model.WorkerId} is currently not assigned to branch with id {model.BranchId}.");
                 return BadRequest(ModelState);

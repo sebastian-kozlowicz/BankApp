@@ -5,12 +5,12 @@ using AutoMapper;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount;
 using BankApp.Dtos.BankAccount.WithCustomerCreation;
-using BankApp.Dtos.BankAccount.WithCustomerCreationByWorker;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {
@@ -134,9 +134,42 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var workerBranch = _context.Branches.SingleOrDefault(b => b.Id == model.BankAccount.WorkerBranchId);
+            var worker = _context.Users.SingleOrDefault(u => u.Id == model.Register.User.CreatedById);
+            if (worker == null)
+            {
+                ModelState.AddModelError(nameof(model.Register.User.CreatedById), $"Worker with id {model.Register.User.CreatedById} doesn't exist.");
+                return BadRequest(ModelState);
+            }
 
-            var generatedAccountNumber = _accountNumberFactory.GenerateAccountNumber(workerBranch.Id);
+            int? workerBranchId = null;
+
+            if (await _userManager.IsInRoleAsync(worker, UserRole.Employee.ToString()))
+            {
+                await _context.Employees.Where(e => e.Id == worker.Id).LoadAsync();
+
+                if (worker.Employee.WorkAtId == null)
+                {
+                    ModelState.AddModelError(nameof(model.Register.User.CreatedById), $"Worker with id {model.Register.User.CreatedById} is currently not assigned to any branch.");
+                    return BadRequest(ModelState);
+                }
+
+                workerBranchId = worker.Employee.WorkAtId;
+            }
+
+            if (await _userManager.IsInRoleAsync(worker, UserRole.Manager.ToString()))
+            {
+                await _context.Managers.Where(e => e.Id == worker.Id).LoadAsync();
+
+                if (worker.Employee.WorkAtId == null)
+                {
+                    ModelState.AddModelError(nameof(model.Register.User.CreatedById), $"Worker with id {model.Register.User.CreatedById} is currently not assigned to any branch.");
+                    return BadRequest(ModelState);
+                }
+
+                workerBranchId = worker.Manager.WorkAtId;
+            }
+
+            var generatedAccountNumber = _accountNumberFactory.GenerateAccountNumber(workerBranchId);
 
             var user = _mapper.Map<ApplicationUser>(model.Register);
             user.Customer = new Customer { Id = user.Id };
