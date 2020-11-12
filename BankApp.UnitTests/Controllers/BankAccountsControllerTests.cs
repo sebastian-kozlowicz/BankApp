@@ -111,7 +111,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
-            //Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountDto.CustomerId);
+            Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountDto.CustomerId);
 
             var bankAccountFromDb = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountDto.Id);
 

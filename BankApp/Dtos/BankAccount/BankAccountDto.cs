@@ -1,4 +1,4 @@
-﻿using BankApp.Dtos.ApplicationUser;
+﻿using BankApp.Dtos.Customer;
 using BankApp.Enumerators;
 
 namespace BankApp.Dtos.BankAccount
@@ -18,7 +18,7 @@ namespace BankApp.Dtos.BankAccount
         public string Iban { get; set; }
         public string IbanSeparated { get; set; }
         public decimal Balance { get; set; }
-        public ApplicationUserDto ApplicationUser { get; set; }
-        public int ApplicationUserId { get; set; }
+        public CustomerDto Customer { get; set; }
+        public int CustomerId { get; set; }
     }
 }
