@@ -91,6 +91,7 @@ namespace BankApp.UnitTests.Controllers
         [TestMethod]
         public void CreateBranchWithAddress_Should_CreateBranch_And_ReturnBranchDto()
         {
+            // Arrange
             var newBranch = new BranchWithAddressCreationDto
             {
                 Branch = new BranchCreationDto
@@ -108,8 +109,10 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
+            // Act
             var createdAtRouteResult = _branchesController.CreateBranchWithAddress(newBranch).Result as CreatedAtRouteResult; 
 
+            // Assert
             Assert.IsNotNull(createdAtRouteResult);
             Assert.IsInstanceOfType(createdAtRouteResult.Value, typeof(BranchDto));
 

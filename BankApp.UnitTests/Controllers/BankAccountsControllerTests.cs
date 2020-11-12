@@ -9,6 +9,7 @@ using BankApp.Interfaces;
 using BankApp.Mapping;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -50,7 +51,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void CreateBankAccount_Should_CreateBankAccount()
+        public void CreateBankAccount_Should_CreateBankAccount_And_ReturnBankAccountDto()
         {
             // Arrange
             var expectedBankAccount = new BankAccount
@@ -66,6 +67,13 @@ namespace BankApp.UnitTests.Controllers
                 AccountNumberText = "0000000000000000",
                 Iban = "PL61108000010000000000000000",
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000",
+                CustomerId = 1
+            };
+
+            var bankAccountCreation = new BankAccountCreationDto
+            {
+                AccountType = AccountType.Checking, 
+                Currency = Currency.Eur, 
                 CustomerId = 1
             };
 
@@ -85,22 +93,39 @@ namespace BankApp.UnitTests.Controllers
             _accountNumberFactoryMock.Setup(anf => anf.GenerateAccountNumber(null)).Returns(bankAccountNumber);
 
             // Act
-            _bankAccountsController.CreateBankAccount(new BankAccountCreationDto { AccountType = AccountType.Checking, Currency = Currency.Eur, CustomerId = 1 });
+            var createdAtRouteResult = _bankAccountsController.CreateBankAccount(bankAccountCreation).Result as CreatedAtRouteResult;
 
             // Assert
-            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == 1);
+            Assert.IsNotNull(createdAtRouteResult);
+            Assert.IsInstanceOfType(createdAtRouteResult.Value, typeof(BankAccountDto));
 
-            Assert.IsNotNull(bankAccount);
-            Assert.AreEqual(expectedBankAccount.CountryCode, bankAccount.CountryCode);
-            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccount.CheckNumber);
-            Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccount.NationalBankCode);
-            Assert.AreEqual(expectedBankAccount.BranchCode, bankAccount.BranchCode);
-            Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccount.NationalCheckDigit);
-            Assert.AreEqual(expectedBankAccount.AccountNumber, bankAccount.AccountNumber);
-            Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccount.AccountNumberText);
-            Assert.AreEqual(expectedBankAccount.Iban, bankAccount.Iban);
-            Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccount.IbanSeparated);
-            Assert.AreEqual(expectedBankAccount.CustomerId, bankAccount.CustomerId);
+            var bankAccountDto = createdAtRouteResult.Value as BankAccountDto;
+
+            Assert.IsNotNull(bankAccountDto);
+            Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountDto.CountryCode);
+            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountDto.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
+            Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountDto.BranchCode);
+            Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
+            Assert.AreEqual(expectedBankAccount.AccountNumber, bankAccountDto.AccountNumber);
+            Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
+            Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
+            Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
+            //Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountDto.CustomerId);
+
+            var bankAccountFromDb = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountDto.Id);
+
+            Assert.IsNotNull(bankAccountFromDb);
+            Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountFromDb.CountryCode);
+            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountFromDb.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountFromDb.NationalBankCode);
+            Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountFromDb.BranchCode);
+            Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountFromDb.NationalCheckDigit);
+            Assert.AreEqual(expectedBankAccount.AccountNumber, bankAccountFromDb.AccountNumber);
+            Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountFromDb.AccountNumberText);
+            Assert.AreEqual(expectedBankAccount.Iban, bankAccountFromDb.Iban);
+            Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountFromDb.CustomerId);
         }
     }
 }
