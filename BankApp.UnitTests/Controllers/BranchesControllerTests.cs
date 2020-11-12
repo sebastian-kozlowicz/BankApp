@@ -75,5 +75,15 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(_branch.BranchAddress.ApartmentNumber, branchDto.BranchAddress.ApartmentNumber);
             Assert.AreEqual(_branch.BranchAddress.PostalCode, branchDto.BranchAddress.PostalCode);
         }
+
+        [TestMethod]
+        public void GetBranch_Should_ReturnNotFound_When_BranchIsNotFound()
+        {
+            var notFoundResult = _branchesController.GetBranch(999);
+
+            Assert.IsNotNull(notFoundResult);
+            Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
+
+        }
     }
 }
