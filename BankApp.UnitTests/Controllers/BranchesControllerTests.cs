@@ -2,7 +2,9 @@
 using AutoMapper;
 using BankApp.Controllers;
 using BankApp.Data;
+using BankApp.Dtos.Address;
 using BankApp.Dtos.Branch;
+using BankApp.Dtos.Branch.WithAddress;
 using BankApp.Mapping;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -62,7 +64,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsNotNull(okResult);
             Assert.IsInstanceOfType(okResult.Value, typeof(BranchDto));
 
-            var branchDto = okResult.Value as BranchDto; 
+            var branchDto = okResult.Value as BranchDto;
 
             Assert.IsNotNull(branchDto);
             Assert.AreEqual(_branch.Id, branchDto.Id);
@@ -84,6 +86,43 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsNotNull(notFoundResult);
             Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
 
+        }
+
+        [TestMethod]
+        public void CreateBranchWithAddress_Should_ReturnBranchDto()
+        {
+            var branch = new BranchWithAddressCreationDto
+            {
+                Branch = new BranchCreationDto
+                {
+                    BranchCode = "001"
+                },
+                Address = new AddressCreationDto
+                {
+                    Country = "United States",
+                    City = "New York",
+                    Street = "Glenwood Ave",
+                    HouseNumber = "10",
+                    ApartmentNumber = "11",
+                    PostalCode = "10028"
+                }
+            };
+
+            var createdAtRouteResult = _branchesController.CreateBranchWithAddress(branch).Result as CreatedAtRouteResult; 
+
+            Assert.IsNotNull(createdAtRouteResult);
+            Assert.IsInstanceOfType(createdAtRouteResult.Value, typeof(BranchDto));
+
+            var branchDto = createdAtRouteResult.Value as BranchDto;
+
+            Assert.IsNotNull(branchDto);
+            Assert.AreEqual(branch.Branch.BranchCode, branchDto.BranchCode);
+            Assert.AreEqual(branch.Address.Country, branchDto.BranchAddress.Country);
+            Assert.AreEqual(branch.Address.City, branchDto.BranchAddress.City);
+            Assert.AreEqual(branch.Address.Street, branchDto.BranchAddress.Street);
+            Assert.AreEqual(branch.Address.HouseNumber, branchDto.BranchAddress.HouseNumber);
+            Assert.AreEqual(branch.Address.ApartmentNumber, branchDto.BranchAddress.ApartmentNumber);
+            Assert.AreEqual(branch.Address.PostalCode, branchDto.BranchAddress.PostalCode);
         }
     }
 }
