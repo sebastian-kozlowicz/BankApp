@@ -51,7 +51,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void CreateBankAccount_Should_CreateBankAccount_And_ReturnBankAccountDto()
+        public void CreateBankAccount_Should_CreateBankAccount_And_ReturnBankAccountDto_When_ModelStateIsValid()
         {
             // Arrange
             var expectedBankAccount = new BankAccount
@@ -72,8 +72,8 @@ namespace BankApp.UnitTests.Controllers
 
             var bankAccountCreation = new BankAccountCreationDto
             {
-                AccountType = AccountType.Checking, 
-                Currency = Currency.Eur, 
+                AccountType = AccountType.Checking,
+                Currency = Currency.Eur,
                 CustomerId = 1
             };
 
@@ -126,6 +126,41 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountFromDb.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
             Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountFromDb.CustomerId);
+        }
+
+        [TestMethod]
+        public void CreateBankAccount_Should_ReturnBadRequest_When_ModelStateIsInvalid()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountCreationDto();
+            _bankAccountsController.ModelState.AddModelError("Currency", "The Currency field is required.");
+            _bankAccountsController.ModelState.AddModelError("CustomerId", "The CustomerId field is required.");
+            _bankAccountsController.ModelState.AddModelError("AccountType", "The AccountType field is required.");
+
+            // Act
+            var badRequestResult =
+                _bankAccountsController.CreateBankAccount(bankAccountCreation).Result as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey("Currency"));
+            Assert.IsTrue(error.ContainsKey("CustomerId"));
+            Assert.IsTrue(error.ContainsKey("AccountType"));
+
+            var currencyErrorValues = error["Currency"] as string[];
+            Assert.IsNotNull(currencyErrorValues);
+            Assert.IsTrue(currencyErrorValues.Single() == "The Currency field is required.");
+
+            var customerIdErrorValues = error["CustomerId"] as string[];
+            Assert.IsNotNull(customerIdErrorValues);
+            Assert.IsTrue(customerIdErrorValues.Single() == "The CustomerId field is required.");
+
+            var accountTypeErrorValues = error["AccountType"] as string[];
+            Assert.IsNotNull(accountTypeErrorValues);
+            Assert.IsTrue(accountTypeErrorValues.Single() == "The AccountType field is required.");
         }
     }
 }

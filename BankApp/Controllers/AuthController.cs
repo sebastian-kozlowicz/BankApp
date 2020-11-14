@@ -1,13 +1,11 @@
 ﻿using System.Security.Claims;
 using System.Threading.Tasks;
 using BankApp.Dtos.Auth;
-using BankApp.Helpers;
 using BankApp.Interfaces;
 using BankApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 
 namespace BankApp.Controllers
 {

@@ -89,7 +89,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void CreateBranchWithAddress_Should_CreateBranch_And_ReturnBranchDto()
+        public void CreateBranchWithAddress_Should_CreateBranch_And_ReturnBranchDto_When_ModelStateIsValid()
         {
             // Arrange
             var newBranch = new BranchWithAddressCreationDto
