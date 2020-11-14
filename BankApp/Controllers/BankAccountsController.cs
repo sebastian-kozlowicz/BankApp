@@ -65,8 +65,8 @@ namespace BankApp.Controllers
 
             var bankAccount = new BankAccount
             {
-                AccountType = model.AccountType,
-                Currency = model.Currency,
+                AccountType = (AccountType)model.AccountType,
+                Currency = (Currency)model.Currency,
                 CountryCode = generatedAccountNumber.CountryCode,
                 CheckNumber = generatedAccountNumber.CheckNumber,
                 NationalBankCode = generatedAccountNumber.NationalBankCode,
@@ -76,7 +76,7 @@ namespace BankApp.Controllers
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
-                CustomerId = model.CustomerId
+                CustomerId = (int)model.CustomerId
             };
 
             _context.BankAccounts.Add(bankAccount);
@@ -100,8 +100,8 @@ namespace BankApp.Controllers
 
             var bankAccount = new BankAccount
             {
-                AccountType = model.BankAccount.AccountType,
-                Currency = model.BankAccount.Currency,
+                AccountType = (AccountType)model.BankAccount.AccountType,
+                Currency = (Currency)model.BankAccount.Currency,
                 CountryCode = generatedAccountNumber.CountryCode,
                 CheckNumber = generatedAccountNumber.CheckNumber,
                 NationalBankCode = generatedAccountNumber.NationalBankCode,
@@ -176,8 +176,8 @@ namespace BankApp.Controllers
 
             var bankAccount = new BankAccount
             {
-                AccountType = model.BankAccount.AccountType,
-                Currency = model.BankAccount.Currency,
+                AccountType = (AccountType)model.BankAccount.AccountType,
+                Currency = (Currency)model.BankAccount.Currency,
                 CountryCode = generatedAccountNumber.CountryCode,
                 CheckNumber = generatedAccountNumber.CheckNumber,
                 NationalBankCode = generatedAccountNumber.NationalBankCode,

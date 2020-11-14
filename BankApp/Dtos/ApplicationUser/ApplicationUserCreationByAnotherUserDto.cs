@@ -26,6 +26,6 @@ namespace BankApp.Dtos.ApplicationUser
         public string PhoneNumber { get; set; }
 
         [Required]
-        public int CreatedById { get; set; }
+        public int? CreatedById { get; set; }
     }
 }
