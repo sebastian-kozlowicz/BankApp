@@ -3,7 +3,7 @@ using BankApp.Dtos.Auth;
 
 namespace BankApp.Dtos.BankAccount.WithCustomerCreation
 {
-    public class BankAccountWithCustomerCreationDto
+    public class BankAccountWithCustomerCreationByCustomerDto
     {
         [Required]
         public RegisterDto Register { get; set; }

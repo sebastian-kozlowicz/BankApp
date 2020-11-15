@@ -88,7 +88,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("CreateWithCustomerByCustomer")]
-        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomer([FromBody] BankAccountWithCustomerCreationDto model)
+        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByCustomer([FromBody] BankAccountWithCustomerCreationByCustomerDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

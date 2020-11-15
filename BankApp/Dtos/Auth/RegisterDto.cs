@@ -7,7 +7,7 @@ namespace BankApp.Dtos.Auth
     public class RegisterDto
     {
         [Required]
-        public ApplicationUserCreationDto User { get; set; }
+        public ApplicationUserCreationBySameUserDto User { get; set; }
         [Required]
         public AddressCreationDto Address { get; set; }
     }
