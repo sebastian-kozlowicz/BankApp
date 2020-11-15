@@ -18,8 +18,8 @@ export class BankAccountService {
     return this.http.post<BankAccount>(this.bankAccountEndpoint, bankAccount);
   }
 
-  createBankAccountWithCustomer(bankAccountWithCustomer: BankAccountWithCustomerCreation) :Observable<BankAccount> {
-    return this.http.post<BankAccount>(this.bankAccountEndpoint + '/CreateWithCustomer', bankAccountWithCustomer);
+  createBankAccountWithCustomerByCustomer(bankAccountWithCustomer: BankAccountWithCustomerCreation) :Observable<BankAccount> {
+    return this.http.post<BankAccount>(this.bankAccountEndpoint + '/CreateWithCustomerByCustomer', bankAccountWithCustomer);
   }
 
   getBankAccount(bankAccountId: number): Observable<BankAccount> {

@@ -139,7 +139,7 @@ export class NewBankAccountWithCustomer {
       }
     };
 
-    this.bankAccountService.createBankAccountWithCustomer(registerModel).subscribe(
+    this.bankAccountService.createBankAccountWithCustomerByCustomer(registerModel).subscribe(
       response => {
         if (response)
           this.toastr.success('New user created!', 'Registration successful.');
