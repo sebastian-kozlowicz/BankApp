@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Controllers;
 using BankApp.Data;
+using BankApp.Dtos.Address;
+using BankApp.Dtos.ApplicationUser;
+using BankApp.Dtos.Auth;
 using BankApp.Dtos.BankAccount;
+using BankApp.Dtos.BankAccount.WithCustomerCreation;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Mapping;
@@ -13,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
+using BankAccountCreationDto = BankApp.Dtos.BankAccount.BankAccountCreationDto;
 
 namespace BankApp.UnitTests.Controllers
 {
@@ -138,8 +144,7 @@ namespace BankApp.UnitTests.Controllers
             _bankAccountsController.ModelState.AddModelError("AccountType", "The AccountType field is required.");
 
             // Act
-            var badRequestResult =
-                _bankAccountsController.CreateBankAccount(bankAccountCreation).Result as BadRequestObjectResult;
+            var badRequestResult = _bankAccountsController.CreateBankAccount(bankAccountCreation).Result as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -161,6 +166,97 @@ namespace BankApp.UnitTests.Controllers
             var accountTypeErrorValues = error["AccountType"] as string[];
             Assert.IsNotNull(accountTypeErrorValues);
             Assert.IsTrue(accountTypeErrorValues.Single() == "The AccountType field is required.");
+        }
+
+        [TestMethod]
+        public async Task CreateBankAccountWithCustomerByCustomer_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
+        {
+            // Arrange
+            var expectedBankAccount = new BankAccount
+            {
+                AccountType = AccountType.Checking,
+                Currency = Currency.Eur,
+                CountryCode = "PL",
+                CheckNumber = "61",
+                NationalBankCode = "1080",
+                BranchCode = "000",
+                NationalCheckDigit = 1,
+                AccountNumber = 0,
+                AccountNumberText = "0000000000000000",
+                Iban = "PL61108000010000000000000000",
+                IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000",
+                CustomerId = 1
+            };
+
+            var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto
+            {
+               Register = new RegisterDto
+               {
+                   User = new ApplicationUserCreationBySameUserDto
+                   {
+                       Name = "John",
+                       Surname = "Smith",
+                       Email = "john@smith.com",
+                       PhoneNumber = "123456789",
+                       Password = "qwerty"
+                   },
+                   Address = new AddressCreationDto
+                   {
+                       Country = "United States",
+                       City = "New York",
+                       Street = "Glenwood Ave",
+                       HouseNumber = "10",
+                       ApartmentNumber = "11",
+                       PostalCode = "10028"
+                   }
+               },
+               BankAccount = new Dtos.BankAccount.WithCustomerCreation.BankAccountCreationDto
+               {
+                   AccountType = AccountType.Checking,
+                   Currency = Currency.Eur
+               }
+            };
+
+            var bankAccountNumber = new BankAccountNumber
+            {
+                CountryCode = "PL",
+                CheckNumber = "61",
+                NationalBankCode = "1080",
+                BranchCode = "000",
+                NationalCheckDigit = 1,
+                AccountNumber = 0,
+                AccountNumberText = "0000000000000000",
+                Iban = "PL61108000010000000000000000",
+                IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
+            };
+
+            _accountNumberFactoryMock.Setup(anf => anf.GenerateAccountNumber(null)).Returns(bankAccountNumber);
+
+            // Act
+            var result = await _bankAccountsController.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result.Result, typeof(BankAccountDto));
+
+            var createdAtRouteResult = result.Result as CreatedAtRouteResult;
+
+            Assert.IsNotNull(createdAtRouteResult);
+            Assert.IsInstanceOfType(createdAtRouteResult.Value, typeof(BankAccountDto));
+
+            var bankAccountDto = createdAtRouteResult.Value as BankAccountDto;
+
+            Assert.IsNotNull(bankAccountDto);
+            Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountDto.CountryCode);
+            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountDto.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
+            Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountDto.BranchCode);
+            Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
+            Assert.AreEqual(expectedBankAccount.AccountNumber, bankAccountDto.AccountNumber);
+            Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
+            Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
+            Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountDto.CustomerId);
         }
     }
 }
