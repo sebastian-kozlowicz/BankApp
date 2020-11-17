@@ -28,8 +28,9 @@ namespace BankApp.UnitTests.Controllers
         private BankAccountsController _bankAccountsController;
         private readonly IMapper _mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
         private Mock<IAccountNumberFactory> _accountNumberFactoryMock;
+        private Mock<IUserStore<ApplicationUser>> _userStoreMock;
+        private Mock<UserManager<ApplicationUser>> _userManagerMock;
         private ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
 
         private static ApplicationDbContext GetMockContext()
         {
@@ -52,8 +53,10 @@ namespace BankApp.UnitTests.Controllers
         public void TestInitialize()
         {
             _context = GetMockContext();
+            _userStoreMock = new Mock<IUserStore<ApplicationUser>>();
+            _userManagerMock = new Mock<UserManager<ApplicationUser>>(_userStoreMock.Object, null, null, null, null, null, null, null, null);
             _accountNumberFactoryMock = new Mock<IAccountNumberFactory>();
-            _bankAccountsController = new BankAccountsController(_userManager, _context, _mapper, _accountNumberFactoryMock.Object);
+            _bankAccountsController = new BankAccountsController(_userManagerMock.Object, _context, _mapper, _accountNumberFactoryMock.Object);
         }
 
         [TestMethod]
@@ -190,31 +193,31 @@ namespace BankApp.UnitTests.Controllers
 
             var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto
             {
-               Register = new RegisterDto
-               {
-                   User = new ApplicationUserCreationBySameUserDto
-                   {
-                       Name = "John",
-                       Surname = "Smith",
-                       Email = "john@smith.com",
-                       PhoneNumber = "123456789",
-                       Password = "qwerty"
-                   },
-                   Address = new AddressCreationDto
-                   {
-                       Country = "United States",
-                       City = "New York",
-                       Street = "Glenwood Ave",
-                       HouseNumber = "10",
-                       ApartmentNumber = "11",
-                       PostalCode = "10028"
-                   }
-               },
-               BankAccount = new Dtos.BankAccount.WithCustomerCreation.BankAccountCreationDto
-               {
-                   AccountType = AccountType.Checking,
-                   Currency = Currency.Eur
-               }
+                Register = new RegisterDto
+                {
+                    User = new ApplicationUserCreationBySameUserDto
+                    {
+                        Name = "John",
+                        Surname = "Smith",
+                        Email = "john@smith.com",
+                        PhoneNumber = "123456789",
+                        Password = "qwerty"
+                    },
+                    Address = new AddressCreationDto
+                    {
+                        Country = "United States",
+                        City = "New York",
+                        Street = "Glenwood Ave",
+                        HouseNumber = "10",
+                        ApartmentNumber = "11",
+                        PostalCode = "10028"
+                    }
+                },
+                BankAccount = new Dtos.BankAccount.WithCustomerCreation.BankAccountCreationDto
+                {
+                    AccountType = AccountType.Checking,
+                    Currency = Currency.Eur
+                }
             };
 
             var bankAccountNumber = new BankAccountNumber
@@ -230,6 +233,19 @@ namespace BankApp.UnitTests.Controllers
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
             };
 
+            var user = new ApplicationUser
+            {
+                UserName = bankAccountCreation.Register.User.Email, 
+                Email = bankAccountCreation.Register.User.Email
+            };
+
+            _userManagerMock.Setup(m => m.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
+                .ReturnsAsync(IdentityResult.Success).Callback(() =>
+                {
+                    _context.Users.Add(user);
+                    _context.SaveChanges();
+                });
+
             _accountNumberFactoryMock.Setup(anf => anf.GenerateAccountNumber(null)).Returns(bankAccountNumber);
 
             // Act
@@ -237,7 +253,7 @@ namespace BankApp.UnitTests.Controllers
 
             // Assert
             Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.Result, typeof(BankAccountDto));
+            Assert.IsInstanceOfType(result.Result, typeof(CreatedAtRouteResult));
 
             var createdAtRouteResult = result.Result as CreatedAtRouteResult;
 
@@ -256,7 +272,6 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
-            Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountDto.CustomerId);
         }
     }
 }
