@@ -111,7 +111,6 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsInstanceOfType(createdAtRouteResult.Value, typeof(BankAccountDto));
 
             var bankAccountDto = createdAtRouteResult.Value as BankAccountDto;
-
             Assert.IsNotNull(bankAccountDto);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountDto.CountryCode);
             Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountDto.CheckNumber);
@@ -125,7 +124,6 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountDto.CustomerId);
 
             var bankAccountFromDb = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountDto.Id);
-
             Assert.IsNotNull(bankAccountFromDb);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountFromDb.CountryCode);
             Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountFromDb.CheckNumber);
@@ -153,6 +151,7 @@ namespace BankApp.UnitTests.Controllers
 
             // Assert
             Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
 
             var error = badRequestResult.Value as SerializableError;
             Assert.IsNotNull(error);
@@ -261,12 +260,10 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsInstanceOfType(result.Result, typeof(CreatedAtRouteResult));
 
             var createdAtRouteResult = result.Result as CreatedAtRouteResult;
-
             Assert.IsNotNull(createdAtRouteResult);
             Assert.IsInstanceOfType(createdAtRouteResult.Value, typeof(BankAccountDto));
 
             var bankAccountDto = createdAtRouteResult.Value as BankAccountDto;
-
             Assert.IsNotNull(bankAccountDto);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountDto.CountryCode);
             Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountDto.CheckNumber);
@@ -283,7 +280,6 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.PhoneNumber, bankAccountDto.Customer.ApplicationUser.PhoneNumber);
 
             var bankAccountFromDb = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountDto.Id);
-
             Assert.IsNotNull(bankAccountFromDb);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountFromDb.CountryCode);
             Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountFromDb.CheckNumber);
@@ -298,6 +294,39 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Surname, bankAccountFromDb.Customer.ApplicationUser.Surname);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Email, bankAccountFromDb.Customer.ApplicationUser.Email);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.PhoneNumber, bankAccountFromDb.Customer.ApplicationUser.PhoneNumber);
+        }
+
+        [TestMethod]
+        public async Task CreateBankAccountWithCustomerByCustomer_ReturnBadRequest_When_ModelStateIsInvalid()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto();
+            _bankAccountsController.ModelState.AddModelError("Register", "The Register field is required.");
+            _bankAccountsController.ModelState.AddModelError("BankAccount", "The BankAccount field is required.");
+
+            // Act
+            var result = await _bankAccountsController.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+
+            var badRequestResult = result.Result as BadRequestObjectResult;
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey("Register"));
+            Assert.IsTrue(error.ContainsKey("BankAccount"));
+
+            var currencyErrorValues = error["Register"] as string[];
+            Assert.IsNotNull(currencyErrorValues);
+            Assert.IsTrue(currencyErrorValues.Single() == "The Register field is required.");
+
+            var customerIdErrorValues = error["BankAccount"] as string[];
+            Assert.IsNotNull(customerIdErrorValues);
+            Assert.IsTrue(customerIdErrorValues.Single() == "The BankAccount field is required.");
         }
     }
 }

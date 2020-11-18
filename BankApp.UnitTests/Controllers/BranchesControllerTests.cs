@@ -66,7 +66,6 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsInstanceOfType(okResult.Value, typeof(BranchDto));
 
             var branchDto = okResult.Value as BranchDto;
-
             Assert.IsNotNull(branchDto);
             Assert.AreEqual(_branch.Id, branchDto.Id);
             Assert.AreEqual(_branch.BranchCode, branchDto.BranchCode);
@@ -117,7 +116,6 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsInstanceOfType(createdAtRouteResult.Value, typeof(BranchDto));
 
             var branchDto = createdAtRouteResult.Value as BranchDto;
-
             Assert.IsNotNull(branchDto);
             Assert.AreEqual(newBranch.Branch.BranchCode, branchDto.BranchCode);
             Assert.AreEqual(newBranch.Address.Country, branchDto.BranchAddress.Country);
@@ -128,7 +126,6 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(newBranch.Address.PostalCode, branchDto.BranchAddress.PostalCode);
 
             var branchFromDb = _context.Branches.SingleOrDefault(b => b.Id == branchDto.Id);
-
             Assert.IsNotNull(branchFromDb);
             Assert.AreEqual(newBranch.Branch.BranchCode, branchFromDb.BranchCode);
             Assert.AreEqual(newBranch.Address.Country, branchFromDb.BranchAddress.Country);
