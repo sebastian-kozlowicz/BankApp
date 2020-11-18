@@ -43,6 +43,7 @@ namespace BankApp.UnitTests.Controllers
             context.BankData.Add(new BankData { CountryCode = "PL", NationalBankCode = "1080" });
             context.Branches.Add(new Branch { Id = 1, BranchCode = "000" });
             context.Headquarters.Add(new Headquarters { Id = 1 });
+            context.Users.Add(new ApplicationUser { Id = 1 });
             context.Customers.Add(new Customer { Id = 1 });
             context.SaveChanges();
 
@@ -233,14 +234,8 @@ namespace BankApp.UnitTests.Controllers
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
             };
 
-            var user = new ApplicationUser
-            {
-                UserName = bankAccountCreation.Register.User.Email, 
-                Email = bankAccountCreation.Register.User.Email
-            };
-
             _userManagerMock.Setup(m => m.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
-                .ReturnsAsync(IdentityResult.Success).Callback(() =>
+                .ReturnsAsync(IdentityResult.Success).Callback<ApplicationUser, string>((user, password) =>
                 {
                     _context.Users.Add(user);
                     _context.SaveChanges();
