@@ -9,6 +9,7 @@ using BankApp.Dtos.ApplicationUser;
 using BankApp.Dtos.Auth;
 using BankApp.Dtos.BankAccount;
 using BankApp.Dtos.BankAccount.WithCustomerCreation;
+using BankApp.Dtos.Customer;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Mapping;
@@ -64,22 +65,6 @@ namespace BankApp.UnitTests.Controllers
         public void CreateBankAccount_Should_CreateBankAccount_And_ReturnBankAccountDto_When_ModelStateIsValid()
         {
             // Arrange
-            var expectedBankAccount = new BankAccount
-            {
-                AccountType = AccountType.Checking,
-                Currency = Currency.Eur,
-                CountryCode = "PL",
-                CheckNumber = "61",
-                NationalBankCode = "1080",
-                BranchCode = "000",
-                NationalCheckDigit = 1,
-                AccountNumber = 0,
-                AccountNumberText = "0000000000000000",
-                Iban = "PL61108000010000000000000000",
-                IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000",
-                CustomerId = 1
-            };
-
             var bankAccountCreation = new BankAccountCreationDto
             {
                 AccountType = AccountType.Checking,
@@ -98,6 +83,22 @@ namespace BankApp.UnitTests.Controllers
                 AccountNumberText = "0000000000000000",
                 Iban = "PL61108000010000000000000000",
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
+            };
+
+            var expectedBankAccount = new BankAccountDto
+            {
+                AccountType = (AccountType)bankAccountCreation.AccountType,
+                Currency = (Currency)bankAccountCreation.Currency,
+                CountryCode = bankAccountNumber.CountryCode,
+                CheckNumber = bankAccountNumber.CheckNumber,
+                NationalBankCode = bankAccountNumber.NationalBankCode,
+                BranchCode = bankAccountNumber.BranchCode,
+                NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
+                AccountNumber = bankAccountNumber.AccountNumber,
+                AccountNumberText = bankAccountNumber.AccountNumberText,
+                Iban = bankAccountNumber.Iban,
+                IbanSeparated = bankAccountNumber.IbanSeparated,
+                CustomerId = (int)bankAccountCreation.CustomerId
             };
 
             _accountNumberFactoryMock.Setup(anf => anf.GenerateAccountNumber(null)).Returns(bankAccountNumber);
@@ -176,22 +177,6 @@ namespace BankApp.UnitTests.Controllers
         public async Task CreateBankAccountWithCustomerByCustomer_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
         {
             // Arrange
-            var expectedBankAccount = new BankAccount
-            {
-                AccountType = AccountType.Checking,
-                Currency = Currency.Eur,
-                CountryCode = "PL",
-                CheckNumber = "61",
-                NationalBankCode = "1080",
-                BranchCode = "000",
-                NationalCheckDigit = 1,
-                AccountNumber = 0,
-                AccountNumberText = "0000000000000000",
-                Iban = "PL61108000010000000000000000",
-                IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000",
-                CustomerId = 1
-            };
-
             var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto
             {
                 Register = new RegisterDto
@@ -234,6 +219,31 @@ namespace BankApp.UnitTests.Controllers
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
             };
 
+            var expectedBankAccount = new BankAccountDto
+            {
+                AccountType = (AccountType)bankAccountCreation.BankAccount.AccountType,
+                Currency = (Currency)bankAccountCreation.BankAccount.Currency,
+                CountryCode = bankAccountNumber.CountryCode,
+                CheckNumber = bankAccountNumber.CheckNumber,
+                NationalBankCode = bankAccountNumber.NationalBankCode,
+                BranchCode = bankAccountNumber.BranchCode,
+                NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
+                AccountNumber = bankAccountNumber.AccountNumber,
+                AccountNumberText = bankAccountNumber.AccountNumberText,
+                Iban = bankAccountNumber.Iban,
+                IbanSeparated = bankAccountNumber.IbanSeparated,
+                Customer = new CustomerDto
+                {
+                    ApplicationUser = new ApplicationUserDto
+                    {
+                        Name = bankAccountCreation.Register.User.Name,
+                        Surname = bankAccountCreation.Register.User.Surname,
+                        Email = bankAccountCreation.Register.User.Email,
+                        PhoneNumber = bankAccountCreation.Register.User.PhoneNumber
+                    }
+                }
+            };
+
             _userManagerMock.Setup(m => m.CreateAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
                 .ReturnsAsync(IdentityResult.Success).Callback<ApplicationUser, string>((user, password) =>
                 {
@@ -267,6 +277,27 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountDto.Customer.ApplicationUser.Name);
+            Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Surname, bankAccountDto.Customer.ApplicationUser.Surname);
+            Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Email, bankAccountDto.Customer.ApplicationUser.Email);
+            Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.PhoneNumber, bankAccountDto.Customer.ApplicationUser.PhoneNumber);
+
+            var bankAccountFromDb = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountDto.Id);
+
+            Assert.IsNotNull(bankAccountFromDb);
+            Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountFromDb.CountryCode);
+            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountFromDb.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountFromDb.NationalBankCode);
+            Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountFromDb.BranchCode);
+            Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountFromDb.NationalCheckDigit);
+            Assert.AreEqual(expectedBankAccount.AccountNumber, bankAccountFromDb.AccountNumber);
+            Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountFromDb.AccountNumberText);
+            Assert.AreEqual(expectedBankAccount.Iban, bankAccountFromDb.Iban);
+            Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountFromDb.Customer.ApplicationUser.Name);
+            Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Surname, bankAccountFromDb.Customer.ApplicationUser.Surname);
+            Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Email, bankAccountFromDb.Customer.ApplicationUser.Email);
+            Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.PhoneNumber, bankAccountFromDb.Customer.ApplicationUser.PhoneNumber);
         }
     }
 }
