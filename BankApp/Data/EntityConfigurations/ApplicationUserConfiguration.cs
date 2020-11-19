@@ -32,6 +32,17 @@ namespace BankApp.Data.EntityConfigurations
                 .HasOne(a => a.UserAddress)
                 .WithOne(ua => ua.ApplicationUser)
                 .HasForeignKey<UserAddress>(ua => ua.Id);
+
+            builder
+                .HasMany(a => a.AssignedEmployeesAtBranchHistory)
+                .WithOne(eat => eat.AssignedBy)
+                .HasForeignKey(eat => eat.AssignedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(a => a.ExpelledEmployeesFromBranchHistory)
+                .WithOne(eat => eat.ExpelledBy)
+                .HasForeignKey(eat => eat.ExpelledById);
         }
     }
 }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -122,6 +122,14 @@
     <Compile Remove="Data\Migrations\20201105203845_Test.Designer.cs" />
     <Compile Remove="Data\Migrations\20201105203935_Test.cs" />
     <Compile Remove="Data\Migrations\20201105203935_Test.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201119194025_AddAssignedByAndExpelledByToEmployeeAtBranchHistoryTable.cs" />
+    <Compile Remove="Data\Migrations\20201119194025_AddAssignedByAndExpelledByToEmployeeAtBranchHistoryTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201119195214_AddAssignedByAndExpelledByToEmployeeAtBranchHistoryTable.cs" />
+    <Compile Remove="Data\Migrations\20201119195214_AddAssignedByAndExpelledByToEmployeeAtBranchHistoryTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201119202859_AddAssignedByAndExpelledByToEmployeeAtBranchHistoryTable.cs" />
+    <Compile Remove="Data\Migrations\20201119202859_AddAssignedByAndExpelledByToEmployeeAtBranchHistoryTable.Designer.cs" />
+    <Compile Remove="Data\Migrations\20201119204648_AddAssignedByAndExpelledByToEmployeeAtBranchHistoryTable.cs" />
+    <Compile Remove="Data\Migrations\20201119204648_AddAssignedByAndExpelledByToEmployeeAtBranchHistoryTable.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

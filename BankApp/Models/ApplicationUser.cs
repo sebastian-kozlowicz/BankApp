@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace BankApp.Models
 {
@@ -13,5 +14,7 @@ namespace BankApp.Models
         public UserAddress UserAddress { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public int? CreatedById { get; set; }
+        public IList<EmployeeAtBranchHistory> AssignedEmployeesAtBranchHistory { get; set; }
+        public IList<EmployeeAtBranchHistory> ExpelledEmployeesFromBranchHistory { get; set; }
     }
 }
