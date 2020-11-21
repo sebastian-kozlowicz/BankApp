@@ -70,34 +70,34 @@ export function tokenGetter() {
       }
     }),
     RouterModule.forRoot([
-      {
+    {
         path: '', component: HomeComponent, pathMatch: 'full'
-      },
-      {
+    },
+    {
         path: 'registration/customer', component: NewBankAccountWithCustomer
-      },
-      {
+    },
+    {
         path: 'auth/login', component: LoginComponent
-      },
-      {
+    },
+    {
         path: 'no-access', component: NoAccessComponent
-      },
-      {
+    },
+    {
         path: 'user/new', component: NewUserComponent, canActivate: [AdminAuthGuard, AuthGuard]
-      },
-      {
+    },
+    {
         path: 'admin-panel', component: AdminPanelComponent, canActivate: [AdminAuthGuard, AuthGuard]
-      },
-      {
+    },
+    {
         path: 'customer/profile', component: CustomerProfileComponent
-      },
-      {
+    },
+    {
         path: 'customer/bank-transfer', component: BankTransferComponent
-      },
-      {
+    },
+    {
         path: 'branch/new', component: NewBranchComponent, canActivate: [AdminAuthGuard, AuthGuard]
-      }
-    ])
+    }
+], { relativeLinkResolution: 'legacy' })
   ],
   providers: [
     AuthService,
