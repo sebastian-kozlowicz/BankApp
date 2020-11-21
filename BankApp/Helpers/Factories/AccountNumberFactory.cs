@@ -74,18 +74,12 @@ namespace BankApp.Helpers.Factories
         {
             int sum = 0;
             var weights = new int[] { 3, 9, 7, 1, 3, 9, 7 };
-            var nationalBankCodeArray = nationalBankCode.Select(digit => int.Parse(digit.ToString())).ToArray();
+            var nationalBankCodeDigitsArray = nationalBankCode.Select(digit => int.Parse(digit.ToString())).ToArray();
             var branchCodeArray = branchCode.Select(digit => int.Parse(digit.ToString())).ToArray();
+            var concatenatedDigitsArray = nationalBankCodeDigitsArray.Concat(branchCodeArray).ToArray();
 
-            for (int i = 0; i < nationalBankCodeArray.Length; i++)
-                sum += weights[i] * nationalBankCodeArray[i];
-
-            int j = 0;
-            for (int i = nationalBankCodeArray.Length; i < weights.Length; i++)
-            {
-                sum += weights[i] * branchCodeArray[j];
-                j++;
-            }
+            for (int i = 0; i < concatenatedDigitsArray.Length; i++)
+                sum += weights[i] * concatenatedDigitsArray[i];
 
             return (10 - sum % 10) % 10;
         }
