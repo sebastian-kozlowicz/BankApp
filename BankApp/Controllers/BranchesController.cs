@@ -7,6 +7,7 @@ using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using BankApp.Constants;
 
 namespace BankApp.Controllers
 {
@@ -91,7 +92,7 @@ namespace BankApp.Controllers
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
                 EmployeeId = employee.Id,
-                AssignedById = int.Parse(User.FindFirst("userId").Value)
+                AssignedById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value)
                 
             };
 
