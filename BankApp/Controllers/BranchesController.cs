@@ -90,7 +90,9 @@ namespace BankApp.Controllers
             {
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
-                EmployeeId = employee.Id
+                EmployeeId = employee.Id,
+                AssignedById = int.Parse(User.FindFirst("userId").Value)
+                
             };
 
             _context.EmployeeAtBranchHistory.Add(employeeAtBranch);
