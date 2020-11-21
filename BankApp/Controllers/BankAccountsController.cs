@@ -61,7 +61,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var generatedAccountNumber = _accountNumberFactory.GenerateAccountNumber();
+            var generatedAccountNumber = _accountNumberFactory.GenerateBankAccountNumber();
 
             var bankAccount = new BankAccount
             {
@@ -93,7 +93,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var generatedAccountNumber = _accountNumberFactory.GenerateAccountNumber();
+            var generatedAccountNumber = _accountNumberFactory.GenerateBankAccountNumber();
 
             var user = _mapper.Map<ApplicationUser>(model.Register);
             user.Customer = new Customer { Id = user.Id };
@@ -169,7 +169,7 @@ namespace BankApp.Controllers
                 workerBranchId = worker.Manager.WorkAtId;
             }
 
-            var generatedAccountNumber = _accountNumberFactory.GenerateAccountNumber(workerBranchId);
+            var generatedAccountNumber = _accountNumberFactory.GenerateBankAccountNumber(workerBranchId);
 
             var user = _mapper.Map<ApplicationUser>(model.Register);
             user.Customer = new Customer { Id = user.Id };

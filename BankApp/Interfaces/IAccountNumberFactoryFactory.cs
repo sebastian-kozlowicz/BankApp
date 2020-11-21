@@ -4,6 +4,6 @@ namespace BankApp.Interfaces
 {
     public interface IAccountNumberFactory
     {
-        BankAccountNumber GenerateAccountNumber(int? branchId = null);
+        BankAccountNumber GenerateBankAccountNumber(int? branchId = null);
     }
 }

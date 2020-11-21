@@ -53,7 +53,7 @@ namespace BankApp.UnitTests.Helpers.Factories
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
             };
 
-            var result = _accountNumberFactory.GenerateAccountNumber(1);
+            var result = _accountNumberFactory.GenerateBankAccountNumber(1);
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
             Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
@@ -82,7 +82,7 @@ namespace BankApp.UnitTests.Helpers.Factories
                 IbanSeparated = "PL 27 1080 0014 0000 0000 0000 0000"
             };
 
-            var result = _accountNumberFactory.GenerateAccountNumber();
+            var result = _accountNumberFactory.GenerateBankAccountNumber();
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
             Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
@@ -114,7 +114,7 @@ namespace BankApp.UnitTests.Helpers.Factories
                 IbanSeparated = "PL 34 1080 0001 0000 0000 0000 0001"
             };
 
-            var result = _accountNumberFactory.GenerateAccountNumber(1);
+            var result = _accountNumberFactory.GenerateBankAccountNumber(1);
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
             Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);

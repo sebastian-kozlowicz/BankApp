@@ -101,7 +101,7 @@ namespace BankApp.UnitTests.Controllers
                 CustomerId = (int)bankAccountCreation.CustomerId
             };
 
-            _accountNumberFactoryMock.Setup(anf => anf.GenerateAccountNumber(null)).Returns(bankAccountNumber);
+            _accountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
 
             // Act
             var createdAtRouteResult = _bankAccountsController.CreateBankAccount(bankAccountCreation).Result as CreatedAtRouteResult;
@@ -250,7 +250,7 @@ namespace BankApp.UnitTests.Controllers
                     _context.SaveChanges();
                 });
 
-            _accountNumberFactoryMock.Setup(anf => anf.GenerateAccountNumber(null)).Returns(bankAccountNumber);
+            _accountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
 
             // Act
             var result = await _bankAccountsController.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);

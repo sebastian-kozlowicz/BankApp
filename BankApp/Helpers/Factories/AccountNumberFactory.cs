@@ -10,7 +10,7 @@ namespace BankApp.Helpers.Factories
     public class AccountNumberFactory : IAccountNumberFactory
     {
         private readonly ApplicationDbContext _context;
-        private static readonly Dictionary<string, int> _countryCharactersAssignedToNumbers = new Dictionary<string, int>()
+        private static readonly Dictionary<string, int> CountryCharactersAssignedToNumbers = new Dictionary<string, int>
         {
             {"A", 10 },
             {"B", 11 },
@@ -45,7 +45,7 @@ namespace BankApp.Helpers.Factories
             _context = context;
         }
 
-        public BankAccountNumber GenerateAccountNumber(int? branchId = null)
+        public BankAccountNumber GenerateBankAccountNumber(int? branchId = null)
         {
             var bankData = GetBankData();
             var branchCode = GetBranchCode(branchId);
@@ -86,8 +86,8 @@ namespace BankApp.Helpers.Factories
 
         public string GenerateCheckNumber(BankData bankData, string branchCode, int nationalCheckDigit, string accountNumberText)
         {
-            var firstCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
-            var secondCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(1, 1)];
+            var firstCountryCharacterAsNumber = CountryCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
+            var secondCountryCharacterAsNumber = CountryCharactersAssignedToNumbers[bankData.CountryCode.Substring(1, 1)];
 
             var formattedAccountNumber = $"{bankData.NationalBankCode}" +
                                          $"{branchCode}" +
