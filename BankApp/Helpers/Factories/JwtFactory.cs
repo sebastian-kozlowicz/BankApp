@@ -45,7 +45,7 @@ namespace BankApp.Helpers.Factories
             var claimsIdentity = new ClaimsIdentity(new GenericIdentity(user.Email, "Token"), new[]
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
-                new Claim(JwtRegisteredClaimNames.Jti, _jwtOptions.JtiGenerator().Result),
+                new Claim(JwtRegisteredClaimNames.Jti, _jwtOptions.Jti),
                 new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                 new Claim("userId", user.Id.ToString(), ClaimValueTypes.Integer32)
             });
@@ -70,8 +70,8 @@ namespace BankApp.Helpers.Factories
             if (options.SigningCredentials == null)
                 throw new ArgumentNullException(nameof(JwtIssuerOptions.SigningCredentials));
 
-            if (options.JtiGenerator == null)
-                throw new ArgumentNullException(nameof(JwtIssuerOptions.JtiGenerator));
+            if (options.Jti == null)
+                throw new ArgumentNullException(nameof(JwtIssuerOptions.Jti));
         }
     }
 }
