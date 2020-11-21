@@ -95,17 +95,19 @@ namespace BankApp.Helpers.Factories
             var firstCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
             var secondCountryCharacterAsNumber = _countryCharactersAssignedToNumbers[bankData.CountryCode.Substring(1, 1)];
 
-            var formatedAccountNumber = $"{bankData.NationalBankCode}" +
-                                        $"{branchCode}" +
-                                        $"{nationalCheckDigit}" +
-                                        $"{accountNumberText}" +
-                                        $"{firstCountryCharacterAsNumber}" +
-                                        $"{secondCountryCharacterAsNumber}"
-                                        + "00";
+            var formattedAccountNumber = $"{bankData.NationalBankCode}" +
+                                         $"{branchCode}" +
+                                         $"{nationalCheckDigit}" +
+                                         $"{accountNumberText}" +
+                                         $"{firstCountryCharacterAsNumber}" +
+                                         $"{secondCountryCharacterAsNumber}"
+                                         + "00";
 
-            var splittedAccountNumberArray = Regex.Split(formatedAccountNumber, "(?<=\\G.{8})");
+            //todo: when \G anchor issue will be fixed in .NET 5.0 runtime swap below implementation, link to issue https://github.com/dotnet/runtime/pull/44975
+            //var splittedAccountNumberArray = Regex.Split(formattedAccountNumber, "(?<=\\G.{8})");
+            var splittedAccountNumberArray = Regex.Split(formattedAccountNumber, "(.{8})").Where(an => !string.IsNullOrEmpty(an)).ToArray();
 
-            string modResult = string.Empty;
+            var modResult = string.Empty;
             foreach (var number in splittedAccountNumberArray)
             {
                 modResult = (long.Parse(modResult + number) % 97).ToString();
@@ -131,8 +133,9 @@ namespace BankApp.Helpers.Factories
 
         public string GetIbanSeparated(BankData bankData, string checkNumber, string branchCode, int nationalCheckDigit, string accountNumberText)
         {
-            var splittedAccountNumberArray = Regex.Split(accountNumberText, "(?<=\\G.{4})");
-            splittedAccountNumberArray = splittedAccountNumberArray.Where(an => !string.IsNullOrEmpty(an)).ToArray();
+            //todo: when \G anchor issue will be fixed in .NET 5.0 runtime swap below implementation, link to issue https://github.com/dotnet/runtime/pull/44975
+            //var splittedAccountNumberArray = Regex.Split(accountNumberText, "(?<=\\G.{4})").Where(an => !string.IsNullOrEmpty(an)).ToArray();
+            var splittedAccountNumberArray = Regex.Split(accountNumberText, "(.{4})").Where(an => !string.IsNullOrEmpty(an)).ToArray();
             var separatedAccountNumber = string.Join(" ", splittedAccountNumberArray);
 
             return $"{bankData.CountryCode} " +
