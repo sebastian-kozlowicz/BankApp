@@ -85,6 +85,20 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            var currentUserId = User.FindFirst(CustomClaimTypes.UserId)?.Value;
+            if (currentUserId == null)
+            {
+                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim was not found in JWT token.");
+                return BadRequest(ModelState);
+            }
+
+            var isParsed = int.TryParse(currentUserId, out var currentUserIdParsed);
+            if (!isParsed)
+            {
+                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim is not valid numeric value.");
+                return BadRequest(ModelState);
+            }
+
             employee.WorkAtId = branch.Id;
             AssignEmployeeExpelDateFromBranch(model);
             var employeeAtBranch = new EmployeeAtBranchHistory
@@ -92,8 +106,7 @@ namespace BankApp.Controllers
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
                 EmployeeId = employee.Id,
-                AssignedById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value)
-                
+                AssignedById = currentUserIdParsed
             };
 
             _context.EmployeeAtBranchHistory.Add(employeeAtBranch);
