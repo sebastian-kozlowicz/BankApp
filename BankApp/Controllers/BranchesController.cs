@@ -79,7 +79,7 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (employee.WorkAtId == model.BranchId)
+            if (employee.WorkAtId != null)
             {
                 ModelState.AddModelError(nameof(model.BranchId), $"Employee with id {model.WorkerId} is currently assigned to branch with id {model.BranchId}.");
                 return BadRequest(ModelState);
@@ -100,7 +100,6 @@ namespace BankApp.Controllers
             }
 
             employee.WorkAtId = branch.Id;
-            AssignEmployeeExpelDateFromBranch(model);
             var employeeAtBranch = new EmployeeAtBranchHistory
             {
                 AssignDate = DateTime.UtcNow,
@@ -184,8 +183,28 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            var currentUserId = User.FindFirst(CustomClaimTypes.UserId)?.Value;
+            if (currentUserId == null)
+            {
+                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim was not found in JWT token.");
+                return BadRequest(ModelState);
+            }
+
+            var isParsed = int.TryParse(currentUserId, out var currentUserIdParsed);
+            if (!isParsed)
+            {
+                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim is not valid numeric value.");
+                return BadRequest(ModelState);
+            }
+
             employee.WorkAtId = null;
-            AssignEmployeeExpelDateFromBranch(model);
+            var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == model.WorkerId).ToList().LastOrDefault();
+            if (employeeAtBranchFromDb != null)
+            {
+                employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
+                employeeAtBranchFromDb.ExpelledById = currentUserIdParsed;
+            }
+
             _context.SaveChanges();
 
             return Ok();
@@ -223,13 +242,6 @@ namespace BankApp.Controllers
             _context.SaveChanges();
 
             return Ok();
-        }
-
-        private void AssignEmployeeExpelDateFromBranch(WorkerAtBranchDto model)
-        {
-            var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == model.WorkerId).ToList().LastOrDefault();
-            if (employeeAtBranchFromDb != null && employeeAtBranchFromDb.ExpelDate == null)
-                employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
         }
 
         private void AssignManagerExpelDateFromBranch(WorkerAtBranchDto model)
