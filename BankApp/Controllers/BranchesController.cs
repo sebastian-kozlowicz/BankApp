@@ -135,19 +135,33 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (manager.WorkAtId == model.BranchId)
+            if (manager.WorkAtId != null)
             {
                 ModelState.AddModelError(nameof(model.BranchId), $"Manager with id {model.WorkerId} is currently assigned to branch with id {model.BranchId}.");
                 return BadRequest(ModelState);
             }
 
+            var currentUserId = User.FindFirst(CustomClaimTypes.UserId)?.Value;
+            if (currentUserId == null)
+            {
+                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim was not found in JWT token.");
+                return BadRequest(ModelState);
+            }
+
+            var isParsed = int.TryParse(currentUserId, out var currentUserIdParsed);
+            if (!isParsed)
+            {
+                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim is not valid numeric value.");
+                return BadRequest(ModelState);
+            }
+
             manager.WorkAtId = branch.Id;
-            AssignManagerExpelDateFromBranch(model);
             var managerAtBranch = new ManagerAtBranchHistory
             {
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
-                ManagerId = manager.Id
+                ManagerId = manager.Id,
+                AssignedById = currentUserIdParsed
             };
 
             _context.ManagerAtBranchHistory.Add(managerAtBranch);
@@ -237,18 +251,31 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            var currentUserId = User.FindFirst(CustomClaimTypes.UserId)?.Value;
+            if (currentUserId == null)
+            {
+                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim was not found in JWT token.");
+                return BadRequest(ModelState);
+            }
+
+            var isParsed = int.TryParse(currentUserId, out var currentUserIdParsed);
+            if (!isParsed)
+            {
+                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim is not valid numeric value.");
+                return BadRequest(ModelState);
+            }
+
             manager.WorkAtId = null;
-            AssignManagerExpelDateFromBranch(model);
+            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == model.WorkerId).ToList().LastOrDefault();
+            if (managerAtBranchFromDb != null)
+            {
+                managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
+                managerAtBranchFromDb.ExpelledById = currentUserIdParsed;
+            }
+
             _context.SaveChanges();
 
             return Ok();
-        }
-
-        private void AssignManagerExpelDateFromBranch(WorkerAtBranchDto model)
-        {
-            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == model.WorkerId).ToList().LastOrDefault();
-            if (managerAtBranchFromDb != null && managerAtBranchFromDb.ExpelDate == null)
-                managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
         }
     }
 }
