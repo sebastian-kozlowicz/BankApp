@@ -11,5 +11,9 @@ namespace BankApp.Models
         public int BranchId { get; set; }
         public Manager Manager { get; set; }
         public int ManagerId { get; set; }
+        public ApplicationUser AssignedBy { get; set; }
+        public int AssignedById { get; set; }
+        public ApplicationUser ExpelledBy { get; set; }
+        public int? ExpelledById { get; set; }
     }
 }

@@ -34,7 +34,7 @@ namespace BankApp.Data.EntityConfigurations
                 .HasForeignKey<UserAddress>(ua => ua.Id);
 
             builder
-                .HasMany(a => a.AssignedEmployeesAtBranchHistory)
+                .HasMany(a => a.AssignedEmployeesToBranchHistory)
                 .WithOne(eat => eat.AssignedBy)
                 .HasForeignKey(eat => eat.AssignedById)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -43,6 +43,17 @@ namespace BankApp.Data.EntityConfigurations
                 .HasMany(a => a.ExpelledEmployeesFromBranchHistory)
                 .WithOne(eat => eat.ExpelledBy)
                 .HasForeignKey(eat => eat.ExpelledById);
+
+            builder
+                .HasMany(a => a.AssignedManagersToBranchHistory)
+                .WithOne(mat => mat.AssignedBy)
+                .HasForeignKey(mat => mat.AssignedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasMany(a => a.ExpelledManagersFromBranchHistory)
+                .WithOne(mat => mat.ExpelledBy)
+                .HasForeignKey(mat => mat.ExpelledById);
         }
     }
 }
