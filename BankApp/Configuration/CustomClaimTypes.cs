@@ -1,4 +1,4 @@
-﻿namespace BankApp.Constants
+﻿namespace BankApp.Configuration
 {
     public static class CustomClaimTypes
     {

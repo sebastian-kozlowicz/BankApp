@@ -7,7 +7,7 @@ using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using BankApp.Constants;
+using BankApp.Configuration;
 
 namespace BankApp.Controllers
 {

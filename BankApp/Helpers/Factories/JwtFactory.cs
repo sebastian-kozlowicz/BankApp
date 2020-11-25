@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using BankApp.Configuration;
-using BankApp.Constants;
 using BankApp.Interfaces;
 using BankApp.Models;
 using Microsoft.Extensions.Options;
