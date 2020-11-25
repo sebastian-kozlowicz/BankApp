@@ -19,6 +19,9 @@ using BankApp.Configuration;
 using System.Globalization;
 using BankApp.Helpers.Factories;
 using BankApp.Helpers.Services;
+using BankApp.Policies.Handlers;
+using BankApp.Policies.Requirement;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BankApp
 {
@@ -52,6 +55,7 @@ namespace BankApp
                 .AddClientStore<InMemoryClientStore>()
                 .AddResourceStore<InMemoryResourcesStore>();
 
+            services.AddSingleton<IAuthorizationHandler, UserIdRequirementHandler>();
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.AddTransient<IAccountNumberFactory, AccountNumberFactory>();
             services.AddTransient<ITransferService<InternalTransferService>, InternalTransferService>();
@@ -96,6 +100,11 @@ namespace BankApp
                 options.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
                 options.TokenValidationParameters = tokenValidationParameters;
                 options.SaveToken = false;
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("UserIdIncludedInToken", policy => policy.Requirements.Add(new UserIdRequirement()));
             });
 
             services.AddControllersWithViews();
