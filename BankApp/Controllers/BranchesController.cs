@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using BankApp.Configuration;
+using BankApp.Policies;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BankApp.Controllers
 {
@@ -59,6 +61,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("AssignEmployeeToBranch")]
         public ActionResult AssignEmployeeToBranch([FromBody] WorkerAtBranchDto model)
         {
@@ -85,27 +88,13 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var currentUserId = User.FindFirst(CustomClaimTypes.UserId)?.Value;
-            if (currentUserId == null)
-            {
-                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim was not found in JWT token.");
-                return BadRequest(ModelState);
-            }
-
-            var isParsed = int.TryParse(currentUserId, out var currentUserIdParsed);
-            if (!isParsed)
-            {
-                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim is not valid numeric value.");
-                return BadRequest(ModelState);
-            }
-
             employee.WorkAtId = branch.Id;
             var employeeAtBranch = new EmployeeAtBranchHistory
             {
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
                 EmployeeId = employee.Id,
-                AssignedById = currentUserIdParsed
+                AssignedById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value)
             };
 
             _context.EmployeeAtBranchHistory.Add(employeeAtBranch);
@@ -115,6 +104,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("AssignManagerToBranch")]
         public ActionResult AssignManagerToBranch([FromBody] WorkerAtBranchDto model)
         {
@@ -141,27 +131,13 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var currentUserId = User.FindFirst(CustomClaimTypes.UserId)?.Value;
-            if (currentUserId == null)
-            {
-                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim was not found in JWT token.");
-                return BadRequest(ModelState);
-            }
-
-            var isParsed = int.TryParse(currentUserId, out var currentUserIdParsed);
-            if (!isParsed)
-            {
-                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim is not valid numeric value.");
-                return BadRequest(ModelState);
-            }
-
             manager.WorkAtId = branch.Id;
             var managerAtBranch = new ManagerAtBranchHistory
             {
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
                 ManagerId = manager.Id,
-                AssignedById = currentUserIdParsed
+                AssignedById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value)
             };
 
             _context.ManagerAtBranchHistory.Add(managerAtBranch);
@@ -171,6 +147,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("ExpelEmployeeFromBranch")]
         public ActionResult ExpelEmployeeFromBranch([FromBody] WorkerAtBranchDto model)
         {
@@ -197,26 +174,12 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var currentUserId = User.FindFirst(CustomClaimTypes.UserId)?.Value;
-            if (currentUserId == null)
-            {
-                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim was not found in JWT token.");
-                return BadRequest(ModelState);
-            }
-
-            var isParsed = int.TryParse(currentUserId, out var currentUserIdParsed);
-            if (!isParsed)
-            {
-                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim is not valid numeric value.");
-                return BadRequest(ModelState);
-            }
-
             employee.WorkAtId = null;
             var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == model.WorkerId).ToList().LastOrDefault();
             if (employeeAtBranchFromDb != null)
             {
                 employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-                employeeAtBranchFromDb.ExpelledById = currentUserIdParsed;
+                employeeAtBranchFromDb.ExpelledById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value);
             }
 
             _context.SaveChanges();
@@ -225,6 +188,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("ExpelManagerFromBranch")]
         public ActionResult ExpelManagerFromBranch([FromBody] WorkerAtBranchDto model)
         {
@@ -251,26 +215,12 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            var currentUserId = User.FindFirst(CustomClaimTypes.UserId)?.Value;
-            if (currentUserId == null)
-            {
-                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim was not found in JWT token.");
-                return BadRequest(ModelState);
-            }
-
-            var isParsed = int.TryParse(currentUserId, out var currentUserIdParsed);
-            if (!isParsed)
-            {
-                ModelState.AddModelError(nameof(CustomClaimTypes.UserId), $"{CustomClaimTypes.UserId} claim is not valid numeric value.");
-                return BadRequest(ModelState);
-            }
-
             manager.WorkAtId = null;
             var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == model.WorkerId).ToList().LastOrDefault();
             if (managerAtBranchFromDb != null)
             {
                 managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-                managerAtBranchFromDb.ExpelledById = currentUserIdParsed;
+                managerAtBranchFromDb.ExpelledById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value);
             }
 
             _context.SaveChanges();
