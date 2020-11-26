@@ -19,6 +19,7 @@ using BankApp.Configuration;
 using System.Globalization;
 using BankApp.Helpers.Factories;
 using BankApp.Helpers.Services;
+using BankApp.Policies;
 using BankApp.Policies.Handlers;
 using BankApp.Policies.Requirement;
 using Microsoft.AspNetCore.Authorization;
@@ -104,7 +105,7 @@ namespace BankApp
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("UserIdIncludedInToken", policy => policy.Requirements.Add(new UserIdRequirement()));
+                options.AddPolicy(PolicyName.UserIdIncludedInJwtToken, policy => policy.Requirements.Add(new UserIdRequirement()));
             });
 
             services.AddControllersWithViews();
