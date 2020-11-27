@@ -47,7 +47,6 @@ namespace BankApp.Mapping
                 .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.User.PhoneNumber))
                 .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.User.Name))
                 .ForMember(dest => dest.Surname, opt => opt.MapFrom(src => src.User.Surname))
-                .ForMember(dest => dest.CreatedById, opt => opt.MapFrom(src => src.User.CreatedById))
                 .ForPath(dest => dest.UserAddress.Country, opt => opt.MapFrom(src => src.Address.Country))
                 .ForPath(dest => dest.UserAddress.City, opt => opt.MapFrom(src => src.Address.City))
                 .ForPath(dest => dest.UserAddress.Street, opt => opt.MapFrom(src => src.Address.Street))

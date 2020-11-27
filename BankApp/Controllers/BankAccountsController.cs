@@ -2,12 +2,15 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount;
 using BankApp.Dtos.BankAccount.WithCustomerCreation;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
+using BankApp.Policies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -128,16 +131,19 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("CreateWithCustomerByWorker")]
         public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByWorker([FromBody] BankAccountWithCustomerCreationByWorkerDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var worker = _context.Users.SingleOrDefault(u => u.Id == model.Register.User.CreatedById);
+            var currentUserId = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value);
+
+            var worker = _context.Users.SingleOrDefault(u => u.Id == currentUserId);
             if (worker == null)
             {
-                ModelState.AddModelError(nameof(model.Register.User.CreatedById), $"Worker with id {model.Register.User.CreatedById} doesn't exist.");
+                ModelState.AddModelError(nameof(worker), $"Worker with id {currentUserId} found in claims doesn't exist in database.");
                 return BadRequest(ModelState);
             }
 
@@ -149,7 +155,7 @@ namespace BankApp.Controllers
 
                 if (worker.Employee.WorkAtId == null)
                 {
-                    ModelState.AddModelError(nameof(model.Register.User.CreatedById), $"Worker with id {model.Register.User.CreatedById} is currently not assigned to any branch.");
+                    ModelState.AddModelError(nameof(worker), $"Worker with id {currentUserId} is currently not assigned to any branch.");
                     return BadRequest(ModelState);
                 }
 
@@ -162,7 +168,7 @@ namespace BankApp.Controllers
 
                 if (worker.Employee.WorkAtId == null)
                 {
-                    ModelState.AddModelError(nameof(model.Register.User.CreatedById), $"Worker with id {model.Register.User.CreatedById} is currently not assigned to any branch.");
+                    ModelState.AddModelError(nameof(worker), $"Worker with id {currentUserId} is currently not assigned to any branch.");
                     return BadRequest(ModelState);
                 }
 
@@ -173,6 +179,7 @@ namespace BankApp.Controllers
 
             var user = _mapper.Map<ApplicationUser>(model.Register);
             user.Customer = new Customer { Id = user.Id };
+            user.CreatedById = currentUserId;
 
             var bankAccount = new BankAccount
             {

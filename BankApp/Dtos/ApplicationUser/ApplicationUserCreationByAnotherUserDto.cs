@@ -20,8 +20,5 @@ namespace BankApp.Dtos.ApplicationUser
         [StringLength(12, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
         [DataType(DataType.PhoneNumber)]
         public string PhoneNumber { get; set; }
-
-        [Required]
-        public int? CreatedById { get; set; }
     }
 }
