@@ -46,18 +46,13 @@ namespace BankApp.Helpers.Factories
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, _jwtOptions.Jti),
-                new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
+                new Claim(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
                 new Claim(CustomClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer32)
             });
 
             claimsIdentity.AddClaims(roles.Select(r => new Claim(ClaimTypes.Role, r)));
             return claimsIdentity;
         }
-
-        private static long ToUnixEpochDate(DateTime date)
-          => (long)Math.Round((date.ToUniversalTime() -
-                               new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero))
-                              .TotalSeconds);
 
         private static void ThrowIfInvalidOptions(JwtIssuerOptions options)
         {
