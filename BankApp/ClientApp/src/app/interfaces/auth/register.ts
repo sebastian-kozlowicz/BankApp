@@ -1,7 +1,7 @@
 import { AddressCreation } from "../address/address-creation";
-import { UserCreation } from "../user/user-creation";
+import { UserCreationBySameUser } from "../user/user-creation-by-same-user";
 
 export interface Register {
-  user: UserCreation;
+  user: UserCreationBySameUser;
   address: AddressCreation;
 }

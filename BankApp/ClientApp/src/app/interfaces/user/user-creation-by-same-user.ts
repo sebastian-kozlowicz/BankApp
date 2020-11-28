@@ -1,4 +1,4 @@
-export interface UserCreation {
+export interface UserCreationBySameUser {
   name: string;
   surname: string;
   email: string;

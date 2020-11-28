@@ -3,5 +3,4 @@ export interface UserCreationByAnotherUser {
   surname: string;
   email: string;
   phoneNumber: string;
-  createdById: number;
 }
