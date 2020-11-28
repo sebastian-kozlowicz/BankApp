@@ -6,7 +6,6 @@ import { PersonalInformationFormValues } from "../../interfaces/forms/personal-i
 import { AddressFormValues } from "../../interfaces/forms/address-form-values";
 import { UserRole } from '../../enumerators/userRole';
 import { RegisterByAnotherUser } from "../../interfaces/auth/register-by-another-user";
-import { JwtToken } from "../../interfaces/auth/jwtToken";
 
 @Component({
   selector: 'app-new-user',
@@ -20,7 +19,7 @@ export class NewUserComponent {
     private toastr: ToastrService) { }
 
   UserRole = UserRole;
-  USER_ROLES: Array<UserRole> = [UserRole.Administrator, UserRole.Employee, UserRole.Manager];
+  USER_ROLES: Array<UserRole> = [UserRole.Administrator, UserRole.Teller, UserRole.Manager];
 
   get userRole() {
     return this.accountInformationForm.get('userRole');
@@ -59,8 +58,7 @@ export class NewUserComponent {
         name: this.personalInformationValue.name,
         surname: this.personalInformationValue.surname,
         email: this.personalInformationValue.email,
-        phoneNumber: this.personalInformationValue.phoneNumber.toString(),
-        createdById: this.authService.currentUser.userId
+        phoneNumber: this.personalInformationValue.phoneNumber.toString()
       },
       address: {
         country: this.addressValue.country,
@@ -80,8 +78,8 @@ export class NewUserComponent {
     else if (this.userRoleValue === UserRole.Customer) {
       serviceMethodName = "registerCustomer";
     }
-    else if (this.userRoleValue === UserRole.Employee) {
-      serviceMethodName = "registerEmployee";
+    else if (this.userRoleValue === UserRole.Teller) {
+      serviceMethodName = "registerTeller";
     }
     else if (this.userRoleValue === UserRole.Manager) {
       serviceMethodName = "registerManager";

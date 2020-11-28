@@ -1,8 +1,8 @@
 ﻿using BankApp.Dtos.ApplicationUser;
 
-namespace BankApp.Dtos.Employee
+namespace BankApp.Dtos.Teller
 {
-    public class EmployeeDto
+    public class TellerDto
     {
         public string Id { get; set; }
         public ApplicationUserDto ApplicationUser { get; set; }

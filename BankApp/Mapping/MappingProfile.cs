@@ -8,8 +8,8 @@ using BankApp.Dtos.Branch;
 using BankApp.Dtos.Branch.WithAddress;
 using BankApp.Dtos.Card;
 using BankApp.Dtos.Customer;
-using BankApp.Dtos.Employee;
 using BankApp.Dtos.Manager;
+using BankApp.Dtos.Teller;
 using BankApp.Models;
 
 namespace BankApp.Mapping
@@ -23,7 +23,7 @@ namespace BankApp.Mapping
             CreateMap<Card, CardDto>();
             CreateMap<Administrator, AdministratorDto>();
             CreateMap<Customer, CustomerDto>();
-            CreateMap<Employee, EmployeeDto>();
+            CreateMap<Teller, TellerDto>();
             CreateMap<Manager, ManagerDto>();
             CreateMap<Branch, BranchDto>();
             CreateMap<BranchAddress, AddressDto>();

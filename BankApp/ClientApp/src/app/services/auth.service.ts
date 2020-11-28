@@ -17,7 +17,7 @@ export class AuthService {
 
   private readonly administratorsEndpoint = '/api/administrators';
   private readonly customersEndpoint = '/api/customers';
-  private readonly employeesEndpoint = '/api/employees';
+  private readonly tellersEndpoint = '/api/tellers';
   private readonly managersEndpoint = '/api/managers';
   private readonly loginEndpoint = '/api/auth/login';
 
@@ -29,8 +29,8 @@ export class AuthService {
     return this.http.post(this.customersEndpoint, registerModel);
   }
 
-  registerEmployee(registerModel: RegisterByAnotherUser) {
-    return this.http.post(this.employeesEndpoint, registerModel);
+  registerTeller(registerModel: RegisterByAnotherUser) {
+    return this.http.post(this.tellersEndpoint, registerModel);
   }
 
   registerManager(registerModel: RegisterByAnotherUser) {
@@ -88,7 +88,7 @@ export class AuthService {
   isEmployee() {
     let user = this.currentUser;
 
-    if (user && user.role.includes(UserRole[UserRole.Employee]))
+    if (user && user.role.includes(UserRole[UserRole.Teller]))
       return true;
 
     return false;

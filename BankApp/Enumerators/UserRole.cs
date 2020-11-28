@@ -4,7 +4,7 @@
     {
         Administrator,
         Customer,
-        Employee,
+        Teller,
         Manager
     }
 }

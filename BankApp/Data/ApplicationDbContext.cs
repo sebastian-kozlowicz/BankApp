@@ -8,7 +8,7 @@ namespace BankApp.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<int>, int>
     {
-        public DbSet<EmployeeAtBranchHistory> EmployeeAtBranchHistory { get; set; }
+        public DbSet<TellerAtBranchHistory> TellerAtBranchHistory { get; set; }
         public DbSet<ManagerAtBranchHistory> ManagerAtBranchHistory { get; set; }
         public DbSet<BankData> BankData { get; set; }
         public DbSet<UserAddress> UserAddresses { get; set; }
@@ -20,7 +20,7 @@ namespace BankApp.Data
         public DbSet<Card> Cards { get; set; }
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Customer> Customers { get; set; }
-        public DbSet<Employee> Employees { get; set; }
+        public DbSet<Teller> Tellers { get; set; }
         public DbSet<Manager> Managers { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)

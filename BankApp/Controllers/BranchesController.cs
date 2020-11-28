@@ -62,16 +62,16 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
-        [Route("AssignEmployeeToBranch")]
-        public ActionResult AssignEmployeeToBranch([FromBody] WorkerAtBranchDto model)
+        [Route("AssignTellerToBranch")]
+        public ActionResult AssignTellerToBranch([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var employee = _context.Employees.SingleOrDefault(e => e.Id == model.WorkerId);
-            if (employee == null)
+            var teller = _context.Tellers.SingleOrDefault(e => e.Id == model.WorkerId);
+            if (teller == null)
             {
-                ModelState.AddModelError(nameof(model.WorkerId), $"Employee with id {model.WorkerId} doesn't exist.");
+                ModelState.AddModelError(nameof(model.WorkerId), $"Teller with id {model.WorkerId} doesn't exist.");
                 return BadRequest(ModelState);
             }
 
@@ -82,22 +82,22 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (employee.WorkAtId != null)
+            if (teller.WorkAtId != null)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Employee with id {model.WorkerId} is currently assigned to branch with id {model.BranchId}.");
+                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently assigned to branch with id {model.BranchId}.");
                 return BadRequest(ModelState);
             }
 
-            employee.WorkAtId = branch.Id;
-            var employeeAtBranch = new EmployeeAtBranchHistory
+            teller.WorkAtId = branch.Id;
+            var tellerAtBranch = new TellerAtBranchHistory
             {
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
-                EmployeeId = employee.Id,
+                TellerId = teller.Id,
                 AssignedById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value)
             };
 
-            _context.EmployeeAtBranchHistory.Add(employeeAtBranch);
+            _context.TellerAtBranchHistory.Add(tellerAtBranch);
             _context.SaveChanges();
 
             return Ok();
@@ -148,16 +148,16 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
-        [Route("ExpelEmployeeFromBranch")]
-        public ActionResult ExpelEmployeeFromBranch([FromBody] WorkerAtBranchDto model)
+        [Route("ExpelTellerFromBranch")]
+        public ActionResult ExpelTellerFromBranch([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var employee = _context.Employees.SingleOrDefault(e => e.Id == model.WorkerId);
-            if (employee == null)
+            var teller = _context.Tellers.SingleOrDefault(e => e.Id == model.WorkerId);
+            if (teller == null)
             {
-                ModelState.AddModelError(nameof(model.WorkerId), $"Employee with id {model.WorkerId} doesn't exist.");
+                ModelState.AddModelError(nameof(model.WorkerId), $"Teller with id {model.WorkerId} doesn't exist.");
                 return BadRequest(ModelState);
             }
 
@@ -168,18 +168,18 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (employee.WorkAtId != branch.Id)
+            if (teller.WorkAtId != branch.Id)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Employee with id {model.WorkerId} is currently not assigned to branch with id {model.BranchId}.");
+                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently not assigned to branch with id {model.BranchId}.");
                 return BadRequest(ModelState);
             }
 
-            employee.WorkAtId = null;
-            var employeeAtBranchFromDb = _context.EmployeeAtBranchHistory.Where(e => e.EmployeeId == model.WorkerId).ToList().LastOrDefault();
-            if (employeeAtBranchFromDb != null)
+            teller.WorkAtId = null;
+            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(e => e.TellerId == model.WorkerId).ToList().LastOrDefault();
+            if (tellerAtBranchFromDb != null)
             {
-                employeeAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-                employeeAtBranchFromDb.ExpelledById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value);
+                tellerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
+                tellerAtBranchFromDb.ExpelledById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value);
             }
 
             _context.SaveChanges();

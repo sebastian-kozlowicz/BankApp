@@ -5,7 +5,7 @@ var UserRole;
 (function (UserRole) {
     UserRole[UserRole["Administrator"] = 0] = "Administrator";
     UserRole[UserRole["Customer"] = 1] = "Customer";
-    UserRole[UserRole["Employee"] = 2] = "Employee";
+    UserRole[UserRole["Teller"] = 2] = "Teller";
     UserRole[UserRole["Manager"] = 3] = "Manager";
 })(UserRole = exports.UserRole || (exports.UserRole = {}));
 //# sourceMappingURL=userRole.js.map

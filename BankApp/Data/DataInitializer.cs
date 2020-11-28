@@ -22,8 +22,8 @@ namespace BankApp.Data
             if (!roleManager.RoleExistsAsync(UserRole.Customer.ToString()).Result)
                 _ = roleManager.CreateAsync(new IdentityRole<int>(UserRole.Customer.ToString())).Result;
 
-            if (!roleManager.RoleExistsAsync(UserRole.Employee.ToString()).Result)
-                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRole.Employee.ToString())).Result;
+            if (!roleManager.RoleExistsAsync(UserRole.Teller.ToString()).Result)
+                _ = roleManager.CreateAsync(new IdentityRole<int>(UserRole.Teller.ToString())).Result;
 
             if (!roleManager.RoleExistsAsync(UserRole.Manager.ToString()).Result)
                 _ = roleManager.CreateAsync(new IdentityRole<int>(UserRole.Manager.ToString())).Result;
@@ -35,7 +35,7 @@ namespace BankApp.Data
             {
                 var user = new ApplicationUser { UserName = "admin@localhost", Email = "admin@localhost" };
 
-                user.Administrator = new Administrator() { Id = user.Id };
+                user.Administrator = new Administrator { Id = user.Id };
 
                 var result = userManager.CreateAsync(user, "Qwerty1@").Result;
 
@@ -47,7 +47,7 @@ namespace BankApp.Data
             {
                 var user = new ApplicationUser { UserName = "customer@localhost", Email = "customer@localhost" };
 
-                user.Customer = new Customer() { Id = user.Id };
+                user.Customer = new Customer { Id = user.Id };
 
                 var result = userManager.CreateAsync(user, "Qwerty1@").Result;
 
@@ -57,17 +57,17 @@ namespace BankApp.Data
                 }
             }
 
-            if (userManager.FindByEmailAsync("employee@localhost").Result == null)
+            if (userManager.FindByEmailAsync("teller@localhost").Result == null)
             {
-                var user = new ApplicationUser { UserName = "employee@localhost", Email = "employee@localhost" };
+                var user = new ApplicationUser { UserName = "teller@localhost", Email = "teller@localhost" };
 
-                user.Employee = new Employee() { Id = user.Id };
+                user.Teller = new Teller { Id = user.Id };
 
                 var result = userManager.CreateAsync(user, "Qwerty1@").Result;
 
                 if (result.Succeeded)
                 {
-                    _ = userManager.AddToRoleAsync(user, UserRole.Employee.ToString()).Result;
+                    _ = userManager.AddToRoleAsync(user, UserRole.Teller.ToString()).Result;
                 }
             }
 
@@ -75,7 +75,7 @@ namespace BankApp.Data
             {
                 var user = new ApplicationUser { UserName = "manager@localhost", Email = "manager@localhost" };
 
-                user.Manager = new Manager() { Id = user.Id };
+                user.Manager = new Manager { Id = user.Id };
 
                 var result = userManager.CreateAsync(user, "Qwerty1@").Result;
 

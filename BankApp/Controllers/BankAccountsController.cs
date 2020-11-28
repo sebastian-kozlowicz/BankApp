@@ -140,39 +140,39 @@ namespace BankApp.Controllers
 
             var currentUserId = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value);
 
-            var worker = _context.Users.SingleOrDefault(u => u.Id == currentUserId);
-            if (worker == null)
+            var currentUser = _context.Users.SingleOrDefault(u => u.Id == currentUserId);
+            if (currentUser == null)
             {
-                ModelState.AddModelError(nameof(worker), $"Worker with id {currentUserId} found in claims doesn't exist in database.");
+                ModelState.AddModelError(nameof(currentUser), $"User with id {currentUserId} found in claims doesn't exist in database.");
                 return BadRequest(ModelState);
             }
 
             int? workerBranchId = null;
 
-            if (await _userManager.IsInRoleAsync(worker, UserRole.Employee.ToString()))
+            if (await _userManager.IsInRoleAsync(currentUser, UserRole.Teller.ToString()))
             {
-                await _context.Employees.Where(e => e.Id == worker.Id).LoadAsync();
+                await _context.Tellers.Where(e => e.Id == currentUser.Id).LoadAsync();
 
-                if (worker.Employee.WorkAtId == null)
+                if (currentUser.Teller.WorkAtId == null)
                 {
-                    ModelState.AddModelError(nameof(worker), $"Worker with id {currentUserId} is currently not assigned to any branch.");
+                    ModelState.AddModelError(nameof(currentUser.Teller), $"Worker with id {currentUserId} is currently not assigned to any branch.");
                     return BadRequest(ModelState);
                 }
 
-                workerBranchId = worker.Employee.WorkAtId;
+                workerBranchId = currentUser.Teller.WorkAtId;
             }
 
-            if (await _userManager.IsInRoleAsync(worker, UserRole.Manager.ToString()))
+            if (await _userManager.IsInRoleAsync(currentUser, UserRole.Manager.ToString()))
             {
-                await _context.Managers.Where(e => e.Id == worker.Id).LoadAsync();
+                await _context.Managers.Where(e => e.Id == currentUser.Id).LoadAsync();
 
-                if (worker.Employee.WorkAtId == null)
+                if (currentUser.Manager.WorkAtId == null)
                 {
-                    ModelState.AddModelError(nameof(worker), $"Worker with id {currentUserId} is currently not assigned to any branch.");
+                    ModelState.AddModelError(nameof(currentUser.Manager), $"Worker with id {currentUserId} is currently not assigned to any branch.");
                     return BadRequest(ModelState);
                 }
 
-                workerBranchId = worker.Manager.WorkAtId;
+                workerBranchId = currentUser.Manager.WorkAtId;
             }
 
             var generatedAccountNumber = _accountNumberFactory.GenerateBankAccountNumber(workerBranchId);
