@@ -120,6 +120,7 @@ namespace BankApp.Controllers
             };
 
             user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
+            user.CreatedBankAccounts = new List<BankAccount> { bankAccount };
 
             var result = await _userManager.CreateAsync(user, model.Register.User.Password);
 
