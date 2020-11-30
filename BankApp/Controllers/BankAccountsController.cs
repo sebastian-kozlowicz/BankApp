@@ -79,7 +79,8 @@ namespace BankApp.Controllers
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
-                CustomerId = (int)model.CustomerId
+                CustomerId = (int)model.CustomerId,
+                CreatedById = (int)model.CustomerId
             };
 
             _context.BankAccounts.Add(bankAccount);
@@ -114,7 +115,8 @@ namespace BankApp.Controllers
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
-                CustomerId = user.Id
+                CustomerId = user.Id,
+                CreatedById = user.Id
             };
 
             user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
@@ -194,7 +196,8 @@ namespace BankApp.Controllers
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
-                CustomerId = user.Id
+                CustomerId = user.Id,
+                CreatedById = currentUserId
             };
 
             user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
