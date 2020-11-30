@@ -34,6 +34,12 @@ namespace BankApp.Data.EntityConfigurations
                 .HasForeignKey<UserAddress>(ua => ua.Id);
 
             builder
+                .HasMany(a => a.CreatedBankAccounts)
+                .WithOne(ba => ba.CreatedBy)
+                .HasForeignKey(ba => ba.CreatedById)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
                 .HasMany(a => a.AssignedTellersToBranchHistory)
                 .WithOne(eat => eat.AssignedBy)
                 .HasForeignKey(eat => eat.AssignedById)

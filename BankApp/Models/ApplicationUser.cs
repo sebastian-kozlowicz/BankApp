@@ -14,6 +14,7 @@ namespace BankApp.Models
         public UserAddress UserAddress { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public int? CreatedById { get; set; }
+        public IList<BankAccount> CreatedBankAccounts { get; set; }
         public IList<TellerAtBranchHistory> AssignedTellersToBranchHistory { get; set; }
         public IList<TellerAtBranchHistory> ExpelledTellersFromBranchHistory { get; set; }
         public IList<ManagerAtBranchHistory> AssignedManagersToBranchHistory { get; set; }

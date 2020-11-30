@@ -21,6 +21,8 @@ namespace BankApp.Models
         public decimal DebitLimit { get; set; }
         public Customer Customer { get; set; }
         public int CustomerId { get; set; }
+        public ApplicationUser CreatedBy { get; set; }
+        public int CreatedById { get; set; }
         public Card Card { get; set; }
         public IList<BankTransfer> BankTransfers { get; set; }
     }
