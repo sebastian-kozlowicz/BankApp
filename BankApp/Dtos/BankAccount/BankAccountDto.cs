@@ -1,4 +1,5 @@
-﻿using BankApp.Dtos.Customer;
+﻿using BankApp.Dtos.ApplicationUser;
+using BankApp.Dtos.Customer;
 using BankApp.Enumerators;
 
 namespace BankApp.Dtos.BankAccount
@@ -20,5 +21,7 @@ namespace BankApp.Dtos.BankAccount
         public decimal Balance { get; set; }
         public CustomerDto Customer { get; set; }
         public int CustomerId { get; set; }
+        public ApplicationUserDto CreatedBy { get; set; }
+        public int CreatedById { get; set; }
     }
 }
