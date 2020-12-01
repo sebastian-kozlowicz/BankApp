@@ -17,12 +17,14 @@ using System.Text;
 using BankApp.Interfaces;
 using BankApp.Configuration;
 using System.Globalization;
+using System.Threading.Tasks;
 using BankApp.Helpers.Factories;
 using BankApp.Helpers.Services;
 using BankApp.Policies;
 using BankApp.Policies.Handlers;
 using BankApp.Policies.Requirement;
 using Microsoft.AspNetCore.Authorization;
+using Nito.AsyncEx;
 
 namespace BankApp
 {
@@ -146,8 +148,6 @@ namespace BankApp
             app.UseAuthentication();
             app.UseAuthorization();
 
-            DataInitializer.SeedData(userManager, roleManager, context);
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
@@ -169,7 +169,8 @@ namespace BankApp
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
-
+            
+            AsyncContext.Run(async () => await DataInitializer.SeedData(userManager, roleManager, context));
         }
     }
 }
