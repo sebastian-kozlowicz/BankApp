@@ -164,8 +164,7 @@ namespace BankApp.Controllers
 
                 workerBranchId = currentUser.Teller.WorkAtId;
             }
-
-            if (await _userManager.IsInRoleAsync(currentUser, UserRole.Manager.ToString()))
+            else if (await _userManager.IsInRoleAsync(currentUser, UserRole.Manager.ToString()))
             {
                 await _context.Managers.Where(e => e.Id == currentUser.Id).LoadAsync();
 
