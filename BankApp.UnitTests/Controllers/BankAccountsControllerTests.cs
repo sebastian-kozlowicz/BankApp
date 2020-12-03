@@ -36,7 +36,7 @@ namespace BankApp.UnitTests.Controllers
         private Mock<IUserStore<ApplicationUser>> _userStoreMock;
         private Mock<UserManager<ApplicationUser>> _userManagerMock;
         private ApplicationDbContext _context;
-        private readonly BankAccount _bankAccount = new BankAccount
+        private readonly BankAccount _firstBankAccount = new BankAccount
         {
             Id = 1,
             AccountType = AccountType.Checking,
@@ -55,6 +55,26 @@ namespace BankApp.UnitTests.Controllers
             CustomerId = 1,
             CreatedById = 1
         };
+        private readonly BankAccount _secondBankAccount = new BankAccount
+        {
+            Id = 2,
+            AccountType = AccountType.Savings,
+            Currency = Currency.Pln,
+            CountryCode = "PL",
+            CheckNumber = "27",
+            NationalBankCode = "1080",
+            BranchCode = "001",
+            NationalCheckDigit = 4,
+            AccountNumber = 0,
+            AccountNumberText = "0000000000000000",
+            Iban = "PL27108000140000000000000000",
+            IbanSeparated = "PL 27 1080 0014 0000 0000 0000 0000",
+            Balance = 0,
+            DebitLimit = 0,
+            CustomerId = 1,
+            CreatedById = 1
+        };
+        private List<BankAccount> BankAccounts => new List<BankAccount> { _firstBankAccount, _secondBankAccount };
 
         private ApplicationDbContext GetMockContext()
         {
@@ -67,7 +87,7 @@ namespace BankApp.UnitTests.Controllers
             context.BankData.Add(new BankData { CountryCode = "PL", NationalBankCode = "1080" });
             context.Branches.Add(new Branch { Id = 1, BranchCode = "000" });
             context.Headquarters.Add(new Headquarters { Id = 1 });
-            context.BankAccounts.Add(_bankAccount);
+            context.BankAccounts.AddRange(BankAccounts);
             context.Users.Add(new ApplicationUser { Id = 1 });
             context.Users.Add(new ApplicationUser { Id = 2 });
             context.Customers.Add(new Customer { Id = 1 });
@@ -97,22 +117,22 @@ namespace BankApp.UnitTests.Controllers
 
             var bankAccountDto = okResult.Value as BankAccountDto;
             Assert.IsNotNull(bankAccountDto);
-            Assert.AreEqual(_bankAccount.Id, bankAccountDto.Id);
-            Assert.AreEqual(_bankAccount.AccountType, bankAccountDto.AccountType);
-            Assert.AreEqual(_bankAccount.Currency, bankAccountDto.Currency);
-            Assert.AreEqual(_bankAccount.CountryCode, bankAccountDto.CountryCode);
-            Assert.AreEqual(_bankAccount.CheckNumber, bankAccountDto.CheckNumber);
-            Assert.AreEqual(_bankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
-            Assert.AreEqual(_bankAccount.BranchCode, bankAccountDto.BranchCode);
-            Assert.AreEqual(_bankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
-            Assert.AreEqual(_bankAccount.AccountNumber, bankAccountDto.AccountNumber);
-            Assert.AreEqual(_bankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
-            Assert.AreEqual(_bankAccount.Iban, bankAccountDto.Iban);
-            Assert.AreEqual(_bankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
-            Assert.AreEqual(_bankAccount.Balance, bankAccountDto.Balance);
-            Assert.AreEqual(_bankAccount.DebitLimit, bankAccountDto.DebitLimit);
-            Assert.AreEqual(_bankAccount.CustomerId, bankAccountDto.CustomerId);
-            Assert.AreEqual(_bankAccount.CreatedById, bankAccountDto.CreatedById);
+            Assert.AreEqual(_firstBankAccount.Id, bankAccountDto.Id);
+            Assert.AreEqual(_firstBankAccount.AccountType, bankAccountDto.AccountType);
+            Assert.AreEqual(_firstBankAccount.Currency, bankAccountDto.Currency);
+            Assert.AreEqual(_firstBankAccount.CountryCode, bankAccountDto.CountryCode);
+            Assert.AreEqual(_firstBankAccount.CheckNumber, bankAccountDto.CheckNumber);
+            Assert.AreEqual(_firstBankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
+            Assert.AreEqual(_firstBankAccount.BranchCode, bankAccountDto.BranchCode);
+            Assert.AreEqual(_firstBankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
+            Assert.AreEqual(_firstBankAccount.AccountNumber, bankAccountDto.AccountNumber);
+            Assert.AreEqual(_firstBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
+            Assert.AreEqual(_firstBankAccount.Iban, bankAccountDto.Iban);
+            Assert.AreEqual(_firstBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
+            Assert.AreEqual(_firstBankAccount.Balance, bankAccountDto.Balance);
+            Assert.AreEqual(_firstBankAccount.DebitLimit, bankAccountDto.DebitLimit);
+            Assert.AreEqual(_firstBankAccount.CustomerId, bankAccountDto.CustomerId);
+            Assert.AreEqual(_firstBankAccount.CreatedById, bankAccountDto.CreatedById);
         }
 
         [TestMethod]
@@ -122,6 +142,53 @@ namespace BankApp.UnitTests.Controllers
 
             Assert.IsNotNull(notFoundResult);
             Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
+        public void GetBankAccountsForUser_Should_BankAccountDto_When_BankAccountIsFound()
+        {
+            var okResult = _bankAccountsController.GetBankAccountsForUser(1).Result as OkObjectResult;
+
+            Assert.IsNotNull(okResult);
+            Assert.IsInstanceOfType(okResult.Value, typeof(List<BankAccountDto>));
+
+            var bankAccountsDto = okResult.Value as List<BankAccountDto>;
+            Assert.IsNotNull(bankAccountsDto);
+            CollectionAssert.AllItemsAreNotNull(bankAccountsDto);
+
+            Assert.AreEqual(_firstBankAccount.Id, bankAccountsDto[0].Id);
+            Assert.AreEqual(_firstBankAccount.AccountType, bankAccountsDto[0].AccountType);
+            Assert.AreEqual(_firstBankAccount.Currency, bankAccountsDto[0].Currency);
+            Assert.AreEqual(_firstBankAccount.CountryCode, bankAccountsDto[0].CountryCode);
+            Assert.AreEqual(_firstBankAccount.CheckNumber, bankAccountsDto[0].CheckNumber);
+            Assert.AreEqual(_firstBankAccount.NationalBankCode, bankAccountsDto[0].NationalBankCode);
+            Assert.AreEqual(_firstBankAccount.BranchCode, bankAccountsDto[0].BranchCode);
+            Assert.AreEqual(_firstBankAccount.NationalCheckDigit, bankAccountsDto[0].NationalCheckDigit);
+            Assert.AreEqual(_firstBankAccount.AccountNumber, bankAccountsDto[0].AccountNumber);
+            Assert.AreEqual(_firstBankAccount.AccountNumberText, bankAccountsDto[0].AccountNumberText);
+            Assert.AreEqual(_firstBankAccount.Iban, bankAccountsDto[0].Iban);
+            Assert.AreEqual(_firstBankAccount.IbanSeparated, bankAccountsDto[0].IbanSeparated);
+            Assert.AreEqual(_firstBankAccount.Balance, bankAccountsDto[0].Balance);
+            Assert.AreEqual(_firstBankAccount.DebitLimit, bankAccountsDto[0].DebitLimit);
+            Assert.AreEqual(_firstBankAccount.CustomerId, bankAccountsDto[0].CustomerId);
+            Assert.AreEqual(_firstBankAccount.CreatedById, bankAccountsDto[0].CreatedById);
+
+            Assert.AreEqual(_secondBankAccount.Id, bankAccountsDto[1].Id);
+            Assert.AreEqual(_secondBankAccount.AccountType, bankAccountsDto[1].AccountType);
+            Assert.AreEqual(_secondBankAccount.Currency, bankAccountsDto[1].Currency);
+            Assert.AreEqual(_secondBankAccount.CountryCode, bankAccountsDto[1].CountryCode);
+            Assert.AreEqual(_secondBankAccount.CheckNumber, bankAccountsDto[1].CheckNumber);
+            Assert.AreEqual(_secondBankAccount.NationalBankCode, bankAccountsDto[1].NationalBankCode);
+            Assert.AreEqual(_secondBankAccount.BranchCode, bankAccountsDto[1].BranchCode);
+            Assert.AreEqual(_secondBankAccount.NationalCheckDigit, bankAccountsDto[1].NationalCheckDigit);
+            Assert.AreEqual(_secondBankAccount.AccountNumber, bankAccountsDto[1].AccountNumber);
+            Assert.AreEqual(_secondBankAccount.AccountNumberText, bankAccountsDto[1].AccountNumberText);
+            Assert.AreEqual(_secondBankAccount.Iban, bankAccountsDto[1].Iban);
+            Assert.AreEqual(_secondBankAccount.IbanSeparated, bankAccountsDto[1].IbanSeparated);
+            Assert.AreEqual(_secondBankAccount.Balance, bankAccountsDto[1].Balance);
+            Assert.AreEqual(_secondBankAccount.DebitLimit, bankAccountsDto[1].DebitLimit);
+            Assert.AreEqual(_secondBankAccount.CustomerId, bankAccountsDto[1].CustomerId);
+            Assert.AreEqual(_secondBankAccount.CreatedById, bankAccountsDto[1].CreatedById);
         }
 
         [TestMethod]
