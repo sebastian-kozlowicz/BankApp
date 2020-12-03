@@ -19,6 +19,7 @@ namespace BankApp.Dtos.BankAccount
         public string Iban { get; set; }
         public string IbanSeparated { get; set; }
         public decimal Balance { get; set; }
+        public decimal DebitLimit { get; set; }
         public CustomerDto Customer { get; set; }
         public int CustomerId { get; set; }
         public ApplicationUserDto CreatedBy { get; set; }
