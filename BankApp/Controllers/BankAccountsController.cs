@@ -48,7 +48,7 @@ namespace BankApp.Controllers
 
         [HttpGet]
         [Route("GetAllForUser/{applicationUserId}")]
-        public ActionResult<IEnumerable<BankAccountDto>> GetBankAccounts(int applicationUserId)
+        public ActionResult<IEnumerable<BankAccountDto>> GetBankAccountsForUser(int applicationUserId)
         {
             var bankAccounts = _context.BankAccounts.Where(ba => ba.CustomerId == applicationUserId).ToList();
 
