@@ -116,6 +116,15 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
+        public void GetBankAccount_Should_ReturnNotFound_When_BankAccountNotFound()
+        {
+            var notFoundResult = _bankAccountsController.GetBankAccount(999);
+
+            Assert.IsNotNull(notFoundResult);
+            Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
+        }
+
+        [TestMethod]
         public void CreateBankAccount_Should_CreateBankAccount_And_ReturnBankAccountDto_When_ModelStateIsValid()
         {
             // Arrange
