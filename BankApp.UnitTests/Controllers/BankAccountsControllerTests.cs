@@ -50,6 +50,8 @@ namespace BankApp.UnitTests.Controllers
             AccountNumberText = "0000000000000000",
             Iban = "PL61108000010000000000000000",
             IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000",
+            Balance = 0,
+            DebitLimit = 0,
             CustomerId = 1,
             CreatedById = 1
         };
@@ -107,6 +109,8 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(_bankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
             Assert.AreEqual(_bankAccount.Iban, bankAccountDto.Iban);
             Assert.AreEqual(_bankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
+            Assert.AreEqual(_bankAccount.Balance, bankAccountDto.Balance);
+            Assert.AreEqual(_bankAccount.DebitLimit, bankAccountDto.DebitLimit);
             Assert.AreEqual(_bankAccount.CustomerId, bankAccountDto.CustomerId);
             Assert.AreEqual(_bankAccount.CreatedById, bankAccountDto.CreatedById);
         }
@@ -148,6 +152,8 @@ namespace BankApp.UnitTests.Controllers
                 AccountNumberText = bankAccountNumber.AccountNumberText,
                 Iban = bankAccountNumber.Iban,
                 IbanSeparated = bankAccountNumber.IbanSeparated,
+                Balance = 0,
+                DebitLimit = 0,
                 CustomerId = (int)bankAccountCreation.CustomerId,
                 CreatedById = (int)bankAccountCreation.CustomerId
             };
@@ -174,6 +180,8 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.Balance, bankAccountDto.Balance);
+            Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountDto.DebitLimit);
             Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountDto.CustomerId);
             Assert.AreEqual(expectedBankAccount.CreatedById, bankAccountDto.CreatedById);
 
@@ -190,6 +198,8 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountFromDb.AccountNumberText);
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountFromDb.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.Balance, bankAccountFromDb.Balance);
+            Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountFromDb.DebitLimit);
             Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountFromDb.CustomerId);
             Assert.AreEqual(expectedBankAccount.CreatedById, bankAccountFromDb.CreatedById);
         }
@@ -288,6 +298,8 @@ namespace BankApp.UnitTests.Controllers
                 AccountNumberText = bankAccountNumber.AccountNumberText,
                 Iban = bankAccountNumber.Iban,
                 IbanSeparated = bankAccountNumber.IbanSeparated,
+                Balance = 0,
+                DebitLimit = 0,
                 Customer = new CustomerDto
                 {
                     ApplicationUser = new ApplicationUserDto
@@ -333,6 +345,8 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.Balance, bankAccountDto.Balance);
+            Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountDto.DebitLimit);
             Assert.AreEqual(bankAccountDto.CreatedById, bankAccountDto.Customer.Id);
             Assert.AreEqual(bankAccountDto.Customer.Id, bankAccountDto.Customer.ApplicationUser.Id);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountDto.Customer.ApplicationUser.Name);
@@ -353,6 +367,8 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountFromDb.AccountNumberText);
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountFromDb.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.Balance, bankAccountFromDb.Balance);
+            Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountFromDb.DebitLimit);
             Assert.AreEqual(bankAccountFromDb.CreatedById, bankAccountFromDb.Customer.Id);
             Assert.AreEqual(bankAccountDto.Customer.Id, bankAccountDto.Customer.ApplicationUser.Id);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountFromDb.Customer.ApplicationUser.Name);
@@ -452,6 +468,8 @@ namespace BankApp.UnitTests.Controllers
                 AccountNumberText = bankAccountNumber.AccountNumberText,
                 Iban = bankAccountNumber.Iban,
                 IbanSeparated = bankAccountNumber.IbanSeparated,
+                Balance = 0,
+                DebitLimit = 0,
                 Customer = new CustomerDto
                 {
                     ApplicationUser = new ApplicationUserDto
@@ -514,6 +532,8 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.Balance, bankAccountDto.Balance);
+            Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountDto.DebitLimit);
             Assert.AreEqual(currentUser.Id, bankAccountDto.CreatedById);
             Assert.AreEqual(bankAccountDto.Customer.Id, bankAccountDto.Customer.ApplicationUser.Id);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountDto.Customer.ApplicationUser.Name);
@@ -534,6 +554,8 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountFromDb.AccountNumberText);
             Assert.AreEqual(expectedBankAccount.Iban, bankAccountFromDb.Iban);
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
+            Assert.AreEqual(expectedBankAccount.Balance, bankAccountFromDb.Balance);
+            Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountFromDb.DebitLimit);
             Assert.AreEqual(currentUser.Id, bankAccountFromDb.CreatedById);
             Assert.AreEqual(bankAccountFromDb.Customer.Id, bankAccountFromDb.Customer.ApplicationUser.Id);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountFromDb.Customer.ApplicationUser.Name);
