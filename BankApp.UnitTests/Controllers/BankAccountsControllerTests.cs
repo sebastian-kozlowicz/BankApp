@@ -145,7 +145,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void GetBankAccountsForUser_Should_BankAccountDto_When_BankAccountIsFound()
+        public void GetBankAccountsForUser_Should_BankAccountDto_When_BankAccountsAreFound()
         {
             var okResult = _bankAccountsController.GetBankAccountsForUser(1).Result as OkObjectResult;
 
@@ -410,6 +410,8 @@ namespace BankApp.UnitTests.Controllers
             var result = await _bankAccountsController.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
 
             // Assert
+            _userManagerMock.Verify(m => m.AddToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Customer.ToString()), Times.Once);
+
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.Result, typeof(CreatedAtRouteResult));
 
@@ -597,6 +599,8 @@ namespace BankApp.UnitTests.Controllers
             var result = await _bankAccountsController.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
 
             // Assert
+            _userManagerMock.Verify(m => m.AddToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Customer.ToString()), Times.Once);
+
             Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.Result, typeof(CreatedAtRouteResult));
 
