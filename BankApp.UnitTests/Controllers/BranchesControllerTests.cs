@@ -145,13 +145,9 @@ namespace BankApp.UnitTests.Controllers
             _branchesController.ModelState.AddModelError("Address", "The Address field is required.");
 
             // Act
-            var result = _branchesController.CreateBranchWithAddress(branchCreation);
+            var badRequestResult = _branchesController.CreateBranchWithAddress(branchCreation).Result as BadRequestObjectResult;
 
             // Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
-
-            var badRequestResult = result.Result as BadRequestObjectResult;
             Assert.IsNotNull(badRequestResult);
             Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
 
@@ -167,6 +163,47 @@ namespace BankApp.UnitTests.Controllers
             var customerIdErrorValues = error["Address"] as string[];
             Assert.IsNotNull(customerIdErrorValues);
             Assert.IsTrue(customerIdErrorValues.Single() == "The Address field is required.");
+        }
+
+        [TestMethod]
+        public void CreateBranchWithAddress_Should_ReturnBadRequest_When_BranchCodeIsAlreadyInUse()
+        {
+            // Arrange
+            var branchCreation = new BranchWithAddressCreationDto
+            {
+                Branch = new BranchCreationDto
+                {
+                    BranchCode = "000"
+                },
+                Address = new AddressCreationDto
+                {
+                    Country = "United States",
+                    City = "New York",
+                    Street = "Glenwood Ave",
+                    HouseNumber = "10",
+                    ApartmentNumber = "11",
+                    PostalCode = "10028"
+                }
+            };
+
+            // Act
+            var result = _branchesController.CreateBranchWithAddress(branchCreation);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+
+            var badRequestResult = result.Result as BadRequestObjectResult;
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(branchCreation.Branch.BranchCode)));
+
+            var branchCodeErrorValues = error[nameof(branchCreation.Branch.BranchCode)] as string[];
+            Assert.IsNotNull(branchCodeErrorValues);
+            Assert.IsTrue(branchCodeErrorValues.Single() == "Branch code is already in use.");
         }
     }
 }

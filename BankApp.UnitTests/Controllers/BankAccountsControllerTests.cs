@@ -488,13 +488,13 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsTrue(error.ContainsKey("Register"));
             Assert.IsTrue(error.ContainsKey("BankAccount"));
 
-            var currencyErrorValues = error["Register"] as string[];
-            Assert.IsNotNull(currencyErrorValues);
-            Assert.IsTrue(currencyErrorValues.Single() == "The Register field is required.");
+            var registerErrorValues = error["Register"] as string[];
+            Assert.IsNotNull(registerErrorValues);
+            Assert.IsTrue(registerErrorValues.Single() == "The Register field is required.");
 
-            var customerIdErrorValues = error["BankAccount"] as string[];
-            Assert.IsNotNull(customerIdErrorValues);
-            Assert.IsTrue(customerIdErrorValues.Single() == "The BankAccount field is required.");
+            var bankAccountErrorValues = error["BankAccount"] as string[];
+            Assert.IsNotNull(bankAccountErrorValues);
+            Assert.IsTrue(bankAccountErrorValues.Single() == "The BankAccount field is required.");
         }
 
         [TestMethod]
@@ -677,13 +677,13 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsTrue(error.ContainsKey("Register"));
             Assert.IsTrue(error.ContainsKey("BankAccount"));
 
-            var currencyErrorValues = error["Register"] as string[];
-            Assert.IsNotNull(currencyErrorValues);
-            Assert.IsTrue(currencyErrorValues.Single() == "The Register field is required.");
+            var registerErrorValues = error["Register"] as string[];
+            Assert.IsNotNull(registerErrorValues);
+            Assert.IsTrue(registerErrorValues.Single() == "The Register field is required.");
 
-            var customerIdErrorValues = error["BankAccount"] as string[];
-            Assert.IsNotNull(customerIdErrorValues);
-            Assert.IsTrue(customerIdErrorValues.Single() == "The BankAccount field is required.");
+            var bankAccountErrorValues = error["BankAccount"] as string[];
+            Assert.IsNotNull(bankAccountErrorValues);
+            Assert.IsTrue(bankAccountErrorValues.Single() == "The BankAccount field is required.");
         }
     }
 }
