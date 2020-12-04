@@ -88,10 +88,10 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void CreateBranchWithAddress_Should_CreateBranch_And_ReturnBranchDto_When_ModelStateIsValid()
+        public void CreateBranchWithAddress_Should_CreateBranchWithAddress_And_ReturnBranchDto_When_ModelStateIsValid()
         {
             // Arrange
-            var newBranch = new BranchWithAddressCreationDto
+            var branchCreation = new BranchWithAddressCreationDto
             {
                 Branch = new BranchCreationDto
                 {
@@ -109,7 +109,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var createdAtRouteResult = _branchesController.CreateBranchWithAddress(newBranch).Result as CreatedAtRouteResult; 
+            var createdAtRouteResult = _branchesController.CreateBranchWithAddress(branchCreation).Result as CreatedAtRouteResult;
 
             // Assert
             Assert.IsNotNull(createdAtRouteResult);
@@ -117,23 +117,56 @@ namespace BankApp.UnitTests.Controllers
 
             var branchDto = createdAtRouteResult.Value as BranchDto;
             Assert.IsNotNull(branchDto);
-            Assert.AreEqual(newBranch.Branch.BranchCode, branchDto.BranchCode);
-            Assert.AreEqual(newBranch.Address.Country, branchDto.BranchAddress.Country);
-            Assert.AreEqual(newBranch.Address.City, branchDto.BranchAddress.City);
-            Assert.AreEqual(newBranch.Address.Street, branchDto.BranchAddress.Street);
-            Assert.AreEqual(newBranch.Address.HouseNumber, branchDto.BranchAddress.HouseNumber);
-            Assert.AreEqual(newBranch.Address.ApartmentNumber, branchDto.BranchAddress.ApartmentNumber);
-            Assert.AreEqual(newBranch.Address.PostalCode, branchDto.BranchAddress.PostalCode);
+            Assert.AreEqual(branchCreation.Branch.BranchCode, branchDto.BranchCode);
+            Assert.AreEqual(branchCreation.Address.Country, branchDto.BranchAddress.Country);
+            Assert.AreEqual(branchCreation.Address.City, branchDto.BranchAddress.City);
+            Assert.AreEqual(branchCreation.Address.Street, branchDto.BranchAddress.Street);
+            Assert.AreEqual(branchCreation.Address.HouseNumber, branchDto.BranchAddress.HouseNumber);
+            Assert.AreEqual(branchCreation.Address.ApartmentNumber, branchDto.BranchAddress.ApartmentNumber);
+            Assert.AreEqual(branchCreation.Address.PostalCode, branchDto.BranchAddress.PostalCode);
 
             var branchFromDb = _context.Branches.SingleOrDefault(b => b.Id == branchDto.Id);
             Assert.IsNotNull(branchFromDb);
-            Assert.AreEqual(newBranch.Branch.BranchCode, branchFromDb.BranchCode);
-            Assert.AreEqual(newBranch.Address.Country, branchFromDb.BranchAddress.Country);
-            Assert.AreEqual(newBranch.Address.City, branchFromDb.BranchAddress.City);
-            Assert.AreEqual(newBranch.Address.Street, branchFromDb.BranchAddress.Street);
-            Assert.AreEqual(newBranch.Address.HouseNumber, branchFromDb.BranchAddress.HouseNumber);
-            Assert.AreEqual(newBranch.Address.ApartmentNumber, branchFromDb.BranchAddress.ApartmentNumber);
-            Assert.AreEqual(newBranch.Address.PostalCode, branchFromDb.BranchAddress.PostalCode);
+            Assert.AreEqual(branchCreation.Branch.BranchCode, branchFromDb.BranchCode);
+            Assert.AreEqual(branchCreation.Address.Country, branchFromDb.BranchAddress.Country);
+            Assert.AreEqual(branchCreation.Address.City, branchFromDb.BranchAddress.City);
+            Assert.AreEqual(branchCreation.Address.Street, branchFromDb.BranchAddress.Street);
+            Assert.AreEqual(branchCreation.Address.HouseNumber, branchFromDb.BranchAddress.HouseNumber);
+            Assert.AreEqual(branchCreation.Address.ApartmentNumber, branchFromDb.BranchAddress.ApartmentNumber);
+            Assert.AreEqual(branchCreation.Address.PostalCode, branchFromDb.BranchAddress.PostalCode);
+        }
+
+        [TestMethod]
+        public void CreateBranchWithAddress_Should_ReturnBadRequest_When_ModelStateIsInvalid()
+        {
+            // Arrange
+            var branchCreation = new BranchWithAddressCreationDto();
+            _branchesController.ModelState.AddModelError("Branch", "The Branch field is required.");
+            _branchesController.ModelState.AddModelError("Address", "The Address field is required.");
+
+            // Act
+            var result = _branchesController.CreateBranchWithAddress(branchCreation);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+
+            var badRequestResult = result.Result as BadRequestObjectResult;
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey("Branch"));
+            Assert.IsTrue(error.ContainsKey("Address"));
+
+            var currencyErrorValues = error["Branch"] as string[];
+            Assert.IsNotNull(currencyErrorValues);
+            Assert.IsTrue(currencyErrorValues.Single() == "The Branch field is required.");
+
+            var customerIdErrorValues = error["Address"] as string[];
+            Assert.IsNotNull(customerIdErrorValues);
+            Assert.IsTrue(customerIdErrorValues.Single() == "The Address field is required.");
         }
     }
 }

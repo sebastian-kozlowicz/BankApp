@@ -465,7 +465,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public async Task CreateBankAccountWithCustomerByCustomer_ReturnBadRequest_When_ModelStateIsInvalid()
+        public async Task CreateBankAccountWithCustomerByCustomer_Should_ReturnBadRequest_When_ModelStateIsInvalid()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto();
@@ -654,7 +654,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public async Task CreateBankAccountWithCustomerByWorker_ReturnBadRequest_When_ModelStateIsInvalid()
+        public async Task CreateBankAccountWithCustomerByWorker_Should_ReturnBadRequest_When_ModelStateIsInvalid()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto();
