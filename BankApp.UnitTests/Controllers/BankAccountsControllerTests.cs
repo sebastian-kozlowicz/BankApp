@@ -74,7 +74,7 @@ namespace BankApp.UnitTests.Controllers
             CustomerId = 1,
             CreatedById = 1
         };
-        private List<BankAccount> BankAccounts => new List<BankAccount> { _firstBankAccount, _secondBankAccount };
+        private IEnumerable<BankAccount> BankAccounts => new List<BankAccount> { _firstBankAccount, _secondBankAccount };
 
         private ApplicationDbContext GetMockContext()
         {
@@ -189,6 +189,15 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(_secondBankAccount.DebitLimit, bankAccountsDto[1].DebitLimit);
             Assert.AreEqual(_secondBankAccount.CustomerId, bankAccountsDto[1].CustomerId);
             Assert.AreEqual(_secondBankAccount.CreatedById, bankAccountsDto[1].CreatedById);
+        }
+
+        [TestMethod]
+        public void GetBankAccountsForUser_Should_ReturnNotFound_When_BankAccountsNotFound()
+        {
+            var notFoundResult = _bankAccountsController.GetBankAccountsForUser(999);
+
+            Assert.IsNotNull(notFoundResult);
+            Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
         }
 
         [TestMethod]
