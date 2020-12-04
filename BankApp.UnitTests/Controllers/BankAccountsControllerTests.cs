@@ -88,10 +88,9 @@ namespace BankApp.UnitTests.Controllers
             context.Branches.Add(new Branch { Id = 1, BranchCode = "000" });
             context.Headquarters.Add(new Headquarters { Id = 1 });
             context.BankAccounts.AddRange(BankAccounts);
-            context.Users.Add(new ApplicationUser { Id = 1 });
-            context.Users.Add(new ApplicationUser { Id = 2 });
-            context.Customers.Add(new Customer { Id = 1 });
-            context.Tellers.Add(new Teller { Id = 2, WorkAtId = 1 });
+            context.Users.Add(new ApplicationUser { Id = 1, Customer = new Customer { Id = 1 } });
+            context.Users.Add(new ApplicationUser { Id = 2, Teller = new Teller { Id = 2, WorkAtId = 1 } });
+            context.Users.Add(new ApplicationUser { Id = 3, Teller = new Teller { Id = 3 } });
             context.SaveChanges();
 
             return context;
@@ -581,6 +580,8 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
+            _bankAccountsController.ControllerContext = context;
+
             _userManagerMock.Setup(m => m.IsInRoleAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
                 .ReturnsAsync(() => true);
 
@@ -592,8 +593,6 @@ namespace BankApp.UnitTests.Controllers
                 });
 
             _accountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(It.IsAny<int>())).Returns(bankAccountNumber);
-
-            _bankAccountsController.ControllerContext = context;
 
             // Act
             var result = await _bankAccountsController.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
@@ -750,6 +749,75 @@ namespace BankApp.UnitTests.Controllers
             var currentUserErrorValues = error[nameof(currentUser)] as string[];
             Assert.IsNotNull(currentUserErrorValues);
             Assert.IsTrue(currentUserErrorValues.Single() == $"User with id {currentUser.Id} found in claims doesn't exist in database.");
+        }
+
+        [TestMethod]
+        public async Task CreateBankAccountWithCustomerByWorker_Should_ReturnBadRequest_When_TellerIsNotAssignedToBranch()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
+            {
+                Register = new RegisterByAnotherUserDto
+                {
+                    User = new ApplicationUserCreationByAnotherUserDto
+                    {
+                        Name = "John",
+                        Surname = "Smith",
+                        Email = "john@smith.com",
+                        PhoneNumber = "123456789"
+                    },
+                    Address = new AddressCreationDto
+                    {
+                        Country = "United States",
+                        City = "New York",
+                        Street = "Glenwood Ave",
+                        HouseNumber = "10",
+                        ApartmentNumber = "11",
+                        PostalCode = "10028"
+                    }
+                },
+                BankAccount = new Dtos.BankAccount.WithCustomerCreation.BankAccountCreationDto
+                {
+                    AccountType = AccountType.Checking,
+                    Currency = Currency.Eur
+                }
+            };
+
+            var currentUser = new ApplicationUser { Id = 3 };
+            var claims = new List<Claim> { new Claim(CustomClaimTypes.UserId, currentUser.Id.ToString()) };
+            var identity = new ClaimsIdentity(claims);
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var context = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = claimsPrincipal
+                }
+            };
+
+            _bankAccountsController.ControllerContext = context;
+
+            _userManagerMock.Setup(m => m.IsInRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Teller.ToString()))
+                .ReturnsAsync(() => true);
+
+            // Act
+            var result = await _bankAccountsController.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
+
+            // Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+
+            var badRequestResult = result.Result as BadRequestObjectResult;
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(currentUser.Teller)));
+
+            var currentUserErrorValues = error[nameof(currentUser.Teller)] as string[];
+            Assert.IsNotNull(currentUserErrorValues);
+            Assert.IsTrue(currentUserErrorValues.Single() == $"Worker with id {currentUser.Id} is currently not assigned to any branch.");
         }
     }
 }
