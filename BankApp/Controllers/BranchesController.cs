@@ -68,7 +68,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var teller = _context.Tellers.SingleOrDefault(e => e.Id == model.WorkerId);
+            var teller = _context.Tellers.SingleOrDefault(t => t.Id == model.WorkerId);
             if (teller == null)
             {
                 ModelState.AddModelError(nameof(model.WorkerId), $"Teller with id {model.WorkerId} doesn't exist.");
@@ -154,7 +154,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var teller = _context.Tellers.SingleOrDefault(e => e.Id == model.WorkerId);
+            var teller = _context.Tellers.SingleOrDefault(t => t.Id == model.WorkerId);
             if (teller == null)
             {
                 ModelState.AddModelError(nameof(model.WorkerId), $"Teller with id {model.WorkerId} doesn't exist.");
@@ -175,7 +175,7 @@ namespace BankApp.Controllers
             }
 
             teller.WorkAtId = null;
-            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(e => e.TellerId == model.WorkerId).ToList().LastOrDefault();
+            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(t => t.TellerId == model.WorkerId).ToList().LastOrDefault();
             if (tellerAtBranchFromDb != null)
             {
                 tellerAtBranchFromDb.ExpelDate = DateTime.UtcNow;

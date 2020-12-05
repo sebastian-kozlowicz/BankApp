@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using AutoMapper;
+using BankApp.Configuration;
 using BankApp.Controllers;
 using BankApp.Data;
 using BankApp.Dtos.Address;
@@ -8,6 +11,7 @@ using BankApp.Dtos.Branch;
 using BankApp.Dtos.Branch.WithAddress;
 using BankApp.Mapping;
 using BankApp.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -44,6 +48,8 @@ namespace BankApp.UnitTests.Controllers
 
             var context = new ApplicationDbContext(options);
 
+            context.Users.Add(new ApplicationUser { Id = 1, Administrator = new Administrator { Id = 1 } });
+            context.Users.Add(new ApplicationUser { Id = 2, Teller = new Teller { Id = 2 } });
             context.Branches.Add(_branch);
             context.SaveChanges();
 
@@ -204,6 +210,50 @@ namespace BankApp.UnitTests.Controllers
             var branchCodeErrorValues = error[nameof(branchCreation.Branch.BranchCode)] as string[];
             Assert.IsNotNull(branchCodeErrorValues);
             Assert.IsTrue(branchCodeErrorValues.Single() == "Branch code is already in use.");
+        }
+
+        [TestMethod]
+        public void AssignTellerToBranch_Should_SetWorkAtIdPropertyToSuppliedBranchId_And_CreateTellerAtBranchHistory_And_ReturnOkObjectResult_When_ModelStateIsValid()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 2,
+                BranchId = 1
+            };
+
+            var currentUser = new ApplicationUser { Id = 1 };
+            var claims = new List<Claim> { new Claim(CustomClaimTypes.UserId, currentUser.Id.ToString()) };
+            var identity = new ClaimsIdentity(claims);
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var context = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = claimsPrincipal
+                }
+            };
+
+            _branchesController.ControllerContext = context;
+
+            // Act
+            var okResult = _branchesController.AssignTellerToBranch(workerAtBranch) as OkResult;
+
+            // Assert
+            Assert.IsNotNull(okResult);
+
+            var tellerFromDb = _context.Tellers.SingleOrDefault(t => t.Id == workerAtBranch.WorkerId);
+            Assert.IsNotNull(tellerFromDb);
+            Assert.AreEqual(workerAtBranch.BranchId, tellerFromDb.WorkAtId);
+
+            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(t => t.TellerId == workerAtBranch.WorkerId).ToList().LastOrDefault();
+            Assert.IsNotNull(tellerAtBranchFromDb);
+            Assert.IsNotNull(tellerAtBranchFromDb.AssignDate);
+            Assert.IsNull(tellerAtBranchFromDb.ExpelDate);
+            Assert.IsNull(tellerAtBranchFromDb.ExpelledById);
+            Assert.AreEqual(tellerAtBranchFromDb.AssignedById, currentUser.Id);
+            Assert.AreEqual(tellerAtBranchFromDb.TellerId, workerAtBranch.WorkerId);
+            Assert.AreEqual(tellerAtBranchFromDb.BranchId, workerAtBranch.BranchId);
         }
     }
 }
