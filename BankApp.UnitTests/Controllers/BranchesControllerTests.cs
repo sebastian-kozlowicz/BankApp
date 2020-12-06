@@ -24,7 +24,7 @@ namespace BankApp.UnitTests.Controllers
         private BranchesController _branchesController;
         private readonly IMapper _mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
         private ApplicationDbContext _context;
-        private readonly Branch _branch = new Branch
+        private readonly Branch _firstBranch = new Branch
         {
             Id = 1,
             BranchCode = "000",
@@ -39,6 +39,22 @@ namespace BankApp.UnitTests.Controllers
                 PostalCode = "61-001"
             }
         };
+        private readonly Branch _secondBranch = new Branch
+        {
+            Id = 2,
+            BranchCode = "001",
+            BranchAddress = new BranchAddress
+            {
+                Id = 2,
+                Country = "Poland",
+                City = "Poznań",
+                Street = "Gwarna",
+                HouseNumber = "2",
+                ApartmentNumber = "4",
+                PostalCode = "61-703"
+            }
+        };
+        private IEnumerable<Branch> Branches => new List<Branch> { _firstBranch };
 
         private ApplicationDbContext GetMockContext()
         {
@@ -48,9 +64,10 @@ namespace BankApp.UnitTests.Controllers
 
             var context = new ApplicationDbContext(options);
 
+            context.Branches.AddRange(Branches);
             context.Users.Add(new ApplicationUser { Id = 1, Administrator = new Administrator { Id = 1 } });
             context.Users.Add(new ApplicationUser { Id = 2, Teller = new Teller { Id = 2 } });
-            context.Branches.Add(_branch);
+            context.Users.Add(new ApplicationUser { Id = 3, Teller = new Teller { Id = 3, WorkAtId = 2 } });
             context.SaveChanges();
 
             return context;
@@ -73,15 +90,15 @@ namespace BankApp.UnitTests.Controllers
 
             var branchDto = okResult.Value as BranchDto;
             Assert.IsNotNull(branchDto);
-            Assert.AreEqual(_branch.Id, branchDto.Id);
-            Assert.AreEqual(_branch.BranchCode, branchDto.BranchCode);
-            Assert.AreEqual(_branch.BranchAddress.Id, branchDto.BranchAddress.Id);
-            Assert.AreEqual(_branch.BranchAddress.Country, branchDto.BranchAddress.Country);
-            Assert.AreEqual(_branch.BranchAddress.City, branchDto.BranchAddress.City);
-            Assert.AreEqual(_branch.BranchAddress.Street, branchDto.BranchAddress.Street);
-            Assert.AreEqual(_branch.BranchAddress.HouseNumber, branchDto.BranchAddress.HouseNumber);
-            Assert.AreEqual(_branch.BranchAddress.ApartmentNumber, branchDto.BranchAddress.ApartmentNumber);
-            Assert.AreEqual(_branch.BranchAddress.PostalCode, branchDto.BranchAddress.PostalCode);
+            Assert.AreEqual(_firstBranch.Id, branchDto.Id);
+            Assert.AreEqual(_firstBranch.BranchCode, branchDto.BranchCode);
+            Assert.AreEqual(_firstBranch.BranchAddress.Id, branchDto.BranchAddress.Id);
+            Assert.AreEqual(_firstBranch.BranchAddress.Country, branchDto.BranchAddress.Country);
+            Assert.AreEqual(_firstBranch.BranchAddress.City, branchDto.BranchAddress.City);
+            Assert.AreEqual(_firstBranch.BranchAddress.Street, branchDto.BranchAddress.Street);
+            Assert.AreEqual(_firstBranch.BranchAddress.HouseNumber, branchDto.BranchAddress.HouseNumber);
+            Assert.AreEqual(_firstBranch.BranchAddress.ApartmentNumber, branchDto.BranchAddress.ApartmentNumber);
+            Assert.AreEqual(_firstBranch.BranchAddress.PostalCode, branchDto.BranchAddress.PostalCode);
         }
 
         [TestMethod]
@@ -101,7 +118,7 @@ namespace BankApp.UnitTests.Controllers
             {
                 Branch = new BranchCreationDto
                 {
-                    BranchCode = "001"
+                    BranchCode = "002"
                 },
                 Address = new AddressCreationDto
                 {
@@ -336,6 +353,32 @@ namespace BankApp.UnitTests.Controllers
             var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
             Assert.IsNotNull(workerIdErrorValues);
             Assert.IsTrue(workerIdErrorValues.Single() == $"Branch with id {workerAtBranch.BranchId} doesn't exist.");
+        }
+
+        [TestMethod]
+        public void AssignTellerToBranch_Should_ReturnBadRequest_When_TellerIsAlreadyAssignedToBranch()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 3,
+                BranchId = 1
+            };
+
+            // Act
+            var badRequestResult = _branchesController.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
+
+            var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == $"Teller with id {workerAtBranch.WorkerId} is currently assigned to branch with id {_secondBranch.Id}.");
         }
     }
 }

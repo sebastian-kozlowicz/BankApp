@@ -84,7 +84,7 @@ namespace BankApp.Controllers
 
             if (teller.WorkAtId != null)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently assigned to branch with id {model.BranchId}.");
+                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently assigned to branch with id {teller.WorkAtId}.");
                 return BadRequest(ModelState);
             }
 
