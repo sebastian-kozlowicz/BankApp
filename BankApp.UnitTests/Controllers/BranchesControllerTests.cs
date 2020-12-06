@@ -311,5 +311,31 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsNotNull(workerIdErrorValues);
             Assert.IsTrue(workerIdErrorValues.Single() == $"Teller with id {workerAtBranch.WorkerId} doesn't exist.");
         }
+
+        [TestMethod]
+        public void AssignTellerToBranch_Should_ReturnBadRequest_When_BranchNotExist()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 2,
+                BranchId = 999
+            };
+
+            // Act
+            var badRequestResult = _branchesController.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
+
+            var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == $"Branch with id {workerAtBranch.BranchId} doesn't exist.");
+        }
     }
 }
