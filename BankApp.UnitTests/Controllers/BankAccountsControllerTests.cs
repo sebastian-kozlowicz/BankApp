@@ -294,9 +294,9 @@ namespace BankApp.UnitTests.Controllers
         {
             // Arrange
             var bankAccountCreation = new BankAccountCreationDto();
-            _bankAccountsController.ModelState.AddModelError("Currency", "The Currency field is required.");
-            _bankAccountsController.ModelState.AddModelError("CustomerId", "The CustomerId field is required.");
-            _bankAccountsController.ModelState.AddModelError("AccountType", "The AccountType field is required.");
+            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.AccountType), $"The {nameof(bankAccountCreation.AccountType)} field is required.");
+            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.Currency), $"The {nameof(bankAccountCreation.Currency)} field is required.");
+            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.CustomerId), $"The {nameof(bankAccountCreation.CustomerId)} field is required.");
 
             // Act
             var badRequestResult = _bankAccountsController.CreateBankAccount(bankAccountCreation).Result as BadRequestObjectResult;
@@ -307,21 +307,21 @@ namespace BankApp.UnitTests.Controllers
 
             var error = badRequestResult.Value as SerializableError;
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ContainsKey("Currency"));
-            Assert.IsTrue(error.ContainsKey("CustomerId"));
-            Assert.IsTrue(error.ContainsKey("AccountType"));
+            Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.AccountType)));
+            Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.Currency)));
+            Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.CustomerId)));
 
-            var currencyErrorValues = error["Currency"] as string[];
+            var currencyErrorValues = error[nameof(bankAccountCreation.AccountType)] as string[];
             Assert.IsNotNull(currencyErrorValues);
-            Assert.IsTrue(currencyErrorValues.Single() == "The Currency field is required.");
+            Assert.IsTrue(currencyErrorValues.Single() == $"The {nameof(bankAccountCreation.AccountType)} field is required.");
 
-            var customerIdErrorValues = error["CustomerId"] as string[];
+            var customerIdErrorValues = error[nameof(bankAccountCreation.Currency)] as string[];
             Assert.IsNotNull(customerIdErrorValues);
-            Assert.IsTrue(customerIdErrorValues.Single() == "The CustomerId field is required.");
+            Assert.IsTrue(customerIdErrorValues.Single() == $"The {nameof(bankAccountCreation.Currency)} field is required.");
 
-            var accountTypeErrorValues = error["AccountType"] as string[];
+            var accountTypeErrorValues = error[nameof(bankAccountCreation.CustomerId)] as string[];
             Assert.IsNotNull(accountTypeErrorValues);
-            Assert.IsTrue(accountTypeErrorValues.Single() == "The AccountType field is required.");
+            Assert.IsTrue(accountTypeErrorValues.Single() == $"The {nameof(bankAccountCreation.CustomerId)} field is required.");
         }
 
         [TestMethod]
@@ -469,8 +469,8 @@ namespace BankApp.UnitTests.Controllers
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto();
-            _bankAccountsController.ModelState.AddModelError("Register", "The Register field is required.");
-            _bankAccountsController.ModelState.AddModelError("BankAccount", "The BankAccount field is required.");
+            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.Register), $"The {nameof(bankAccountCreation.Register)} field is required.");
+            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount), $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
 
             // Act
             var result = await _bankAccountsController.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
@@ -485,16 +485,16 @@ namespace BankApp.UnitTests.Controllers
 
             var error = badRequestResult.Value as SerializableError;
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ContainsKey("Register"));
-            Assert.IsTrue(error.ContainsKey("BankAccount"));
+            Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.Register)));
+            Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.BankAccount)));
 
-            var registerErrorValues = error["Register"] as string[];
+            var registerErrorValues = error[nameof(bankAccountCreation.Register)] as string[];
             Assert.IsNotNull(registerErrorValues);
-            Assert.IsTrue(registerErrorValues.Single() == "The Register field is required.");
+            Assert.IsTrue(registerErrorValues.Single() == $"The {nameof(bankAccountCreation.Register)} field is required.");
 
-            var bankAccountErrorValues = error["BankAccount"] as string[];
+            var bankAccountErrorValues = error[nameof(bankAccountCreation.BankAccount)] as string[];
             Assert.IsNotNull(bankAccountErrorValues);
-            Assert.IsTrue(bankAccountErrorValues.Single() == "The BankAccount field is required.");
+            Assert.IsTrue(bankAccountErrorValues.Single() == $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
         }
 
         [TestMethod]
@@ -658,8 +658,8 @@ namespace BankApp.UnitTests.Controllers
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto();
-            _bankAccountsController.ModelState.AddModelError("Register", "The Register field is required.");
-            _bankAccountsController.ModelState.AddModelError("BankAccount", "The BankAccount field is required.");
+            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.Register), $"The {nameof(bankAccountCreation.Register)} field is required.");
+            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount), $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
 
             // Act
             var result = await _bankAccountsController.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
@@ -674,16 +674,16 @@ namespace BankApp.UnitTests.Controllers
 
             var error = badRequestResult.Value as SerializableError;
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ContainsKey("Register"));
-            Assert.IsTrue(error.ContainsKey("BankAccount"));
+            Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.Register)));
+            Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.BankAccount)));
 
-            var registerErrorValues = error["Register"] as string[];
+            var registerErrorValues = error[nameof(bankAccountCreation.Register)] as string[];
             Assert.IsNotNull(registerErrorValues);
-            Assert.IsTrue(registerErrorValues.Single() == "The Register field is required.");
+            Assert.IsTrue(registerErrorValues.Single() == $"The {nameof(bankAccountCreation.Register)} field is required.");
 
-            var bankAccountErrorValues = error["BankAccount"] as string[];
+            var bankAccountErrorValues = error[nameof(bankAccountCreation.BankAccount)] as string[];
             Assert.IsNotNull(bankAccountErrorValues);
-            Assert.IsTrue(bankAccountErrorValues.Single() == "The BankAccount field is required.");
+            Assert.IsTrue(bankAccountErrorValues.Single() == $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
         }
 
         [TestMethod]
