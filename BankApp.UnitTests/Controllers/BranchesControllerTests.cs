@@ -162,13 +162,13 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsTrue(error.ContainsKey("Branch"));
             Assert.IsTrue(error.ContainsKey("Address"));
 
-            var currencyErrorValues = error["Branch"] as string[];
-            Assert.IsNotNull(currencyErrorValues);
-            Assert.IsTrue(currencyErrorValues.Single() == "The Branch field is required.");
+            var branchErrorValues = error["Branch"] as string[];
+            Assert.IsNotNull(branchErrorValues);
+            Assert.IsTrue(branchErrorValues.Single() == "The Branch field is required.");
 
-            var customerIdErrorValues = error["Address"] as string[];
-            Assert.IsNotNull(customerIdErrorValues);
-            Assert.IsTrue(customerIdErrorValues.Single() == "The Address field is required.");
+            var addressErrorValues = error["Address"] as string[];
+            Assert.IsNotNull(addressErrorValues);
+            Assert.IsTrue(addressErrorValues.Single() == "The Address field is required.");
         }
 
         [TestMethod]
@@ -254,6 +254,35 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(tellerAtBranchFromDb.AssignedById, currentUser.Id);
             Assert.AreEqual(tellerAtBranchFromDb.TellerId, workerAtBranch.WorkerId);
             Assert.AreEqual(tellerAtBranchFromDb.BranchId, workerAtBranch.BranchId);
+        }
+
+        [TestMethod]
+        public void AssignTellerToBranch_Should_ReturnBadRequest_When_ModelStateIsInvalid()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto();
+            _branchesController.ModelState.AddModelError("WorkerId", "The WorkerId field is required.");
+            _branchesController.ModelState.AddModelError("BranchId", "The BranchId field is required.");
+
+            // Act
+            var badRequestResult = _branchesController.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey("WorkerId"));
+            Assert.IsTrue(error.ContainsKey("BranchId"));
+
+            var workerIdErrorValues = error["WorkerId"] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == "The WorkerId field is required.");
+
+            var branchIdErrorValues = error["BranchId"] as string[];
+            Assert.IsNotNull(branchIdErrorValues);
+            Assert.IsTrue(branchIdErrorValues.Single() == "The BranchId field is required.");
         }
     }
 }
