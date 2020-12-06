@@ -147,8 +147,8 @@ namespace BankApp.UnitTests.Controllers
         {
             // Arrange
             var branchCreation = new BranchWithAddressCreationDto();
-            _branchesController.ModelState.AddModelError("Branch", "The Branch field is required.");
-            _branchesController.ModelState.AddModelError("Address", "The Address field is required.");
+            _branchesController.ModelState.AddModelError(nameof(branchCreation.Branch), $"The {nameof(branchCreation.Branch)} field is required.");
+            _branchesController.ModelState.AddModelError(nameof(branchCreation.Address), $"The {nameof(branchCreation.Address)} field is required.");
 
             // Act
             var badRequestResult = _branchesController.CreateBranchWithAddress(branchCreation).Result as BadRequestObjectResult;
@@ -159,16 +159,16 @@ namespace BankApp.UnitTests.Controllers
 
             var error = badRequestResult.Value as SerializableError;
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ContainsKey("Branch"));
-            Assert.IsTrue(error.ContainsKey("Address"));
+            Assert.IsTrue(error.ContainsKey(nameof(branchCreation.Branch)));
+            Assert.IsTrue(error.ContainsKey(nameof(branchCreation.Address)));
 
-            var branchErrorValues = error["Branch"] as string[];
+            var branchErrorValues = error[nameof(branchCreation.Branch)] as string[];
             Assert.IsNotNull(branchErrorValues);
-            Assert.IsTrue(branchErrorValues.Single() == "The Branch field is required.");
+            Assert.IsTrue(branchErrorValues.Single() == $"The {nameof(branchCreation.Branch)} field is required.");
 
-            var addressErrorValues = error["Address"] as string[];
+            var addressErrorValues = error[nameof(branchCreation.Address)] as string[];
             Assert.IsNotNull(addressErrorValues);
-            Assert.IsTrue(addressErrorValues.Single() == "The Address field is required.");
+            Assert.IsTrue(addressErrorValues.Single() == $"The {nameof(branchCreation.Address)} field is required.");
         }
 
         [TestMethod]
@@ -261,8 +261,9 @@ namespace BankApp.UnitTests.Controllers
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto();
-            _branchesController.ModelState.AddModelError("WorkerId", "The WorkerId field is required.");
-            _branchesController.ModelState.AddModelError("BranchId", "The BranchId field is required.");
+
+            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
+            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
 
             // Act
             var badRequestResult = _branchesController.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
@@ -273,16 +274,16 @@ namespace BankApp.UnitTests.Controllers
 
             var error = badRequestResult.Value as SerializableError;
             Assert.IsNotNull(error);
-            Assert.IsTrue(error.ContainsKey("WorkerId"));
-            Assert.IsTrue(error.ContainsKey("BranchId"));
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.WorkerId)));
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
 
-            var workerIdErrorValues = error["WorkerId"] as string[];
+            var workerIdErrorValues = error[nameof(workerAtBranch.WorkerId)] as string[];
             Assert.IsNotNull(workerIdErrorValues);
-            Assert.IsTrue(workerIdErrorValues.Single() == "The WorkerId field is required.");
+            Assert.IsTrue(workerIdErrorValues.Single() == $"The {nameof(workerAtBranch.WorkerId)} field is required.");
 
-            var branchIdErrorValues = error["BranchId"] as string[];
+            var branchIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
             Assert.IsNotNull(branchIdErrorValues);
-            Assert.IsTrue(branchIdErrorValues.Single() == "The BranchId field is required.");
+            Assert.IsTrue(branchIdErrorValues.Single() == $"The {nameof(workerAtBranch.BranchId)} field is required.");
         }
     }
 }
