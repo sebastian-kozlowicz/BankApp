@@ -68,6 +68,8 @@ namespace BankApp.UnitTests.Controllers
             context.Users.Add(new ApplicationUser { Id = 1, Administrator = new Administrator { Id = 1 } });
             context.Users.Add(new ApplicationUser { Id = 2, Teller = new Teller { Id = 2 } });
             context.Users.Add(new ApplicationUser { Id = 3, Teller = new Teller { Id = 3, WorkAtId = 2 } });
+            context.Users.Add(new ApplicationUser { Id = 4, Manager = new Manager { Id = 4 } });
+
             context.SaveChanges();
 
             return context;
@@ -379,6 +381,50 @@ namespace BankApp.UnitTests.Controllers
             var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
             Assert.IsNotNull(workerIdErrorValues);
             Assert.IsTrue(workerIdErrorValues.Single() == $"Teller with id {workerAtBranch.WorkerId} is currently assigned to branch with id {_secondBranch.Id}.");
+        }
+
+        [TestMethod]
+        public void AssignManagerToBranch_Should_SetWorkAtIdPropertyToSuppliedBranchId_And_CreateManagerAtBranchHistory_And_ReturnOkObjectResult_When_ModelStateIsValid()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 4,
+                BranchId = 1
+            };
+
+            var currentUser = new ApplicationUser { Id = 1 };
+            var claims = new List<Claim> { new Claim(CustomClaimTypes.UserId, currentUser.Id.ToString()) };
+            var identity = new ClaimsIdentity(claims);
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var context = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = claimsPrincipal
+                }
+            };
+
+            _branchesController.ControllerContext = context;
+
+            // Act
+            var okResult = _branchesController.AssignManagerToBranch(workerAtBranch) as OkResult;
+
+            // Assert
+            Assert.IsNotNull(okResult);
+
+            var managerFromDb = _context.Managers.SingleOrDefault(t => t.Id == workerAtBranch.WorkerId);
+            Assert.IsNotNull(managerFromDb);
+            Assert.AreEqual(workerAtBranch.BranchId, managerFromDb.WorkAtId);
+
+            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(m => m.ManagerId == workerAtBranch.WorkerId).ToList().LastOrDefault();
+            Assert.IsNotNull(managerAtBranchFromDb);
+            Assert.IsNotNull(managerAtBranchFromDb.AssignDate);
+            Assert.IsNull(managerAtBranchFromDb.ExpelDate);
+            Assert.IsNull(managerAtBranchFromDb.ExpelledById);
+            Assert.AreEqual(managerAtBranchFromDb.AssignedById, currentUser.Id);
+            Assert.AreEqual(managerAtBranchFromDb.ManagerId, workerAtBranch.WorkerId);
+            Assert.AreEqual(managerAtBranchFromDb.BranchId, workerAtBranch.BranchId);
         }
     }
 }
