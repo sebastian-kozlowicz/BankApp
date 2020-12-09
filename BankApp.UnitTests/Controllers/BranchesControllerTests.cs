@@ -426,5 +426,35 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(managerAtBranchFromDb.ManagerId, workerAtBranch.WorkerId);
             Assert.AreEqual(managerAtBranchFromDb.BranchId, workerAtBranch.BranchId);
         }
+       
+        [TestMethod]
+        public void AssignManagerToBranch_Should_ReturnBadRequest_When_ModelStateIsInvalid()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto();
+
+            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
+            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
+
+            // Act
+            var badRequestResult = _branchesController.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.WorkerId)));
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
+
+            var workerIdErrorValues = error[nameof(workerAtBranch.WorkerId)] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == $"The {nameof(workerAtBranch.WorkerId)} field is required.");
+
+            var branchIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
+            Assert.IsNotNull(branchIdErrorValues);
+            Assert.IsTrue(branchIdErrorValues.Single() == $"The {nameof(workerAtBranch.BranchId)} field is required.");
+        }
     }
 }
