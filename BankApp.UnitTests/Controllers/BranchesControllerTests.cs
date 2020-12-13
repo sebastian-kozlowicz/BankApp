@@ -69,6 +69,7 @@ namespace BankApp.UnitTests.Controllers
             context.Users.Add(new ApplicationUser { Id = 2, Teller = new Teller { Id = 2 } });
             context.Users.Add(new ApplicationUser { Id = 3, Teller = new Teller { Id = 3, WorkAtId = 2 } });
             context.Users.Add(new ApplicationUser { Id = 4, Manager = new Manager { Id = 4 } });
+            context.Users.Add(new ApplicationUser { Id = 5, Manager = new Manager { Id = 5, WorkAtId = 2 } });
 
             context.SaveChanges();
 
@@ -426,7 +427,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(managerAtBranchFromDb.ManagerId, workerAtBranch.WorkerId);
             Assert.AreEqual(managerAtBranchFromDb.BranchId, workerAtBranch.BranchId);
         }
-       
+
         [TestMethod]
         public void AssignManagerToBranch_Should_ReturnBadRequest_When_ModelStateIsInvalid()
         {
@@ -509,5 +510,30 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsTrue(workerIdErrorValues.Single() == $"Branch with id {workerAtBranch.BranchId} doesn't exist.");
         }
 
+        [TestMethod]
+        public void AssignManagerToBranch_Should_ReturnBadRequest_When_ManagerIsAlreadyAssignedToBranch()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 5,
+                BranchId = 1
+            };
+
+            // Act
+            var badRequestResult = _branchesController.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
+
+            var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == $"Manager with id {workerAtBranch.WorkerId} is currently assigned to branch with id {_secondBranch.Id}.");
+        }
     }
 }
