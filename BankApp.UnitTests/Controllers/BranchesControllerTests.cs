@@ -280,9 +280,9 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsNotNull(tellerAtBranchFromDb.AssignDate);
             Assert.IsNull(tellerAtBranchFromDb.ExpelDate);
             Assert.IsNull(tellerAtBranchFromDb.ExpelledById);
-            Assert.AreEqual(tellerAtBranchFromDb.AssignedById, currentUser.Id);
-            Assert.AreEqual(tellerAtBranchFromDb.TellerId, workerAtBranch.WorkerId);
-            Assert.AreEqual(tellerAtBranchFromDb.BranchId, workerAtBranch.BranchId);
+            Assert.AreEqual(currentUser.Id, tellerAtBranchFromDb.AssignedById);
+            Assert.AreEqual(workerAtBranch.BranchId, tellerAtBranchFromDb.BranchId);
+            Assert.AreEqual(workerAtBranch.WorkerId, tellerAtBranchFromDb.TellerId);
         }
 
         [TestMethod]
@@ -432,9 +432,9 @@ namespace BankApp.UnitTests.Controllers
             Assert.IsNotNull(managerAtBranchFromDb.AssignDate);
             Assert.IsNull(managerAtBranchFromDb.ExpelDate);
             Assert.IsNull(managerAtBranchFromDb.ExpelledById);
-            Assert.AreEqual(managerAtBranchFromDb.AssignedById, currentUser.Id);
-            Assert.AreEqual(managerAtBranchFromDb.ManagerId, workerAtBranch.WorkerId);
-            Assert.AreEqual(managerAtBranchFromDb.BranchId, workerAtBranch.BranchId);
+            Assert.AreEqual(currentUser.Id, managerAtBranchFromDb.AssignedById);
+            Assert.AreEqual(workerAtBranch.BranchId, managerAtBranchFromDb.BranchId);
+            Assert.AreEqual(workerAtBranch.WorkerId, managerAtBranchFromDb.ManagerId);
         }
 
         [TestMethod]
@@ -585,8 +585,8 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(_tellerAtBranchHistory.AssignDate, tellerAtBranchFromDb.AssignDate);
             Assert.AreEqual(_tellerAtBranchHistory.AssignedById, tellerAtBranchFromDb.AssignedById);
             Assert.AreEqual(currentUser.Id, tellerAtBranchFromDb.ExpelledById);
-            Assert.AreEqual(workerAtBranch.WorkerId, tellerAtBranchFromDb.TellerId);
             Assert.AreEqual(workerAtBranch.BranchId, tellerAtBranchFromDb.BranchId);
+            Assert.AreEqual(workerAtBranch.WorkerId, tellerAtBranchFromDb.TellerId);
         }
     }
 }
