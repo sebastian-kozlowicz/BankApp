@@ -24,6 +24,14 @@ namespace BankApp.UnitTests.Controllers
         private BranchesController _branchesController;
         private readonly IMapper _mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
         private ApplicationDbContext _context;
+        private readonly TellerAtBranchHistory _tellerAtBranchHistory = new TellerAtBranchHistory
+        {
+            Id = 1,
+            AssignDate = new DateTime(2021, 1, 1),
+            BranchId = 2,
+            TellerId = 3,
+            AssignedById = 1
+        };
         private readonly Branch _firstBranch = new Branch
         {
             Id = 1,
@@ -54,7 +62,7 @@ namespace BankApp.UnitTests.Controllers
                 PostalCode = "61-703"
             }
         };
-        private IEnumerable<Branch> Branches => new List<Branch> { _firstBranch };
+        private IEnumerable<Branch> Branches => new List<Branch> { _firstBranch, _secondBranch };
 
         private ApplicationDbContext GetMockContext()
         {
@@ -70,6 +78,7 @@ namespace BankApp.UnitTests.Controllers
             context.Users.Add(new ApplicationUser { Id = 3, Teller = new Teller { Id = 3, WorkAtId = 2 } });
             context.Users.Add(new ApplicationUser { Id = 4, Manager = new Manager { Id = 4 } });
             context.Users.Add(new ApplicationUser { Id = 5, Manager = new Manager { Id = 5, WorkAtId = 2 } });
+            context.TellerAtBranchHistory.Add(_tellerAtBranchHistory);
 
             context.SaveChanges();
 
@@ -414,7 +423,7 @@ namespace BankApp.UnitTests.Controllers
             // Assert
             Assert.IsNotNull(okResult);
 
-            var managerFromDb = _context.Managers.SingleOrDefault(t => t.Id == workerAtBranch.WorkerId);
+            var managerFromDb = _context.Managers.SingleOrDefault(m => m.Id == workerAtBranch.WorkerId);
             Assert.IsNotNull(managerFromDb);
             Assert.AreEqual(workerAtBranch.BranchId, managerFromDb.WorkAtId);
 
@@ -534,6 +543,50 @@ namespace BankApp.UnitTests.Controllers
             var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
             Assert.IsNotNull(workerIdErrorValues);
             Assert.IsTrue(workerIdErrorValues.Single() == $"Manager with id {workerAtBranch.WorkerId} is currently assigned to branch with id {_secondBranch.Id}.");
+        }
+
+        [TestMethod]
+        public void ExpelTellerFromBranch_Should_ReturnBadRequest_When_ManagerIsAlreadyAssignedToBranch()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 3,
+                BranchId = 2
+            };
+
+            var currentUser = new ApplicationUser { Id = 3 };
+            var claims = new List<Claim> { new Claim(CustomClaimTypes.UserId, currentUser.Id.ToString()) };
+            var identity = new ClaimsIdentity(claims);
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var context = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = claimsPrincipal
+                }
+            };
+
+            _branchesController.ControllerContext = context;
+
+            // Act
+            var okResult = _branchesController.ExpelTellerFromBranch(workerAtBranch) as OkResult;
+
+            // Assert
+            Assert.IsNotNull(okResult);
+
+            var tellerFromDb = _context.Tellers.SingleOrDefault(t => t.Id == workerAtBranch.WorkerId);
+            Assert.IsNotNull(tellerFromDb);
+            Assert.AreEqual(null, tellerFromDb.WorkAtId);
+
+            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(t => t.TellerId == workerAtBranch.WorkerId).ToList().LastOrDefault();
+            Assert.IsNotNull(tellerAtBranchFromDb);
+            Assert.IsNotNull(tellerAtBranchFromDb.ExpelDate);
+            Assert.AreEqual(_tellerAtBranchHistory.AssignDate, tellerAtBranchFromDb.AssignDate);
+            Assert.AreEqual(_tellerAtBranchHistory.AssignedById, tellerAtBranchFromDb.AssignedById);
+            Assert.AreEqual(currentUser.Id, tellerAtBranchFromDb.ExpelledById);
+            Assert.AreEqual(workerAtBranch.WorkerId, tellerAtBranchFromDb.TellerId);
+            Assert.AreEqual(workerAtBranch.BranchId, tellerAtBranchFromDb.BranchId);
         }
     }
 }
