@@ -546,7 +546,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void ExpelTellerFromBranch_Should_ReturnBadRequest_When_ManagerIsAlreadyAssignedToBranch()
+        public void ExpelTellerFromBranch_Should_SetWorkAtIdPropertyToNull_And_FillTellerAtBranchHistoryRecord_And_ReturnOkObjectResult_When_ModelStateIsValid()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
