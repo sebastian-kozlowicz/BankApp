@@ -32,6 +32,14 @@ namespace BankApp.UnitTests.Controllers
             TellerId = 3,
             AssignedById = 1
         };
+        private readonly ManagerAtBranchHistory _managerAtBranchHistory = new ManagerAtBranchHistory
+        {
+            Id = 1,
+            AssignDate = new DateTime(2021, 1, 1),
+            BranchId = 2,
+            ManagerId = 5,
+            AssignedById = 1
+        };
         private readonly Branch _firstBranch = new Branch
         {
             Id = 1,
@@ -79,6 +87,7 @@ namespace BankApp.UnitTests.Controllers
             context.Users.Add(new ApplicationUser { Id = 4, Manager = new Manager { Id = 4 } });
             context.Users.Add(new ApplicationUser { Id = 5, Manager = new Manager { Id = 5, WorkAtId = 2 } });
             context.TellerAtBranchHistory.Add(_tellerAtBranchHistory);
+            context.ManagerAtBranchHistory.Add(_managerAtBranchHistory);
 
             context.SaveChanges();
 
@@ -587,6 +596,50 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(currentUser.Id, tellerAtBranchFromDb.ExpelledById);
             Assert.AreEqual(workerAtBranch.BranchId, tellerAtBranchFromDb.BranchId);
             Assert.AreEqual(workerAtBranch.WorkerId, tellerAtBranchFromDb.TellerId);
+        }
+
+        [TestMethod]
+        public void ExpelManagerFromBranch_Should_SetWorkAtIdPropertyToNull_And_FillManagerAtBranchHistoryRecord_And_ReturnOkObjectResult_When_ModelStateIsValid()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 5,
+                BranchId = 2
+            };
+
+            var currentUser = new ApplicationUser { Id = 5 };
+            var claims = new List<Claim> { new Claim(CustomClaimTypes.UserId, currentUser.Id.ToString()) };
+            var identity = new ClaimsIdentity(claims);
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var context = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = claimsPrincipal
+                }
+            };
+
+            _branchesController.ControllerContext = context;
+
+            // Act
+            var okResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as OkResult;
+
+            // Assert
+            Assert.IsNotNull(okResult);
+
+            var managerFromDb = _context.Managers.SingleOrDefault(m => m.Id == workerAtBranch.WorkerId);
+            Assert.IsNotNull(managerFromDb);
+            Assert.AreEqual(null, managerFromDb.WorkAtId);
+
+            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(m => m.ManagerId == workerAtBranch.WorkerId).ToList().LastOrDefault();
+            Assert.IsNotNull(managerAtBranchFromDb);
+            Assert.IsNotNull(managerAtBranchFromDb.ExpelDate);
+            Assert.AreEqual(_managerAtBranchHistory.AssignDate, managerAtBranchFromDb.AssignDate);
+            Assert.AreEqual(_managerAtBranchHistory.AssignedById, managerAtBranchFromDb.AssignedById);
+            Assert.AreEqual(currentUser.Id, managerAtBranchFromDb.ExpelledById);
+            Assert.AreEqual(workerAtBranch.BranchId, managerAtBranchFromDb.BranchId);
+            Assert.AreEqual(workerAtBranch.WorkerId, managerAtBranchFromDb.ManagerId);
         }
     }
 }
