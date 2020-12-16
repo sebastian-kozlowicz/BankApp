@@ -170,7 +170,7 @@ namespace BankApp.Controllers
 
             if (teller.WorkAtId != branch.Id)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently not assigned to branch with id {model.BranchId}.");
+                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently not assigned to branch with id {teller.WorkAtId}.");
                 return BadRequest(ModelState);
             }
 
@@ -211,7 +211,7 @@ namespace BankApp.Controllers
 
             if (manager.WorkAtId != model.BranchId)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Manager with id {model.WorkerId} is currently not assigned to branch with id {model.BranchId}.");
+                ModelState.AddModelError(nameof(model.BranchId), $"Manager with id {model.WorkerId} is currently not assigned to branch with id {manager.WorkAtId}.");
                 return BadRequest(ModelState);
             }
 

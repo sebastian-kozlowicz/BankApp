@@ -154,7 +154,7 @@ namespace BankApp.Controllers
 
             if (await _userManager.IsInRoleAsync(currentUser, UserRole.Teller.ToString()))
             {
-                await _context.Tellers.Where(e => e.Id == currentUser.Id).LoadAsync();
+                await _context.Tellers.Where(t => t.Id == currentUser.Id).LoadAsync();
 
                 if (currentUser.Teller.WorkAtId == null)
                 {
@@ -166,7 +166,7 @@ namespace BankApp.Controllers
             }
             else if (await _userManager.IsInRoleAsync(currentUser, UserRole.Manager.ToString()))
             {
-                await _context.Managers.Where(e => e.Id == currentUser.Id).LoadAsync();
+                await _context.Managers.Where(m => m.Id == currentUser.Id).LoadAsync();
 
                 if (currentUser.Manager.WorkAtId == null)
                 {
