@@ -168,6 +168,12 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (teller.WorkAtId == null)
+            {
+                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently not assigned to any branch.");
+                return BadRequest(ModelState);
+            }
+
             if (teller.WorkAtId != branch.Id)
             {
                 ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently not assigned to branch with id {teller.WorkAtId}.");
