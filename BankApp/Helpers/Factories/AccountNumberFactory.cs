@@ -155,10 +155,12 @@ namespace BankApp.Helpers.Factories
 
         private long GenerateAccountNumber()
         {
-            if (_context.BankAccounts.Select(ba => ba.AccountNumber).ToList() is var result && !result.Any())
+            var maxAccountNumber = _context.BankAccounts.Max(b => (long?)b.AccountNumber) ?? -1;
+
+            if (maxAccountNumber == -1)
                 return 0;
 
-            return result.Max() + 1;
+            return maxAccountNumber + 1;
         }
 
         private string GetAccountNumberText(long accountNumber)
