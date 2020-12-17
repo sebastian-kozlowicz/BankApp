@@ -681,6 +681,32 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
+        public void ExpelTellerFromBranch_Should_ReturnBadRequest_When_TellerIsNotAssignedToBranch()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 2,
+                BranchId = 2
+            };
+
+            // Act
+            var badRequestResult = _branchesController.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
+
+            var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == $"Teller with id {workerAtBranch.WorkerId} is currently not assigned to any branch.");
+        }
+
+        [TestMethod]
         public void ExpelTellerFromBranch_Should_ReturnBadRequest_When_TellerIsAssignedToOtherBranch()
         {
             // Arrange
@@ -704,32 +730,6 @@ namespace BankApp.UnitTests.Controllers
             var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
             Assert.IsNotNull(workerIdErrorValues);
             Assert.IsTrue(workerIdErrorValues.Single() == $"Teller with id {workerAtBranch.WorkerId} is currently not assigned to branch with id {_secondBranch.Id}.");
-        }
-
-        [TestMethod]
-        public void ExpelTellerFromBranch_Should_ReturnBadRequest_When_TellerIsNotAssignedToBranch()
-        {
-            // Arrange
-            var workerAtBranch = new WorkerAtBranchDto
-            {
-                WorkerId = 2,
-                BranchId = 1
-            };
-
-            // Act
-            var badRequestResult = _branchesController.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
-
-            // Assert
-            Assert.IsNotNull(badRequestResult);
-            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
-
-            var error = badRequestResult.Value as SerializableError;
-            Assert.IsNotNull(error);
-            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
-
-            var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
-            Assert.IsNotNull(workerIdErrorValues);
-            Assert.IsTrue(workerIdErrorValues.Single() == $"Teller with id {workerAtBranch.WorkerId} is currently not assigned to any branch.");
         }
 
         [TestMethod]
@@ -804,6 +804,110 @@ namespace BankApp.UnitTests.Controllers
             var branchIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
             Assert.IsNotNull(branchIdErrorValues);
             Assert.IsTrue(branchIdErrorValues.Single() == $"The {nameof(workerAtBranch.BranchId)} field is required.");
+        }
+
+        [TestMethod]
+        public void ExpelManagerFromBranch_Should_ReturnBadRequest_When_ManagerNotExist()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 999,
+                BranchId = 2
+            };
+
+            // Act
+            var badRequestResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.WorkerId)));
+
+            var workerIdErrorValues = error[nameof(workerAtBranch.WorkerId)] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == $"Manager with id {workerAtBranch.WorkerId} doesn't exist.");
+        }
+
+        [TestMethod]
+        public void ExpelManagerFromBranch_Should_ReturnBadRequest_When_BranchNotExist()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 5,
+                BranchId = 999
+            };
+
+            // Act
+            var badRequestResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
+
+            var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == $"Branch with id {workerAtBranch.BranchId} doesn't exist.");
+        }
+
+        [TestMethod]
+        public void ExpelManagerFromBranch_Should_ReturnBadRequest_When_ManagerIsNotAssignedToBranch()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 4,
+                BranchId = 2
+            };
+
+            // Act
+            var badRequestResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
+
+            var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == $"Manager with id {workerAtBranch.WorkerId} is currently not assigned to any branch.");
+        }
+
+        [TestMethod]
+        public void ExpelManagerFromBranch_Should_ReturnBadRequest_When_ManagerIsAssignedToOtherBranch()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 5,
+                BranchId = 1
+            };
+
+            // Act
+            var badRequestResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
+
+            // Assert
+            Assert.IsNotNull(badRequestResult);
+            Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+
+            var error = badRequestResult.Value as SerializableError;
+            Assert.IsNotNull(error);
+            Assert.IsTrue(error.ContainsKey(nameof(workerAtBranch.BranchId)));
+
+            var workerIdErrorValues = error[nameof(workerAtBranch.BranchId)] as string[];
+            Assert.IsNotNull(workerIdErrorValues);
+            Assert.IsTrue(workerIdErrorValues.Single() == $"Manager with id {workerAtBranch.WorkerId} is currently not assigned to branch with id {_secondBranch.Id}.");
         }
     }
 }
