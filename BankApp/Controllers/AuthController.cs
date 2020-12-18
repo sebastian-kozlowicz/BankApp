@@ -47,10 +47,11 @@ namespace BankApp.Controllers
             {
                 if (await _userManager.FindByEmailAsync(email) is var user && user != null)
                 {
-                    var roles = await _userManager.GetRolesAsync(user);
-
                     if (await _userManager.CheckPasswordAsync(user, password))
+                    {
+                        var roles = await _userManager.GetRolesAsync(user);
                         return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(user, roles));
+                    }
                 }
             }
 
