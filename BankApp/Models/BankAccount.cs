@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using BankApp.Enumerators;
 
 namespace BankApp.Models
@@ -19,6 +20,7 @@ namespace BankApp.Models
         public string IbanSeparated { get; set; }
         public decimal Balance { get; set; }
         public decimal DebitLimit { get; set; }
+        public DateTime OpenedDate { get; set; }
         public Customer Customer { get; set; }
         public int CustomerId { get; set; }
         public ApplicationUser CreatedBy { get; set; }
