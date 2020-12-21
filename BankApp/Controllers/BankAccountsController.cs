@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -79,6 +80,7 @@ namespace BankApp.Controllers
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
+                OpenedDate = DateTime.UtcNow,
                 CustomerId = (int)model.CustomerId,
                 CreatedById = (int)model.CustomerId
             };
@@ -115,6 +117,7 @@ namespace BankApp.Controllers
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
+                OpenedDate = DateTime.UtcNow,
                 CustomerId = user.Id,
                 CreatedById = user.Id
             };
@@ -196,6 +199,7 @@ namespace BankApp.Controllers
                 AccountNumberText = generatedAccountNumber.AccountNumberText,
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
+                OpenedDate = DateTime.UtcNow,
                 CustomerId = user.Id,
                 CreatedById = currentUserId
             };
