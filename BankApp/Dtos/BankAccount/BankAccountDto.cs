@@ -1,6 +1,7 @@
 ﻿using BankApp.Dtos.ApplicationUser;
 using BankApp.Dtos.Customer;
 using BankApp.Enumerators;
+using System;
 
 namespace BankApp.Dtos.BankAccount
 {
@@ -20,6 +21,7 @@ namespace BankApp.Dtos.BankAccount
         public string IbanSeparated { get; set; }
         public decimal Balance { get; set; }
         public decimal DebitLimit { get; set; }
+        public DateTime OpenedDate { get; set; }
         public CustomerDto Customer { get; set; }
         public int CustomerId { get; set; }
         public ApplicationUserDto CreatedBy { get; set; }

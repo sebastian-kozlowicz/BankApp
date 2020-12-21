@@ -267,6 +267,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
             Assert.AreEqual(expectedBankAccount.Balance, bankAccountDto.Balance);
             Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountDto.DebitLimit);
+            Assert.AreNotEqual(DateTime.MinValue, bankAccountDto.OpenedDate);
             Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountDto.CustomerId);
             Assert.AreEqual(expectedBankAccount.CreatedById, bankAccountDto.CreatedById);
 
@@ -285,6 +286,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
             Assert.AreEqual(expectedBankAccount.Balance, bankAccountFromDb.Balance);
             Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountFromDb.DebitLimit);
+            Assert.AreNotEqual(DateTime.MinValue, bankAccountFromDb.OpenedDate);
             Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountFromDb.CustomerId);
             Assert.AreEqual(expectedBankAccount.CreatedById, bankAccountFromDb.CreatedById);
         }
@@ -434,6 +436,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
             Assert.AreEqual(expectedBankAccount.Balance, bankAccountDto.Balance);
             Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountDto.DebitLimit);
+            Assert.AreNotEqual(DateTime.MinValue, bankAccountDto.OpenedDate);
             Assert.AreEqual(bankAccountDto.CreatedById, bankAccountDto.Customer.Id);
             Assert.AreEqual(bankAccountDto.Customer.Id, bankAccountDto.Customer.ApplicationUser.Id);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountDto.Customer.ApplicationUser.Name);
@@ -456,6 +459,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
             Assert.AreEqual(expectedBankAccount.Balance, bankAccountFromDb.Balance);
             Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountFromDb.DebitLimit);
+            Assert.AreNotEqual(DateTime.MinValue, bankAccountFromDb.OpenedDate);
             Assert.AreEqual(bankAccountFromDb.CreatedById, bankAccountFromDb.Customer.Id);
             Assert.AreEqual(bankAccountDto.Customer.Id, bankAccountDto.Customer.ApplicationUser.Id);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountFromDb.Customer.ApplicationUser.Name);
@@ -623,6 +627,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
             Assert.AreEqual(expectedBankAccount.Balance, bankAccountDto.Balance);
             Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountDto.DebitLimit);
+            Assert.AreNotEqual(DateTime.MinValue, bankAccountDto.OpenedDate);
             Assert.AreEqual(currentUser.Id, bankAccountDto.CreatedById);
             Assert.AreEqual(bankAccountDto.Customer.Id, bankAccountDto.Customer.ApplicationUser.Id);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountDto.Customer.ApplicationUser.Name);
@@ -645,6 +650,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
             Assert.AreEqual(expectedBankAccount.Balance, bankAccountFromDb.Balance);
             Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountFromDb.DebitLimit);
+            Assert.AreNotEqual(DateTime.MinValue, bankAccountFromDb.OpenedDate);
             Assert.AreEqual(currentUser.Id, bankAccountFromDb.CreatedById);
             Assert.AreEqual(bankAccountFromDb.Customer.Id, bankAccountFromDb.Customer.ApplicationUser.Id);
             Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountFromDb.Customer.ApplicationUser.Name);
