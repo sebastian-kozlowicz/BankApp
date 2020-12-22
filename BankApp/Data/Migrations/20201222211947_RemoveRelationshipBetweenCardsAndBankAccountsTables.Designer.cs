@@ -4,14 +4,16 @@ using BankApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace BankApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201222211947_RemoveRelationshipBetweenCardsAndBankAccountsTables")]
+    partial class RemoveRelationshipBetweenCardsAndBankAccountsTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,20 +262,8 @@ namespace BankApp.Data.Migrations
 
             modelBuilder.Entity("BankApp.Models.Card", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .UseIdentityColumn();
-
-                    b.Property<int>("BankAccountId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Number")
                         .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BankAccountId");
 
                     b.ToTable("Cards");
                 });
@@ -623,17 +613,6 @@ namespace BankApp.Data.Migrations
                     b.Navigation("Branch");
                 });
 
-            modelBuilder.Entity("BankApp.Models.Card", b =>
-                {
-                    b.HasOne("BankApp.Models.BankAccount", "BankAccount")
-                        .WithMany("Cards")
-                        .HasForeignKey("BankAccountId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("BankAccount");
-                });
-
             modelBuilder.Entity("BankApp.Models.Customer", b =>
                 {
                     b.HasOne("BankApp.Models.ApplicationUser", "ApplicationUser")
@@ -844,8 +823,6 @@ namespace BankApp.Data.Migrations
             modelBuilder.Entity("BankApp.Models.BankAccount", b =>
                 {
                     b.Navigation("BankTransfers");
-
-                    b.Navigation("Cards");
                 });
 
             modelBuilder.Entity("BankApp.Models.Branch", b =>

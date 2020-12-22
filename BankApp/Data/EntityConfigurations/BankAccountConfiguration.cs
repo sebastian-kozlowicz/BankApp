@@ -9,11 +9,6 @@ namespace BankApp.Data.EntityConfigurations
         public void Configure(EntityTypeBuilder<BankAccount> builder)
         {
             builder
-                .HasOne(b => b.Card)
-                .WithOne(c => c.BankAccount)
-                .HasForeignKey<Card>(c => c.Id);
-
-            builder
                 .Property(b => b.Balance)
                 .HasColumnType("decimal(18,2)");
 

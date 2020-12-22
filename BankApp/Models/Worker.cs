@@ -1,5 +1,4 @@
-﻿
-namespace BankApp.Models
+﻿namespace BankApp.Models
 {
     public abstract class Worker
     {
