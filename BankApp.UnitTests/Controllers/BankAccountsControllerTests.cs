@@ -108,7 +108,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void GetBankAccount_Should_BankAccountDto_When_BankAccountIsFound()
+        public void GetBankAccount_Should_ReturnBankAccountDto_When_BankAccountIsFound()
         {
             var okResult = _bankAccountsController.GetBankAccount(1).Result as OkObjectResult;
 
@@ -145,7 +145,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public void GetBankAccountsForUser_Should_BankAccountDto_When_BankAccountsAreFound()
+        public void GetBankAccountsForUser_Should_ReturnBankAccountDtoList_When_BankAccountsAreFound()
         {
             var okResult = _bankAccountsController.GetBankAccountsForUser(1).Result as OkObjectResult;
 
