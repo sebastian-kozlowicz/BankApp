@@ -27,5 +27,11 @@ namespace BankApp.Controllers
             var cards = _context.Cards.ToList();
             return Ok(_mapper.Map<List<Card>, List<CardDto>>(cards));
         }
+
+        [HttpPost]
+        public ActionResult<CardDto> CreateCard([FromBody] CardCreationDto model)
+        {
+            return Ok();
+        }
     }
 }
