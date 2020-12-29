@@ -60,6 +60,7 @@ namespace BankApp
             services.AddSingleton<IAuthorizationHandler, UserIdRequirementHandler>();
             services.AddSingleton<IJwtFactory, JwtFactory>();
             services.AddTransient<IAccountNumberFactory, AccountNumberFactory>();
+            services.AddTransient<ICardNumberFactory, CardNumberFactory>();
             services.AddTransient<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddTransient<ITransferService<ExternalTransferService>, ExternalTransferService>();
 
