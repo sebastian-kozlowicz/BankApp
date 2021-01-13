@@ -7,7 +7,7 @@ using BankApp.Models;
 
 namespace BankApp.Helpers.Factories
 {
-    public class AccountNumberFactory : IAccountNumberFactory
+    public class BankAccountNumberFactory : IBankAccountNumberFactory
     {
         private readonly ApplicationDbContext _context;
         private static readonly Dictionary<string, int> CountryCharactersAssignedToNumbers = new Dictionary<string, int>
@@ -40,7 +40,7 @@ namespace BankApp.Helpers.Factories
             {"Z", 35 },
         };
 
-        public AccountNumberFactory(ApplicationDbContext context)
+        public BankAccountNumberFactory(ApplicationDbContext context)
         {
             _context = context;
         }

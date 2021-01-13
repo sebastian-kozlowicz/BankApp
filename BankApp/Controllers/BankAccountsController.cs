@@ -25,9 +25,9 @@ namespace BankApp.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IAccountNumberFactory _accountNumberFactory;
+        private readonly IBankAccountNumberFactory _accountNumberFactory;
 
-        public BankAccountsController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper, IAccountNumberFactory accountNumberFactory)
+        public BankAccountsController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper, IBankAccountNumberFactory accountNumberFactory)
         {
             _userManager = userManager;
             _context = context;

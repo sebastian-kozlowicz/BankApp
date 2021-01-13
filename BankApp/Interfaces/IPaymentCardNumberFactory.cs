@@ -1,6 +1,6 @@
 ﻿namespace BankApp.Interfaces
 {
-    public interface ICardNumberFactory
+    public interface IPaymentCardNumberFactory
     {
     }
 }

@@ -30,9 +30,9 @@ namespace BankApp.UnitTests.Controllers
     [TestClass]
     public class BankAccountsControllerTests
     {
-        private BankAccountsController _bankAccountsController;
+        private BankAccountsController _sut;
         private readonly IMapper _mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
-        private Mock<IAccountNumberFactory> _accountNumberFactoryMock;
+        private Mock<IBankAccountNumberFactory> _bankAccountNumberFactoryMock;
         private Mock<IUserStore<ApplicationUser>> _userStoreMock;
         private Mock<UserManager<ApplicationUser>> _userManagerMock;
         private ApplicationDbContext _context;
@@ -103,14 +103,14 @@ namespace BankApp.UnitTests.Controllers
             _context = GetMockContext();
             _userStoreMock = new Mock<IUserStore<ApplicationUser>>();
             _userManagerMock = new Mock<UserManager<ApplicationUser>>(_userStoreMock.Object, null, null, null, null, null, null, null, null);
-            _accountNumberFactoryMock = new Mock<IAccountNumberFactory>();
-            _bankAccountsController = new BankAccountsController(_userManagerMock.Object, _context, _mapper, _accountNumberFactoryMock.Object);
+            _bankAccountNumberFactoryMock = new Mock<IBankAccountNumberFactory>();
+            _sut = new BankAccountsController(_userManagerMock.Object, _context, _mapper, _bankAccountNumberFactoryMock.Object);
         }
 
         [TestMethod]
         public void GetBankAccount_Should_ReturnBankAccountDto_When_BankAccountIsFound()
         {
-            var okResult = _bankAccountsController.GetBankAccount(1).Result as OkObjectResult;
+            var okResult = _sut.GetBankAccount(1).Result as OkObjectResult;
 
             Assert.IsNotNull(okResult);
             Assert.IsInstanceOfType(okResult.Value, typeof(BankAccountDto));
@@ -138,7 +138,7 @@ namespace BankApp.UnitTests.Controllers
         [TestMethod]
         public void GetBankAccount_Should_ReturnNotFound_When_BankAccountNotFound()
         {
-            var notFoundResult = _bankAccountsController.GetBankAccount(999);
+            var notFoundResult = _sut.GetBankAccount(999);
 
             Assert.IsNotNull(notFoundResult);
             Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
@@ -147,7 +147,7 @@ namespace BankApp.UnitTests.Controllers
         [TestMethod]
         public void GetBankAccountsForUser_Should_ReturnBankAccountDtoList_When_BankAccountsAreFound()
         {
-            var okResult = _bankAccountsController.GetBankAccountsForUser(1).Result as OkObjectResult;
+            var okResult = _sut.GetBankAccountsForUser(1).Result as OkObjectResult;
 
             Assert.IsNotNull(okResult);
             Assert.IsInstanceOfType(okResult.Value, typeof(List<BankAccountDto>));
@@ -194,7 +194,7 @@ namespace BankApp.UnitTests.Controllers
         [TestMethod]
         public void GetBankAccountsForUser_Should_ReturnNotFound_When_BankAccountsNotFound()
         {
-            var notFoundResult = _bankAccountsController.GetBankAccountsForUser(999);
+            var notFoundResult = _sut.GetBankAccountsForUser(999);
 
             Assert.IsNotNull(notFoundResult);
             Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
@@ -243,10 +243,10 @@ namespace BankApp.UnitTests.Controllers
                 CreatedById = (int)bankAccountCreation.CustomerId
             };
 
-            _accountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
+            _bankAccountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
 
             // Act
-            var createdAtRouteResult = _bankAccountsController.CreateBankAccount(bankAccountCreation).Result as CreatedAtRouteResult;
+            var createdAtRouteResult = _sut.CreateBankAccount(bankAccountCreation).Result as CreatedAtRouteResult;
 
             // Assert
             Assert.IsNotNull(createdAtRouteResult);
@@ -296,12 +296,12 @@ namespace BankApp.UnitTests.Controllers
         {
             // Arrange
             var bankAccountCreation = new BankAccountCreationDto();
-            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.AccountType), $"The {nameof(bankAccountCreation.AccountType)} field is required.");
-            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.Currency), $"The {nameof(bankAccountCreation.Currency)} field is required.");
-            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.CustomerId), $"The {nameof(bankAccountCreation.CustomerId)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.AccountType), $"The {nameof(bankAccountCreation.AccountType)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.Currency), $"The {nameof(bankAccountCreation.Currency)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.CustomerId), $"The {nameof(bankAccountCreation.CustomerId)} field is required.");
 
             // Act
-            var badRequestResult = _bankAccountsController.CreateBankAccount(bankAccountCreation).Result as BadRequestObjectResult;
+            var badRequestResult = _sut.CreateBankAccount(bankAccountCreation).Result as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -406,10 +406,10 @@ namespace BankApp.UnitTests.Controllers
                     _context.SaveChanges();
                 });
 
-            _accountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
+            _bankAccountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
 
             // Act
-            var result = await _bankAccountsController.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
+            var result = await _sut.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
 
             // Assert
             _userManagerMock.Verify(m => m.AddToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Customer.ToString()), Times.Once);
@@ -473,11 +473,11 @@ namespace BankApp.UnitTests.Controllers
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto();
-            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.Register), $"The {nameof(bankAccountCreation.Register)} field is required.");
-            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount), $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.Register), $"The {nameof(bankAccountCreation.Register)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount), $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
 
             // Act
-            var result = await _bankAccountsController.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
+            var result = await _sut.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
 
             // Assert
             Assert.IsNotNull(result);
@@ -585,7 +585,7 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
-            _bankAccountsController.ControllerContext = context;
+            _sut.ControllerContext = context;
 
             _userManagerMock.Setup(m => m.IsInRoleAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
                 .ReturnsAsync(() => true);
@@ -597,10 +597,10 @@ namespace BankApp.UnitTests.Controllers
                     _context.SaveChanges();
                 });
 
-            _accountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(It.IsAny<int>())).Returns(bankAccountNumber);
+            _bankAccountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(It.IsAny<int>())).Returns(bankAccountNumber);
 
             // Act
-            var result = await _bankAccountsController.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
+            var result = await _sut.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
 
             // Assert
             _userManagerMock.Verify(m => m.AddToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Customer.ToString()), Times.Once);
@@ -664,11 +664,11 @@ namespace BankApp.UnitTests.Controllers
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto();
-            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.Register), $"The {nameof(bankAccountCreation.Register)} field is required.");
-            _bankAccountsController.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount), $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.Register), $"The {nameof(bankAccountCreation.Register)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount), $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
 
             // Act
-            var result = await _bankAccountsController.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
+            var result = await _sut.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
 
             // Assert
             Assert.IsNotNull(result);
@@ -736,10 +736,10 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
-            _bankAccountsController.ControllerContext = context;
+            _sut.ControllerContext = context;
 
             // Act
-            var result = await _bankAccountsController.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
+            var result = await _sut.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
 
             // Assert
             Assert.IsNotNull(result);
@@ -802,13 +802,13 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
-            _bankAccountsController.ControllerContext = context;
+            _sut.ControllerContext = context;
 
             _userManagerMock.Setup(m => m.IsInRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Teller.ToString()))
                 .ReturnsAsync(() => true);
 
             // Act
-            var result = await _bankAccountsController.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
+            var result = await _sut.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
 
             // Assert
             Assert.IsNotNull(result);
@@ -871,13 +871,13 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
-            _bankAccountsController.ControllerContext = context;
+            _sut.ControllerContext = context;
 
             _userManagerMock.Setup(m => m.IsInRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Manager.ToString()))
                 .ReturnsAsync(() => true);
 
             // Act
-            var result = await _bankAccountsController.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
+            var result = await _sut.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
 
             // Assert
             Assert.IsNotNull(result);

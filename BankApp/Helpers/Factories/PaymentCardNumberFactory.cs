@@ -3,7 +3,7 @@ using System;
 
 namespace BankApp.Helpers.Factories
 {
-    public class CardNumberFactory : ICardNumberFactory
+    public class PaymentCardNumberFactory : IPaymentCardNumberFactory
     {
         public string GenerateCardNumber()
         {

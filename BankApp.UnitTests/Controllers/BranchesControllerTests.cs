@@ -21,7 +21,7 @@ namespace BankApp.UnitTests.Controllers
     [TestClass]
     public class BranchesControllerTests
     {
-        private BranchesController _branchesController;
+        private BranchesController _sut;
         private readonly IMapper _mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
         private ApplicationDbContext _context;
         private readonly TellerAtBranchHistory _tellerAtBranchHistory = new TellerAtBranchHistory
@@ -98,13 +98,13 @@ namespace BankApp.UnitTests.Controllers
         public void TestInitialize()
         {
             _context = GetMockContext();
-            _branchesController = new BranchesController(_context, _mapper);
+            _sut = new BranchesController(_context, _mapper);
         }
 
         [TestMethod]
         public void GetBranch_Should_ReturnBranchDto_When_BranchIsFound()
         {
-            var okResult = _branchesController.GetBranch(1).Result as OkObjectResult;
+            var okResult = _sut.GetBranch(1).Result as OkObjectResult;
 
             Assert.IsNotNull(okResult);
             Assert.IsInstanceOfType(okResult.Value, typeof(BranchDto));
@@ -125,7 +125,7 @@ namespace BankApp.UnitTests.Controllers
         [TestMethod]
         public void GetBranch_Should_ReturnNotFound_When_BranchIsNotFound()
         {
-            var notFoundResult = _branchesController.GetBranch(999);
+            var notFoundResult = _sut.GetBranch(999);
 
             Assert.IsNotNull(notFoundResult);
             Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
@@ -153,7 +153,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var createdAtRouteResult = _branchesController.CreateBranchWithAddress(branchCreation).Result as CreatedAtRouteResult;
+            var createdAtRouteResult = _sut.CreateBranchWithAddress(branchCreation).Result as CreatedAtRouteResult;
 
             // Assert
             Assert.IsNotNull(createdAtRouteResult);
@@ -185,11 +185,11 @@ namespace BankApp.UnitTests.Controllers
         {
             // Arrange
             var branchCreation = new BranchWithAddressCreationDto();
-            _branchesController.ModelState.AddModelError(nameof(branchCreation.Branch), $"The {nameof(branchCreation.Branch)} field is required.");
-            _branchesController.ModelState.AddModelError(nameof(branchCreation.Address), $"The {nameof(branchCreation.Address)} field is required.");
+            _sut.ModelState.AddModelError(nameof(branchCreation.Branch), $"The {nameof(branchCreation.Branch)} field is required.");
+            _sut.ModelState.AddModelError(nameof(branchCreation.Address), $"The {nameof(branchCreation.Address)} field is required.");
 
             // Act
-            var badRequestResult = _branchesController.CreateBranchWithAddress(branchCreation).Result as BadRequestObjectResult;
+            var badRequestResult = _sut.CreateBranchWithAddress(branchCreation).Result as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -231,7 +231,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var result = _branchesController.CreateBranchWithAddress(branchCreation);
+            var result = _sut.CreateBranchWithAddress(branchCreation);
 
             // Assert
             Assert.IsNotNull(result);
@@ -272,10 +272,10 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
-            _branchesController.ControllerContext = context;
+            _sut.ControllerContext = context;
 
             // Act
-            var okResult = _branchesController.AssignTellerToBranch(workerAtBranch) as OkResult;
+            var okResult = _sut.AssignTellerToBranch(workerAtBranch) as OkResult;
 
             // Assert
             Assert.IsNotNull(okResult);
@@ -300,11 +300,11 @@ namespace BankApp.UnitTests.Controllers
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto();
 
-            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
-            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
+            _sut.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
+            _sut.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
 
             // Act
-            var badRequestResult = _branchesController.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -335,7 +335,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -361,7 +361,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -387,7 +387,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.AssignTellerToBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -424,10 +424,10 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
-            _branchesController.ControllerContext = context;
+            _sut.ControllerContext = context;
 
             // Act
-            var okResult = _branchesController.AssignManagerToBranch(workerAtBranch) as OkResult;
+            var okResult = _sut.AssignManagerToBranch(workerAtBranch) as OkResult;
 
             // Assert
             Assert.IsNotNull(okResult);
@@ -452,11 +452,11 @@ namespace BankApp.UnitTests.Controllers
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto();
 
-            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
-            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
+            _sut.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
+            _sut.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
 
             // Act
-            var badRequestResult = _branchesController.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -487,7 +487,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -513,7 +513,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -539,7 +539,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.AssignManagerToBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -576,10 +576,10 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
-            _branchesController.ControllerContext = context;
+            _sut.ControllerContext = context;
 
             // Act
-            var okResult = _branchesController.ExpelTellerFromBranch(workerAtBranch) as OkResult;
+            var okResult = _sut.ExpelTellerFromBranch(workerAtBranch) as OkResult;
 
             // Assert
             Assert.IsNotNull(okResult);
@@ -604,11 +604,11 @@ namespace BankApp.UnitTests.Controllers
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto();
 
-            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
-            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
+            _sut.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
+            _sut.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
 
             // Act
-            var badRequestResult = _branchesController.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -639,7 +639,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -665,7 +665,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -691,7 +691,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -717,7 +717,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelTellerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -754,10 +754,10 @@ namespace BankApp.UnitTests.Controllers
                 }
             };
 
-            _branchesController.ControllerContext = context;
+            _sut.ControllerContext = context;
 
             // Act
-            var okResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as OkResult;
+            var okResult = _sut.ExpelManagerFromBranch(workerAtBranch) as OkResult;
 
             // Assert
             Assert.IsNotNull(okResult);
@@ -782,11 +782,11 @@ namespace BankApp.UnitTests.Controllers
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto();
 
-            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
-            _branchesController.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
+            _sut.ModelState.AddModelError(nameof(workerAtBranch.WorkerId), $"The {nameof(workerAtBranch.WorkerId)} field is required.");
+            _sut.ModelState.AddModelError(nameof(workerAtBranch.BranchId), $"The {nameof(workerAtBranch.BranchId)} field is required.");
 
             // Act
-            var badRequestResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -817,7 +817,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -843,7 +843,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -869,7 +869,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
@@ -895,7 +895,7 @@ namespace BankApp.UnitTests.Controllers
             };
 
             // Act
-            var badRequestResult = _branchesController.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
+            var badRequestResult = _sut.ExpelManagerFromBranch(workerAtBranch) as BadRequestObjectResult;
 
             // Assert
             Assert.IsNotNull(badRequestResult);
