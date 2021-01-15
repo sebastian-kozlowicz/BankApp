@@ -15,9 +15,9 @@ namespace BankApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IPaymentCardNumberFactory _cardNumberFactory;
+        private readonly IPaymentCardNumberGenerator _cardNumberFactory;
 
-        public CardsController(ApplicationDbContext context, IMapper mapper, IPaymentCardNumberFactory cardNumberFactory)
+        public CardsController(ApplicationDbContext context, IMapper mapper, IPaymentCardNumberGenerator cardNumberFactory)
         {
             _context = context;
             _mapper = mapper;

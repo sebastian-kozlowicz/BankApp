@@ -3,7 +3,7 @@ using System;
 
 namespace BankApp.Helpers.Factories
 {
-    public class PaymentCardNumberFactory : IPaymentCardNumberFactory
+    public class PaymentCardNumberFactory : IPaymentCardNumberGenerator
     {
         private static readonly int visaPrefix = 4;
 
