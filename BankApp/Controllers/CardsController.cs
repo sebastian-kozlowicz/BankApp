@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BankApp.Data;
 using BankApp.Dtos.Card;
+using BankApp.Helpers.Services;
 using BankApp.Interfaces;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +16,13 @@ namespace BankApp.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IPaymentCardNumberGenerator _cardNumberFactory;
+        private readonly IPaymentCardNumberGenerator<VisaPaymentCardNumberGenerator> _visaPaymentCardNumberGenerator;
 
-        public CardsController(ApplicationDbContext context, IMapper mapper, IPaymentCardNumberGenerator cardNumberFactory)
+        public CardsController(ApplicationDbContext context, IMapper mapper, IPaymentCardNumberGenerator<VisaPaymentCardNumberGenerator> cardNumberFactory)
         {
             _context = context;
             _mapper = mapper;
-            _cardNumberFactory = cardNumberFactory;
+            _visaPaymentCardNumberGenerator = cardNumberFactory;
         }
 
         [HttpGet]
