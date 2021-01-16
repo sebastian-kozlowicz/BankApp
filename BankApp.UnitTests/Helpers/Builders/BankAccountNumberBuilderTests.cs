@@ -1,16 +1,16 @@
 ﻿using System;
 using BankApp.Data;
-using BankApp.Helpers.Factories;
+using BankApp.Helpers.Builders;
 using BankApp.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace BankApp.UnitTests.Helpers.Factories
+namespace BankApp.UnitTests.Helpers.Builders
 {
     [TestClass]
-    public class BankAccountNumberFactoryTests
+    public class BankAccountNumberBuilderTests
     {
-        private BankAccountNumberFactory _sut;
+        private BankAccountNumberBuilder _sut;
         private ApplicationDbContext _context;
 
         private static ApplicationDbContext GetMockContext()
@@ -34,7 +34,7 @@ namespace BankApp.UnitTests.Helpers.Factories
         public void TestInitialize()
         {
             _context = GetMockContext();
-            _sut = new BankAccountNumberFactory(_context);
+            _sut = new BankAccountNumberBuilder(_context);
         }
 
         [TestMethod]

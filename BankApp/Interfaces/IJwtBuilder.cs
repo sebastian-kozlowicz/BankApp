@@ -4,7 +4,7 @@ using System.Security.Claims;
 
 namespace BankApp.Interfaces
 {
-    public interface IJwtFactory
+    public interface IJwtBuilder
     {
         string GenerateEncodedToken(ClaimsIdentity claimsIdentity);
         ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IEnumerable<string> roles);

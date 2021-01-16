@@ -25,14 +25,15 @@ namespace BankApp.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IBankAccountNumberFactory _accountNumberFactory;
+        private readonly IBankAccountNumberBuilder _bankAccountNumberBuilder;
 
-        public BankAccountsController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper, IBankAccountNumberFactory accountNumberFactory)
+        public BankAccountsController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper,
+            IBankAccountNumberBuilder bankAccountNumberBuilder)
         {
             _userManager = userManager;
             _context = context;
             _mapper = mapper;
-            _accountNumberFactory = accountNumberFactory;
+            _bankAccountNumberBuilder = bankAccountNumberBuilder;
         }
 
         [HttpGet]
@@ -65,7 +66,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var generatedAccountNumber = _accountNumberFactory.GenerateBankAccountNumber();
+            var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber();
 
             var bankAccount = new BankAccount
             {
@@ -99,7 +100,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var generatedAccountNumber = _accountNumberFactory.GenerateBankAccountNumber();
+            var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber();
 
             var user = _mapper.Map<ApplicationUser>(model.Register);
             user.Customer = new Customer { Id = user.Id };
@@ -180,7 +181,7 @@ namespace BankApp.Controllers
                 workerBranchId = currentUser.Manager.WorkAtId;
             }
 
-            var generatedAccountNumber = _accountNumberFactory.GenerateBankAccountNumber(workerBranchId);
+            var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber(workerBranchId);
 
             var user = _mapper.Map<ApplicationUser>(model.Register);
             user.Customer = new Customer { Id = user.Id };

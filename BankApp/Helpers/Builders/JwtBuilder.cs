@@ -10,13 +10,13 @@ using BankApp.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BankApp.Helpers.Factories
+namespace BankApp.Helpers.Builders
 {
-    public class JwtFactory : IJwtFactory
+    public class JwtBuilder : IJwtBuilder
     {
         private readonly JwtIssuerOptions _jwtOptions;
 
-        public JwtFactory(IOptions<JwtIssuerOptions> jwtOptions)
+        public JwtBuilder(IOptions<JwtIssuerOptions> jwtOptions)
         {
             _jwtOptions = jwtOptions.Value;
             ThrowIfInvalidOptions(_jwtOptions);

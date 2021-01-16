@@ -32,7 +32,7 @@ namespace BankApp.UnitTests.Controllers
     {
         private BankAccountsController _sut;
         private readonly IMapper _mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
-        private Mock<IBankAccountNumberFactory> _bankAccountNumberFactoryMock;
+        private Mock<IBankAccountNumberBuilder> _bankAccountNumberBuilderMock;
         private Mock<IUserStore<ApplicationUser>> _userStoreMock;
         private Mock<UserManager<ApplicationUser>> _userManagerMock;
         private ApplicationDbContext _context;
@@ -103,8 +103,8 @@ namespace BankApp.UnitTests.Controllers
             _context = GetMockContext();
             _userStoreMock = new Mock<IUserStore<ApplicationUser>>();
             _userManagerMock = new Mock<UserManager<ApplicationUser>>(_userStoreMock.Object, null, null, null, null, null, null, null, null);
-            _bankAccountNumberFactoryMock = new Mock<IBankAccountNumberFactory>();
-            _sut = new BankAccountsController(_userManagerMock.Object, _context, _mapper, _bankAccountNumberFactoryMock.Object);
+            _bankAccountNumberBuilderMock = new Mock<IBankAccountNumberBuilder>();
+            _sut = new BankAccountsController(_userManagerMock.Object, _context, _mapper, _bankAccountNumberBuilderMock.Object);
         }
 
         [TestMethod]
@@ -243,7 +243,7 @@ namespace BankApp.UnitTests.Controllers
                 CreatedById = (int)bankAccountCreation.CustomerId
             };
 
-            _bankAccountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
+            _bankAccountNumberBuilderMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
 
             // Act
             var createdAtRouteResult = _sut.CreateBankAccount(bankAccountCreation).Result as CreatedAtRouteResult;
@@ -406,7 +406,7 @@ namespace BankApp.UnitTests.Controllers
                     _context.SaveChanges();
                 });
 
-            _bankAccountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
+            _bankAccountNumberBuilderMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
 
             // Act
             var result = await _sut.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
@@ -597,7 +597,7 @@ namespace BankApp.UnitTests.Controllers
                     _context.SaveChanges();
                 });
 
-            _bankAccountNumberFactoryMock.Setup(anf => anf.GenerateBankAccountNumber(It.IsAny<int>())).Returns(bankAccountNumber);
+            _bankAccountNumberBuilderMock.Setup(anf => anf.GenerateBankAccountNumber(It.IsAny<int>())).Returns(bankAccountNumber);
 
             // Act
             var result = await _sut.CreateBankAccountWithCustomerByWorker(bankAccountCreation);

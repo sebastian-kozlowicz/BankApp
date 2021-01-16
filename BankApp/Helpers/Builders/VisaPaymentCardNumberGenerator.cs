@@ -1,7 +1,7 @@
 ﻿using BankApp.Interfaces;
 using System;
 
-namespace BankApp.Helpers.Services
+namespace BankApp.Helpers.Builders
 {
     public class VisaPaymentCardNumberGenerator : IPaymentCardNumberGenerator<VisaPaymentCardNumberGenerator>
     {

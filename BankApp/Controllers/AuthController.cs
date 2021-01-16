@@ -14,12 +14,12 @@ namespace BankApp.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IJwtFactory _jwtFactory;
+        private readonly IJwtBuilder _jwtBuilder;
 
-        public AuthController(UserManager<ApplicationUser> userManager, IJwtFactory jwtFactory)
+        public AuthController(UserManager<ApplicationUser> userManager, IJwtBuilder jwtBuilder)
         {
             _userManager = userManager;
-            _jwtFactory = jwtFactory;
+            _jwtBuilder = jwtBuilder;
         }
 
         [HttpPost]
@@ -32,7 +32,7 @@ namespace BankApp.Controllers
 
             if (await GetClaimsIdentity(model.Email, model.Password) is var claimsIdentity && claimsIdentity != null)
             {
-                var jwt = _jwtFactory.GenerateEncodedToken(claimsIdentity);
+                var jwt = _jwtBuilder.GenerateEncodedToken(claimsIdentity);
 
                 return Ok(new { token = jwt });
             }
@@ -50,7 +50,7 @@ namespace BankApp.Controllers
                     if (await _userManager.CheckPasswordAsync(user, password))
                     {
                         var roles = await _userManager.GetRolesAsync(user);
-                        return await Task.FromResult(_jwtFactory.GenerateClaimsIdentity(user, roles));
+                        return await Task.FromResult(_jwtBuilder.GenerateClaimsIdentity(user, roles));
                     }
                 }
             }

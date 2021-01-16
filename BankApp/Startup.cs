@@ -17,13 +17,13 @@ using System.Text;
 using BankApp.Interfaces;
 using BankApp.Configuration;
 using System.Globalization;
-using BankApp.Helpers.Factories;
 using BankApp.Helpers.Services;
 using BankApp.Policies;
 using BankApp.Policies.Handlers;
 using BankApp.Policies.Requirement;
 using Microsoft.AspNetCore.Authorization;
 using Nito.AsyncEx;
+using BankApp.Helpers.Builders;
 
 namespace BankApp
 {
@@ -58,8 +58,8 @@ namespace BankApp
                 .AddResourceStore<InMemoryResourcesStore>();
 
             services.AddSingleton<IAuthorizationHandler, UserIdRequirementHandler>();
-            services.AddSingleton<IJwtFactory, JwtFactory>();
-            services.AddTransient<IBankAccountNumberFactory, BankAccountNumberFactory>();
+            services.AddSingleton<IJwtBuilder, JwtBuilder>();
+            services.AddTransient<IBankAccountNumberBuilder, BankAccountNumberBuilder>();
             services.AddTransient<IPaymentCardNumberGenerator<VisaPaymentCardNumberGenerator>, VisaPaymentCardNumberGenerator>();
             services.AddTransient<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddTransient<ITransferService<ExternalTransferService>, ExternalTransferService>();
