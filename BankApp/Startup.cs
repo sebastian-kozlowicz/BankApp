@@ -24,6 +24,7 @@ using BankApp.Policies.Requirement;
 using Microsoft.AspNetCore.Authorization;
 using Nito.AsyncEx;
 using BankApp.Helpers.Builders;
+using BankApp.Helpers.Factories;
 
 namespace BankApp
 {
@@ -59,8 +60,8 @@ namespace BankApp
 
             services.AddSingleton<IAuthorizationHandler, UserIdRequirementHandler>();
             services.AddSingleton<IJwtBuilder, JwtBuilder>();
+            services.AddSingleton<IPaymentCardNumberFactory, PaymentCardNumberFactory>();
             services.AddTransient<IBankAccountNumberBuilder, BankAccountNumberBuilder>();
-            services.AddTransient<IPaymentCardNumberGenerator<VisaPaymentCardNumberGenerator>, VisaPaymentCardNumberGenerator>();
             services.AddTransient<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddTransient<ITransferService<ExternalTransferService>, ExternalTransferService>();
 

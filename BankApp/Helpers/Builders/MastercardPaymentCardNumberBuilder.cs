@@ -3,9 +3,9 @@ using System;
 
 namespace BankApp.Helpers.Builders
 {
-    public class VisaPaymentCardNumberGenerator : IPaymentCardNumberGenerator<VisaPaymentCardNumberGenerator>
+    public class MastercardPaymentCardNumberBuilder : IPaymentCardNumberBuilder
     {
-        private static readonly int VisaPrefix = 4;
+        //private static readonly int MastercardPrefix = 4;
 
         public string GenerateCardNumber(int length)
         {
