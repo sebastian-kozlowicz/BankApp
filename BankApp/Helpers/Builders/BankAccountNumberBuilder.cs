@@ -148,7 +148,7 @@ namespace BankApp.Helpers.Builders
         private string GetBranchCode(int? branchId)
         {
             if (branchId == null)
-                return _context.Branches.SingleOrDefault(b => b.Id == _context.Headquarters.SingleOrDefault().Id).BranchCode;
+                return _context.Branches.SingleOrDefault(b => b.Id == _context.Headquarters.FirstOrDefault().Id).BranchCode;
 
             return _context.Branches.SingleOrDefault(b => b.Id == branchId).BranchCode;
         }
