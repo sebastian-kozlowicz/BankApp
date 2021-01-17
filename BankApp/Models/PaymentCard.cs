@@ -4,7 +4,7 @@
     {
         public int Id { get; set; }
         public byte MajorIndustryIdentifier { get; set; }
-        public int IssuerIdentificationNumber { get; set; }
+        public int BankIdentificationNumber { get; set; }
         public long AccountIdentificationNumber { get; set; }
         public byte CheckDigit { get; set; }
         public string Number { get; set; }
