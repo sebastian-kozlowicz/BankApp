@@ -17,7 +17,7 @@ namespace BankApp.Data
         public DbSet<BankTransfer> BankTransfers { get; set; }
         public DbSet<Branch> Branches { get; set; }
         public DbSet<Headquarters> Headquarters { get; set; }
-        public DbSet<Card> Cards { get; set; }
+        public DbSet<PaymentCard> PaymentCards { get; set; }
         public DbSet<Administrator> Administrators { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Teller> Tellers { get; set; }

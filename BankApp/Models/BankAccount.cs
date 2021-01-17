@@ -25,7 +25,7 @@ namespace BankApp.Models
         public int CustomerId { get; set; }
         public ApplicationUser CreatedBy { get; set; }
         public int CreatedById { get; set; }
-        public IList<Card> Cards { get; set; }
+        public IList<PaymentCard> PaymentCards { get; set; }
         public IList<BankTransfer> BankTransfers { get; set; }
     }
 }

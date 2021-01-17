@@ -1,6 +1,6 @@
 ﻿namespace BankApp.Models
 {
-    public class Card
+    public class PaymentCard
     {
         public int Id { get; set; }
         public byte MajorIndustryIdentifier { get; set; }

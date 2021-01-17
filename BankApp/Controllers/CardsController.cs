@@ -26,14 +26,14 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CardDto>> GetCards()
+        public ActionResult<IEnumerable<PaymentCardDto>> GetCards()
         {
-            var cards = _context.Cards.ToList();
-            return Ok(_mapper.Map<List<Card>, List<CardDto>>(cards));
+            var cards = _context.PaymentCards.ToList();
+            return Ok(_mapper.Map<List<PaymentCard>, List<PaymentCardDto>>(cards));
         }
 
         [HttpPost]
-        public ActionResult<CardDto> CreateCard([FromBody] CardCreationDto model)
+        public ActionResult<PaymentCardDto> CreateCard([FromBody] CardCreationDto model)
         {
             var visaPaymentCardNumberBuilder = _paymentCardNumberFactory.GetPaymentCardNumberBuilder(IssuingNetwork.Visa);
             return Ok();
