@@ -52,14 +52,14 @@ namespace BankApp.Helpers.Builders
             var nationalCheckDigit = GenerateNationalCheckDigit(bankData.NationalBankCode, branchCode);
             var accountNumber = GenerateAccountNumber();
             var accountNumberText = GetAccountNumberText(accountNumber);
-            var checkNumber = GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
-            var iban = GetIban(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
-            var ibanSeparated = GetIbanSeparated(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
+            var checkDigits = GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
+            var iban = GetIban(bankData, checkDigits, branchCode, nationalCheckDigit, accountNumberText);
+            var ibanSeparated = GetIbanSeparated(bankData, checkDigits, branchCode, nationalCheckDigit, accountNumberText);
 
             return new BankAccountNumber
             {
                 CountryCode = bankData.CountryCode,
-                CheckNumber = checkNumber,
+                CheckDigits = checkDigits,
                 NationalBankCode = bankData.NationalBankCode,
                 BranchCode = branchCode,
                 NationalCheckDigit = nationalCheckDigit,
@@ -84,7 +84,7 @@ namespace BankApp.Helpers.Builders
             return (10 - sum % 10) % 10;
         }
 
-        public string GenerateCheckNumber(BankData bankData, string branchCode, int nationalCheckDigit, string accountNumberText)
+        public string GenerateCheckDigits(BankData bankData, string branchCode, int nationalCheckDigit, string accountNumberText)
         {
             var firstCountryCharacterAsNumber = CountryCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
             var secondCountryCharacterAsNumber = CountryCharactersAssignedToNumbers[bankData.CountryCode.Substring(1, 1)];

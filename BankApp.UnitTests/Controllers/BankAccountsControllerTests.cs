@@ -42,7 +42,7 @@ namespace BankApp.UnitTests.Controllers
             AccountType = AccountType.Checking,
             Currency = Currency.Eur,
             CountryCode = "PL",
-            CheckNumber = "61",
+            CheckDigits = "61",
             NationalBankCode = "1080",
             BranchCode = "000",
             NationalCheckDigit = 1,
@@ -61,7 +61,7 @@ namespace BankApp.UnitTests.Controllers
             AccountType = AccountType.Savings,
             Currency = Currency.Pln,
             CountryCode = "PL",
-            CheckNumber = "27",
+            CheckDigits = "27",
             NationalBankCode = "1080",
             BranchCode = "001",
             NationalCheckDigit = 4,
@@ -121,7 +121,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(_firstBankAccount.AccountType, bankAccountDto.AccountType);
             Assert.AreEqual(_firstBankAccount.Currency, bankAccountDto.Currency);
             Assert.AreEqual(_firstBankAccount.CountryCode, bankAccountDto.CountryCode);
-            Assert.AreEqual(_firstBankAccount.CheckNumber, bankAccountDto.CheckNumber);
+            Assert.AreEqual(_firstBankAccount.CheckDigits, bankAccountDto.CheckDigits);
             Assert.AreEqual(_firstBankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
             Assert.AreEqual(_firstBankAccount.BranchCode, bankAccountDto.BranchCode);
             Assert.AreEqual(_firstBankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
@@ -160,7 +160,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(_firstBankAccount.AccountType, bankAccountsDto[0].AccountType);
             Assert.AreEqual(_firstBankAccount.Currency, bankAccountsDto[0].Currency);
             Assert.AreEqual(_firstBankAccount.CountryCode, bankAccountsDto[0].CountryCode);
-            Assert.AreEqual(_firstBankAccount.CheckNumber, bankAccountsDto[0].CheckNumber);
+            Assert.AreEqual(_firstBankAccount.CheckDigits, bankAccountsDto[0].CheckDigits);
             Assert.AreEqual(_firstBankAccount.NationalBankCode, bankAccountsDto[0].NationalBankCode);
             Assert.AreEqual(_firstBankAccount.BranchCode, bankAccountsDto[0].BranchCode);
             Assert.AreEqual(_firstBankAccount.NationalCheckDigit, bankAccountsDto[0].NationalCheckDigit);
@@ -177,7 +177,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(_secondBankAccount.AccountType, bankAccountsDto[1].AccountType);
             Assert.AreEqual(_secondBankAccount.Currency, bankAccountsDto[1].Currency);
             Assert.AreEqual(_secondBankAccount.CountryCode, bankAccountsDto[1].CountryCode);
-            Assert.AreEqual(_secondBankAccount.CheckNumber, bankAccountsDto[1].CheckNumber);
+            Assert.AreEqual(_secondBankAccount.CheckDigits, bankAccountsDto[1].CheckDigits);
             Assert.AreEqual(_secondBankAccount.NationalBankCode, bankAccountsDto[1].NationalBankCode);
             Assert.AreEqual(_secondBankAccount.BranchCode, bankAccountsDto[1].BranchCode);
             Assert.AreEqual(_secondBankAccount.NationalCheckDigit, bankAccountsDto[1].NationalCheckDigit);
@@ -214,7 +214,7 @@ namespace BankApp.UnitTests.Controllers
             var bankAccountNumber = new BankAccountNumber
             {
                 CountryCode = "PL",
-                CheckNumber = "61",
+                CheckDigits = "61",
                 NationalBankCode = "1080",
                 BranchCode = "000",
                 NationalCheckDigit = 1,
@@ -229,7 +229,7 @@ namespace BankApp.UnitTests.Controllers
                 AccountType = (AccountType)bankAccountCreation.AccountType,
                 Currency = (Currency)bankAccountCreation.Currency,
                 CountryCode = bankAccountNumber.CountryCode,
-                CheckNumber = bankAccountNumber.CheckNumber,
+                CheckDigits = bankAccountNumber.CheckDigits,
                 NationalBankCode = bankAccountNumber.NationalBankCode,
                 BranchCode = bankAccountNumber.BranchCode,
                 NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
@@ -257,7 +257,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountType, bankAccountDto.AccountType);
             Assert.AreEqual(expectedBankAccount.Currency, bankAccountDto.Currency);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountDto.CountryCode);
-            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountDto.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountDto.CheckDigits);
             Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
             Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountDto.BranchCode);
             Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
@@ -276,7 +276,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountType, bankAccountFromDb.AccountType);
             Assert.AreEqual(expectedBankAccount.Currency, bankAccountFromDb.Currency);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountFromDb.CountryCode);
-            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountFromDb.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountFromDb.CheckDigits);
             Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountFromDb.NationalBankCode);
             Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountFromDb.BranchCode);
             Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountFromDb.NationalCheckDigit);
@@ -362,7 +362,7 @@ namespace BankApp.UnitTests.Controllers
             var bankAccountNumber = new BankAccountNumber
             {
                 CountryCode = "PL",
-                CheckNumber = "61",
+                CheckDigits = "61",
                 NationalBankCode = "1080",
                 BranchCode = "000",
                 NationalCheckDigit = 1,
@@ -377,7 +377,7 @@ namespace BankApp.UnitTests.Controllers
                 AccountType = (AccountType)bankAccountCreation.BankAccount.AccountType,
                 Currency = (Currency)bankAccountCreation.BankAccount.Currency,
                 CountryCode = bankAccountNumber.CountryCode,
-                CheckNumber = bankAccountNumber.CheckNumber,
+                CheckDigits = bankAccountNumber.CheckDigits,
                 NationalBankCode = bankAccountNumber.NationalBankCode,
                 BranchCode = bankAccountNumber.BranchCode,
                 NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
@@ -426,7 +426,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountType, bankAccountDto.AccountType);
             Assert.AreEqual(expectedBankAccount.Currency, bankAccountDto.Currency);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountDto.CountryCode);
-            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountDto.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountDto.CheckDigits);
             Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
             Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountDto.BranchCode);
             Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
@@ -449,7 +449,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountType, bankAccountFromDb.AccountType);
             Assert.AreEqual(expectedBankAccount.Currency, bankAccountFromDb.Currency);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountFromDb.CountryCode);
-            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountFromDb.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountFromDb.CheckDigits);
             Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountFromDb.NationalBankCode);
             Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountFromDb.BranchCode);
             Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountFromDb.NationalCheckDigit);
@@ -536,7 +536,7 @@ namespace BankApp.UnitTests.Controllers
             var bankAccountNumber = new BankAccountNumber
             {
                 CountryCode = "PL",
-                CheckNumber = "61",
+                CheckDigits = "61",
                 NationalBankCode = "1080",
                 BranchCode = "000",
                 NationalCheckDigit = 1,
@@ -551,7 +551,7 @@ namespace BankApp.UnitTests.Controllers
                 AccountType = (AccountType)bankAccountCreation.BankAccount.AccountType,
                 Currency = (Currency)bankAccountCreation.BankAccount.Currency,
                 CountryCode = bankAccountNumber.CountryCode,
-                CheckNumber = bankAccountNumber.CheckNumber,
+                CheckDigits = bankAccountNumber.CheckDigits,
                 NationalBankCode = bankAccountNumber.NationalBankCode,
                 BranchCode = bankAccountNumber.BranchCode,
                 NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
@@ -617,7 +617,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountType, bankAccountDto.AccountType);
             Assert.AreEqual(expectedBankAccount.Currency, bankAccountDto.Currency);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountDto.CountryCode);
-            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountDto.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountDto.CheckDigits);
             Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
             Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountDto.BranchCode);
             Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
@@ -640,7 +640,7 @@ namespace BankApp.UnitTests.Controllers
             Assert.AreEqual(expectedBankAccount.AccountType, bankAccountFromDb.AccountType);
             Assert.AreEqual(expectedBankAccount.Currency, bankAccountFromDb.Currency);
             Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountFromDb.CountryCode);
-            Assert.AreEqual(expectedBankAccount.CheckNumber, bankAccountFromDb.CheckNumber);
+            Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountFromDb.CheckDigits);
             Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountFromDb.NationalBankCode);
             Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountFromDb.BranchCode);
             Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountFromDb.NationalCheckDigit);

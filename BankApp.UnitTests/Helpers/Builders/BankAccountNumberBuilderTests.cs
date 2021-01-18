@@ -43,7 +43,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             var expectedBankAccountNumber = new BankAccountNumber
             {
                 CountryCode = "PL",
-                CheckNumber = "61",
+                CheckDigits = "61",
                 NationalBankCode = "1080",
                 BranchCode = "000",
                 NationalCheckDigit = 1,
@@ -56,7 +56,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             var result = _sut.GenerateBankAccountNumber(1);
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
-            Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
+            Assert.AreEqual(expectedBankAccountNumber.CheckDigits, result.CheckDigits);
             Assert.AreEqual(expectedBankAccountNumber.NationalBankCode, result.NationalBankCode);
             Assert.AreEqual(expectedBankAccountNumber.BranchCode, result.BranchCode);
             Assert.AreEqual(expectedBankAccountNumber.NationalCheckDigit, result.NationalCheckDigit);
@@ -72,7 +72,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             var expectedBankAccountNumber = new BankAccountNumber
             {
                 CountryCode = "PL",
-                CheckNumber = "27",
+                CheckDigits = "27",
                 NationalBankCode = "1080",
                 BranchCode = "001",
                 NationalCheckDigit = 4,
@@ -85,7 +85,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             var result = _sut.GenerateBankAccountNumber();
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
-            Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
+            Assert.AreEqual(expectedBankAccountNumber.CheckDigits, result.CheckDigits);
             Assert.AreEqual(expectedBankAccountNumber.NationalBankCode, result.NationalBankCode);
             Assert.AreEqual(expectedBankAccountNumber.BranchCode, result.BranchCode);
             Assert.AreEqual(expectedBankAccountNumber.NationalCheckDigit, result.NationalCheckDigit);
@@ -104,7 +104,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             var expectedBankAccountNumber = new BankAccountNumber
             {
                 CountryCode = "PL",
-                CheckNumber = "34",
+                CheckDigits = "34",
                 NationalBankCode = "1080",
                 BranchCode = "000",
                 NationalCheckDigit = 1,
@@ -117,7 +117,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             var result = _sut.GenerateBankAccountNumber(1);
 
             Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
-            Assert.AreEqual(expectedBankAccountNumber.CheckNumber, result.CheckNumber);
+            Assert.AreEqual(expectedBankAccountNumber.CheckDigits, result.CheckDigits);
             Assert.AreEqual(expectedBankAccountNumber.NationalBankCode, result.NationalBankCode);
             Assert.AreEqual(expectedBankAccountNumber.BranchCode, result.BranchCode);
             Assert.AreEqual(expectedBankAccountNumber.NationalCheckDigit, result.NationalCheckDigit);
@@ -140,7 +140,7 @@ namespace BankApp.UnitTests.Helpers.Builders
         }
 
         [TestMethod]
-        public void GenerateCheckNumber_Should_ReturnValidCheckNumber()
+        public void GenerateCheckDigits_Should_ReturnValidCheckDigits()
         {
             var bankData = new BankData
             {
@@ -150,15 +150,15 @@ namespace BankApp.UnitTests.Helpers.Builders
             var branchCode = "000";
             var nationalCheckDigit = 1;
             var accountNumberText = "9999999999999999";
-            var expectedNationalCheckNumber = "63";
+            var expectedNationalCheckDigits = "63";
 
-            var result = _sut.GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
+            var result = _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            Assert.AreEqual(expectedNationalCheckNumber, result);
+            Assert.AreEqual(expectedNationalCheckDigits, result);
         }
 
         [TestMethod]
-        public void GenerateCheckNumber_Should_ReturnValidCheckNumberWithLeadingZero()
+        public void GenerateCheckDigits_Should_ReturnValidCheckDigitsWithLeadingZero()
         {
             var bankData = new BankData
             {
@@ -168,11 +168,11 @@ namespace BankApp.UnitTests.Helpers.Builders
             var branchCode = "405";
             var nationalCheckDigit = 8;
             var accountNumberText = "8540304041736354";
-            string expectedNationalCheckNumber = "04";
+            string expectedNationalCheckDigits = "04";
 
-            var result = _sut.GenerateCheckNumber(bankData, branchCode, nationalCheckDigit, accountNumberText);
+            var result = _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            Assert.AreEqual(expectedNationalCheckNumber, result);
+            Assert.AreEqual(expectedNationalCheckDigits, result);
         }
 
         [TestMethod]
@@ -183,13 +183,13 @@ namespace BankApp.UnitTests.Helpers.Builders
                 CountryCode = "PL",
                 NationalBankCode = "1080"
             };
-            var checkNumber = "63";
+            var checkDigits = "63";
             var branchCode = "000";
             var nationalCheckDigit = 1;
             var accountNumberText = "9999999999999999";
             var expectedIban = "PL63108000019999999999999999";
 
-            var result = _sut.GetIban(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
+            var result = _sut.GetIban(bankData, checkDigits, branchCode, nationalCheckDigit, accountNumberText);
 
             Assert.AreEqual(expectedIban, result);
         }
@@ -202,13 +202,13 @@ namespace BankApp.UnitTests.Helpers.Builders
                 CountryCode = "PL",
                 NationalBankCode = "1080"
             };
-            var checkNumber = "63";
+            var checkDigits = "63";
             var branchCode = "000";
             var nationalCheckDigit = 1;
             var accountNumberText = "9999999999999999";
             var expectedIbanSeparated = "PL 63 1080 0001 9999 9999 9999 9999";
 
-            var result = _sut.GetIbanSeparated(bankData, checkNumber, branchCode, nationalCheckDigit, accountNumberText);
+            var result = _sut.GetIbanSeparated(bankData, checkDigits, branchCode, nationalCheckDigit, accountNumberText);
 
             Assert.AreEqual(expectedIbanSeparated, result);
         }

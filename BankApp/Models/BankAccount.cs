@@ -10,7 +10,7 @@ namespace BankApp.Models
         public AccountType AccountType { get; set; }
         public Currency Currency { get; set; }
         public string CountryCode { get; set; }
-        public string CheckNumber { get; set; }
+        public string CheckDigits { get; set; }
         public string NationalBankCode { get; set; }
         public string BranchCode { get; set; }
         public int NationalCheckDigit { get; set; }
