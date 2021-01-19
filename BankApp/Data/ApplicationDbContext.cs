@@ -11,6 +11,7 @@ namespace BankApp.Data
         public DbSet<TellerAtBranchHistory> TellerAtBranchHistory { get; set; }
         public DbSet<ManagerAtBranchHistory> ManagerAtBranchHistory { get; set; }
         public DbSet<BankData> BankData { get; set; }
+        public DbSet<BankIdentificationNumberData> BankIdentificationNumberData { get; set; }
         public DbSet<UserAddress> UserAddresses { get; set; }
         public DbSet<BranchAddress> BranchAddresses { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
