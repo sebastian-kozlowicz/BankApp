@@ -12,7 +12,8 @@ namespace BankApp.Data
         {
             await SeedRoles(roleManager);
             await SeedUsers(userManager);
-            SeedBankData(context);
+            await SeedBankData(context);
+            await SeedBankIdentificationNumberData(context);
         }
 
         private static async Task SeedRoles(RoleManager<IdentityRole<int>> roleManager)
@@ -81,7 +82,7 @@ namespace BankApp.Data
             }
         }
 
-        private static void SeedBankData(ApplicationDbContext context)
+        private static async Task SeedBankData(ApplicationDbContext context)
         {
             var bankDataInDb = context.BankData.ToList();
 
@@ -89,9 +90,32 @@ namespace BankApp.Data
             {
                 var bankData = new BankData { CountryCode = "PL", NationalBankCode = "1080" };
 
-                context.BankData.Add(bankData);
-                context.SaveChanges();
+                await context.BankData.AddAsync(bankData);
+                await context.SaveChangesAsync();
             }
+        }
+
+        private static async Task SeedBankIdentificationNumberData(ApplicationDbContext context)
+        {
+            var visaBinInDb = context.BankIdentificationNumberData.SingleOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa);
+
+            if (visaBinInDb == null)
+            {
+                var visaBin = new BankIdentificationNumberData { BankIdentificationNumber = 427329, IssuingNetwork = IssuingNetwork.Visa };
+
+                await context.BankIdentificationNumberData.AddAsync(visaBin);
+            }
+
+            var mastercardBinInDb = context.BankIdentificationNumberData.SingleOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Mastercard);
+
+            if (mastercardBinInDb == null)
+            {
+                var mastercardBin = new BankIdentificationNumberData { BankIdentificationNumber = 510918, IssuingNetwork = IssuingNetwork.Mastercard };
+
+                await context.BankIdentificationNumberData.AddAsync(mastercardBin);
+            }
+
+            await context.SaveChangesAsync();
         }
     }
 }
