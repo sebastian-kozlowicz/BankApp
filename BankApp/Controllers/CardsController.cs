@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Dtos.Card;
 using BankApp.Enumerators;
@@ -36,6 +37,8 @@ namespace BankApp.Controllers
         public ActionResult<PaymentCardDto> CreateCard([FromBody] CardCreationDto model)
         {
             var visaPaymentCardNumberBuilder = _paymentCardNumberFactory.GetPaymentCardNumberBuilder(IssuingNetwork.Visa);
+            var visaPaymentCardNumber = visaPaymentCardNumberBuilder.GeneratePaymentCardNumber(VisaAcceptedLength.Sixteen);
+
             return Ok();
         }
     }

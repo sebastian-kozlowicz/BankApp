@@ -1,7 +1,9 @@
-﻿namespace BankApp.Interfaces
+﻿using BankApp.Models;
+
+namespace BankApp.Interfaces
 {
     public interface IPaymentCardNumberBuilder
     {
-        string GenerateCardNumber(int length);
+        PaymentCardNumber GeneratePaymentCardNumber(int length);
     }
 }

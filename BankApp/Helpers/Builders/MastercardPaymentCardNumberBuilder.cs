@@ -1,5 +1,5 @@
 ﻿using BankApp.Interfaces;
-using System;
+using BankApp.Models;
 
 namespace BankApp.Helpers.Builders
 {
@@ -7,9 +7,9 @@ namespace BankApp.Helpers.Builders
     {
         //private static readonly int MastercardPrefix = 4;
 
-        public string GenerateCardNumber(int length)
+        public PaymentCardNumber GeneratePaymentCardNumber(int length)
         {
-            return Guid.NewGuid().ToString().Substring(0, 15);
+            return null;
         }
     }
 }
