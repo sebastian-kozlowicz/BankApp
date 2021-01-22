@@ -36,7 +36,6 @@ namespace BankApp.Data
             if (await userManager.FindByEmailAsync("admin@localhost") == null)
             {
                 var user = new ApplicationUser { UserName = "admin@localhost", Email = "admin@localhost" };
-
                 user.Administrator = new Administrator { Id = user.Id };
 
                 var result = await userManager.CreateAsync(user, "Qwerty1@");
@@ -48,7 +47,6 @@ namespace BankApp.Data
             if (await userManager.FindByEmailAsync("customer@localhost") == null)
             {
                 var user = new ApplicationUser { UserName = "customer@localhost", Email = "customer@localhost" };
-
                 user.Customer = new Customer { Id = user.Id };
 
                 var result = await userManager.CreateAsync(user, "Qwerty1@");
@@ -60,7 +58,6 @@ namespace BankApp.Data
             if (await userManager.FindByEmailAsync("teller@localhost") == null)
             {
                 var user = new ApplicationUser { UserName = "teller@localhost", Email = "teller@localhost" };
-
                 user.Teller = new Teller { Id = user.Id };
 
                 var result = await userManager.CreateAsync(user, "Qwerty1@");
@@ -72,7 +69,6 @@ namespace BankApp.Data
             if (await userManager.FindByEmailAsync("manager@localhost") == null)
             {
                 var user = new ApplicationUser { UserName = "manager@localhost", Email = "manager@localhost" };
-
                 user.Manager = new Manager { Id = user.Id };
 
                 var result = await userManager.CreateAsync(user, "Qwerty1@");
@@ -97,21 +93,19 @@ namespace BankApp.Data
 
         private static async Task SeedBankIdentificationNumberData(ApplicationDbContext context)
         {
-            var visaBinInDb = context.BankIdentificationNumberData.SingleOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa);
+            var visaBinsInDb = context.BankIdentificationNumberData.Where(bin => bin.IssuingNetwork == IssuingNetwork.Visa).ToList();
 
-            if (visaBinInDb == null)
+            if (!visaBinsInDb.Any())
             {
                 var visaBin = new BankIdentificationNumberData { BankIdentificationNumber = 427329, IssuingNetwork = IssuingNetwork.Visa };
-
                 await context.BankIdentificationNumberData.AddAsync(visaBin);
             }
 
-            var mastercardBinInDb = context.BankIdentificationNumberData.SingleOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Mastercard);
+            var mastercardBinsInDb = context.BankIdentificationNumberData.Where(bin => bin.IssuingNetwork == IssuingNetwork.Mastercard).ToList();
 
-            if (mastercardBinInDb == null)
+            if (!mastercardBinsInDb.Any())
             {
                 var mastercardBin = new BankIdentificationNumberData { BankIdentificationNumber = 510918, IssuingNetwork = IssuingNetwork.Mastercard };
-
                 await context.BankIdentificationNumberData.AddAsync(mastercardBin);
             }
 
