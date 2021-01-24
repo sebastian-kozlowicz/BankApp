@@ -1,6 +1,8 @@
 ﻿using BankApp.Data;
+using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
+using System.Linq;
 
 namespace BankApp.Helpers.Builders
 {
@@ -16,7 +18,13 @@ namespace BankApp.Helpers.Builders
 
         public PaymentCardNumber GeneratePaymentCardNumber(int length)
         {
+            var bankIdentificationNumber = GetBankIdentificationNumber();
             return null;
+        }
+
+        private BankIdentificationNumberData GetBankIdentificationNumber()
+        {
+            return _context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa);
         }
     }
 }
