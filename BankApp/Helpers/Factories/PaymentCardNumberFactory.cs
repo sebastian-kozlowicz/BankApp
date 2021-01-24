@@ -17,12 +17,12 @@ namespace BankApp.Helpers.Factories
 
         public IPaymentCardNumberBuilder GetPaymentCardNumberBuilder(IssuingNetwork issuingNetwork)
         {
-            if (issuingNetwork == IssuingNetwork.Mastercard)
-                using (var scope = _serviceProvider.CreateScope())
-                    return scope.ServiceProvider.GetService<MastercardPaymentCardNumberBuilder>();
+            using var scope = _serviceProvider.CreateScope();
 
-            using (var scope = _serviceProvider.CreateScope())
-                return scope.ServiceProvider.GetService<VisaPaymentCardNumberBuilder>();
+            if (issuingNetwork == IssuingNetwork.Mastercard)
+                return scope.ServiceProvider.GetService<MastercardPaymentCardNumberBuilder>();
+
+            return scope.ServiceProvider.GetService<VisaPaymentCardNumberBuilder>();
         }
     }
 }
