@@ -13,13 +13,13 @@ namespace BankApp.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CardsController : ControllerBase
+    public class PaymentCardsController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly IPaymentCardNumberFactory _paymentCardNumberFactory;
 
-        public CardsController(ApplicationDbContext context, IMapper mapper, IPaymentCardNumberFactory paymentCardNumberFactory)
+        public PaymentCardsController(ApplicationDbContext context, IMapper mapper, IPaymentCardNumberFactory paymentCardNumberFactory)
         {
             _context = context;
             _mapper = mapper;
