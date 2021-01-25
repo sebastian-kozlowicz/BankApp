@@ -1,7 +1,9 @@
-﻿using BankApp.Data;
+﻿using BankApp.Configuration;
+using BankApp.Data;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
+using System;
 using System.Linq;
 
 namespace BankApp.Helpers.Builders
@@ -18,6 +20,9 @@ namespace BankApp.Helpers.Builders
 
         public PaymentCardNumber GeneratePaymentCardNumber(int length)
         {
+            if (!VisaAcceptedLength.AcceptedLengths.Contains(length))
+                throw new ArgumentException("Requested Visa payment card number length is invalid.");
+
             var bankIdentificationNumber = GetBankIdentificationNumber();
             return null;
         }
