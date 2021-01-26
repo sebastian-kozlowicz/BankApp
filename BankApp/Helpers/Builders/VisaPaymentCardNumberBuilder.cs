@@ -10,8 +10,8 @@ namespace BankApp.Helpers.Builders
 {
     public class VisaPaymentCardNumberBuilder : IPaymentCardNumberBuilder
     {
-        private static readonly int VisaPrefix = 4;
         private readonly ApplicationDbContext _context;
+        private static readonly string VisaPrefix = "4";
 
         public VisaPaymentCardNumberBuilder(ApplicationDbContext context)
         {
@@ -24,6 +24,9 @@ namespace BankApp.Helpers.Builders
                 throw new ArgumentException("Requested Visa payment card number length is invalid.");
 
             var bankIdentificationNumber = GetBankIdentificationNumber();
+            if (!bankIdentificationNumber.BankIdentificationNumber.ToString().StartsWith(VisaPrefix))
+                throw new ArgumentException("Visa bank identifiaction number found in database is invalid.");
+
             return null;
         }
 
