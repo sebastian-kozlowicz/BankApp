@@ -1,28 +1,25 @@
-﻿using BankApp.Enumerators;
+﻿using BankApp.Data;
+using BankApp.Enumerators;
 using BankApp.Helpers.Builders;
 using BankApp.Interfaces;
-using Microsoft.Extensions.DependencyInjection;
-using System;
 
 namespace BankApp.Helpers.Factories
 {
     public class PaymentCardNumberFactory : IPaymentCardNumberFactory
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly ApplicationDbContext _context;
 
-        public PaymentCardNumberFactory(IServiceProvider serviceProvider)
+        public PaymentCardNumberFactory(ApplicationDbContext context)
         {
-            _serviceProvider = serviceProvider;
+            _context = context;
         }
 
         public IPaymentCardNumberBuilder GetPaymentCardNumberBuilder(IssuingNetwork issuingNetwork)
         {
-            using var scope = _serviceProvider.CreateScope();
-
             if (issuingNetwork == IssuingNetwork.Mastercard)
-                return scope.ServiceProvider.GetService<MastercardPaymentCardNumberBuilder>();
+                return new MastercardPaymentCardNumberBuilder(_context);
 
-            return scope.ServiceProvider.GetService<VisaPaymentCardNumberBuilder>();
+            return new VisaPaymentCardNumberBuilder(_context);
         }
     }
 }

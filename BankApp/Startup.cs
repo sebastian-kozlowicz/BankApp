@@ -60,10 +60,8 @@ namespace BankApp
 
             services.AddSingleton<IAuthorizationHandler, UserIdRequirementHandler>();
             services.AddSingleton<IJwtBuilder, JwtBuilder>();
-            services.AddSingleton<IPaymentCardNumberFactory, PaymentCardNumberFactory>();
-            services.AddScoped<IBankAccountNumberBuilder, BankAccountNumberBuilder>();
-            services.AddScoped<MastercardPaymentCardNumberBuilder>();
-            services.AddScoped<VisaPaymentCardNumberBuilder>();
+            services.AddScoped<IPaymentCardNumberFactory, PaymentCardNumberFactory>();
+            services.AddScoped<IBankAccountNumberBuilder, BankAccountNumberBuilder>(); 
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
 
