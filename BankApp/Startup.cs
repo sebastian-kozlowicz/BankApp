@@ -64,6 +64,7 @@ namespace BankApp
             services.AddScoped<IBankAccountNumberBuilder, BankAccountNumberBuilder>(); 
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
+            services.AddScoped<BankIdentificationNumberData>();
 
             services.Configure<IdentityOptions>(options =>
             {

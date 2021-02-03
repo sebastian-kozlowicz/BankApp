@@ -1,21 +1,19 @@
 ﻿using BankApp.Configuration;
-using BankApp.Data;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
 using System;
-using System.Linq;
 
 namespace BankApp.Helpers.Builders
 {
     public class VisaPaymentCardNumberBuilder : IPaymentCardNumberBuilder
     {
-        private readonly ApplicationDbContext _context;
+        private readonly BankIdentificationNumberData _bankIdentificationNumberData;
         private static readonly string VisaValidPrefix = "4";
 
-        public VisaPaymentCardNumberBuilder(ApplicationDbContext context)
+        public VisaPaymentCardNumberBuilder(BankIdentificationNumberData bankIdentificationNumberData)
         {
-            _context = context;
+            _bankIdentificationNumberData = bankIdentificationNumberData;
         }
 
         public PaymentCardNumber GeneratePaymentCardNumber(int length)
@@ -23,16 +21,11 @@ namespace BankApp.Helpers.Builders
             if (!VisaAcceptedLength.AcceptedLengths.Contains(length))
                 throw new ArgumentException("Requested Visa payment card number length is invalid.");
 
-            var bankIdentificationNumber = GetBankIdentificationNumber();
+            var bankIdentificationNumber = _bankIdentificationNumberData.GetBankIdentificationNumber(IssuingNetwork.Visa);
             if (!bankIdentificationNumber.BankIdentificationNumber.ToString().StartsWith(VisaValidPrefix))
                 throw new ArgumentException("Visa bank identifiaction number found in database is invalid.");
 
             return null;
-        }
-
-        private BankIdentificationNumberData GetBankIdentificationNumber()
-        {
-            return _context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa);
         }
     }
 }
