@@ -37,7 +37,7 @@ namespace BankApp.Controllers
         public ActionResult<PaymentCardDto> CreateCard([FromBody] CardCreationDto model)
         {
             var visaPaymentCardNumberBuilder = _paymentCardNumberFactory.GetPaymentCardNumberBuilder(IssuingNetwork.Visa);
-            var visaPaymentCardNumber = visaPaymentCardNumberBuilder.GeneratePaymentCardNumber(VisaAcceptedLength.Sixteen);
+            var visaPaymentCardNumber = visaPaymentCardNumberBuilder.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen);
 
             return Ok();
         }

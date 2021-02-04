@@ -18,7 +18,7 @@ namespace BankApp.Helpers.Builders
 
         public PaymentCardNumber GeneratePaymentCardNumber(int length)
         {
-            if (!VisaAcceptedLength.AcceptedLengths.Contains(length))
+            if (!IssuingNetworkSettings.Visa.Length.AcceptedLengths.Contains(length))
                 throw new ArgumentException("Requested Visa payment card number length is invalid.");
 
             var bankIdentificationNumber = _bankIdentificationNumberData.GetBankIdentificationNumber(IssuingNetwork.Visa);
