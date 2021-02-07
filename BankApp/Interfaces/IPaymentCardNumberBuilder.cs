@@ -4,6 +4,6 @@ namespace BankApp.Interfaces
 {
     public interface IPaymentCardNumberBuilder
     {
-        PaymentCardNumber GeneratePaymentCardNumber(int length);
+        PaymentCardNumber GeneratePaymentCardNumber(int length, int bankAccountId);
     }
 }

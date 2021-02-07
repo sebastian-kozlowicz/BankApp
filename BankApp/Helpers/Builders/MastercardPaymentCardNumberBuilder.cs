@@ -16,7 +16,7 @@ namespace BankApp.Helpers.Builders
             _bankIdentificationNumberData = bankIdentificationNumberData;
         }
 
-        public PaymentCardNumber GeneratePaymentCardNumber(int length)
+        public PaymentCardNumber GeneratePaymentCardNumber(int length, int bankAccountId)
         {
             if (!IssuingNetworkSettings.Mastercard.Length.AcceptedLengths.Contains(length))
                 throw new ArgumentException("Requested Mastercard payment card number length is invalid.");
