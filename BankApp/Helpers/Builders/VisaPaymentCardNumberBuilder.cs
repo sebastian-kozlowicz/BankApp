@@ -1,4 +1,5 @@
 ﻿using BankApp.Configuration;
+using BankApp.Data;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
@@ -9,13 +10,11 @@ namespace BankApp.Helpers.Builders
 {
     public class VisaPaymentCardNumberBuilder : IPaymentCardNumberBuilder
     {
-        private readonly BankIdentificationNumberData _bankIdentificationNumberData;
-        private readonly BankAccount _bankAccount;
+        private readonly ApplicationDbContext _context;
 
-        public VisaPaymentCardNumberBuilder(BankIdentificationNumberData bankIdentificationNumberData, BankAccount bankAccount)
+        public VisaPaymentCardNumberBuilder(ApplicationDbContext context)
         {
-            _bankIdentificationNumberData = bankIdentificationNumberData;
-            _bankAccount = bankAccount;
+            _context = context;
         }
 
         public PaymentCardNumber GeneratePaymentCardNumber(int length, int bankAccountId)
@@ -23,11 +22,11 @@ namespace BankApp.Helpers.Builders
             if (!IssuingNetworkSettings.Visa.Length.AcceptedLengths.Contains(length))
                 throw new ArgumentException("Requested Visa payment card number length is invalid.");
 
-            var bankIdentificationNumber = _bankIdentificationNumberData.GetBankIdentificationNumber(IssuingNetwork.Visa);
+            var bankIdentificationNumber = _context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa);
             if (!IssuingNetworkSettings.Visa.Prefix.ValidPrefixes.Any(prefix => bankIdentificationNumber.BankIdentificationNumber.ToString().StartsWith(prefix)))
                 throw new ArgumentException("Visa bank identifiaction number found in database is invalid.");
 
-            var bankAccount = _bankAccount.GetBankAccount(bankAccountId);
+            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
 
             return null;
         }

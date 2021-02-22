@@ -2,27 +2,24 @@
 using BankApp.Enumerators;
 using BankApp.Helpers.Builders;
 using BankApp.Interfaces;
-using BankApp.Models;
 
 namespace BankApp.Helpers.Factories
 {
     public class PaymentCardNumberFactory : IPaymentCardNumberFactory
     {
-        private readonly BankIdentificationNumberData _bankIdentificationNumberData;
-        private readonly BankAccount _bankAccount;
+        private readonly ApplicationDbContext _context;
 
-        public PaymentCardNumberFactory(BankIdentificationNumberData bankIdentificationNumberData, BankAccount bankAccount)
+        public PaymentCardNumberFactory(ApplicationDbContext context)
         {
-            _bankIdentificationNumberData = bankIdentificationNumberData;
-            _bankAccount = bankAccount;
+            _context = context;
         }
 
         public IPaymentCardNumberBuilder GetPaymentCardNumberBuilder(IssuingNetwork issuingNetwork)
         {
             if (issuingNetwork == IssuingNetwork.Mastercard)
-                return new MastercardPaymentCardNumberBuilder(_bankIdentificationNumberData, _bankAccount);
+                return new MastercardPaymentCardNumberBuilder(_context);
 
-            return new VisaPaymentCardNumberBuilder(_bankIdentificationNumberData, _bankAccount);
+            return new VisaPaymentCardNumberBuilder(_context);
         }
     }
 }

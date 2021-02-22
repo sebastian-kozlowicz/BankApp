@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using BankApp.Data;
 using BankApp.Enumerators;
-using System.Linq;
 
 namespace BankApp.Models
 {
@@ -29,21 +27,5 @@ namespace BankApp.Models
         public int CreatedById { get; set; }
         public IList<PaymentCard> PaymentCards { get; set; }
         public IList<BankTransfer> BankTransfers { get; set; }
-
-        private readonly ApplicationDbContext _context;
-
-        public BankAccount()
-        {
-        }
-
-        public BankAccount(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        public BankAccount GetBankAccount(int bankAccountId)
-        {
-            return _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
-        }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using BankApp.Configuration;
+using BankApp.Data;
 using BankApp.Enumerators;
 using BankApp.Interfaces;
 using BankApp.Models;
@@ -9,13 +10,11 @@ namespace BankApp.Helpers.Builders
 {
     public class MastercardPaymentCardNumberBuilder : IPaymentCardNumberBuilder
     {
-        private readonly BankIdentificationNumberData _bankIdentificationNumberData;
-        private readonly BankAccount _bankAccount;
+        private readonly ApplicationDbContext _context;
 
-        public MastercardPaymentCardNumberBuilder(BankIdentificationNumberData bankIdentificationNumberData, BankAccount bankAccount)
+        public MastercardPaymentCardNumberBuilder(ApplicationDbContext context)
         {
-            _bankIdentificationNumberData = bankIdentificationNumberData;
-            _bankAccount = bankAccount;
+            _context = context;
         }
 
         public PaymentCardNumber GeneratePaymentCardNumber(int length, int bankAccountId)
@@ -23,11 +22,11 @@ namespace BankApp.Helpers.Builders
             if (!IssuingNetworkSettings.Mastercard.Length.AcceptedLengths.Contains(length))
                 throw new ArgumentException("Requested Mastercard payment card number length is invalid.");
 
-            var bankIdentificationNumber = _bankIdentificationNumberData.GetBankIdentificationNumber(IssuingNetwork.Mastercard);
+            var bankIdentificationNumber = _context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Mastercard);
             if (!IssuingNetworkSettings.Mastercard.Prefix.ValidPrefixes.Any(prefix => bankIdentificationNumber.BankIdentificationNumber.ToString().StartsWith(prefix)))
                 throw new ArgumentException("Mastercard bank identifiaction number found in database is invalid.");
 
-            var bankAccount = _bankAccount.GetBankAccount(bankAccountId);
+            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
 
             return null;
         }
