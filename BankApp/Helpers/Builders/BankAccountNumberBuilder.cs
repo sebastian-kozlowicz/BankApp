@@ -97,9 +97,7 @@ namespace BankApp.Helpers.Builders
                                          $"{secondCountryCharacterAsNumber}"
                                          + "00";
 
-            //todo: when \G anchor issue will be fixed in .NET 5.0 runtime swap below implementation, link to issue https://github.com/dotnet/runtime/pull/44975
-            //var splittedAccountNumberArray = Regex.Split(formattedAccountNumber, "(?<=\\G.{8})");
-            var splittedAccountNumberArray = Regex.Split(formattedAccountNumber, "(.{8})").Where(an => !string.IsNullOrEmpty(an)).ToArray();
+            var splittedAccountNumberArray = Regex.Split(formattedAccountNumber, "(?<=\\G.{8})");
 
             var modResult = string.Empty;
             foreach (var number in splittedAccountNumberArray)
@@ -127,9 +125,7 @@ namespace BankApp.Helpers.Builders
 
         public string GetIbanSeparated(BankData bankData, string checkNumber, string branchCode, int nationalCheckDigit, string accountNumberText)
         {
-            //todo: when \G anchor issue will be fixed in .NET 5.0 runtime swap below implementation, link to issue https://github.com/dotnet/runtime/pull/44975
-            //var splittedAccountNumberArray = Regex.Split(accountNumberText, "(?<=\\G.{4})").Where(an => !string.IsNullOrEmpty(an)).ToArray();
-            var splittedAccountNumberArray = Regex.Split(accountNumberText, "(.{4})").Where(an => !string.IsNullOrEmpty(an)).ToArray();
+            var splittedAccountNumberArray = Regex.Split(accountNumberText, "(?<=\\G.{4})").Where(an => !string.IsNullOrEmpty(an)).ToArray();
             var separatedAccountNumber = string.Join(" ", splittedAccountNumberArray);
 
             return $"{bankData.CountryCode} " +
