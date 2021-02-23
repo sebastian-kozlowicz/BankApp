@@ -27,6 +27,7 @@ namespace BankApp.Helpers.Builders
                 throw new ArgumentException("Visa bank identifiaction number found in database is invalid.");
 
             var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
+            var accountIdentificationNumber = PaymentCardNumberBuilder.GetAccountIdentificationNumber(length, bankAccount.AccountNumberText);
 
             return null;
         }
