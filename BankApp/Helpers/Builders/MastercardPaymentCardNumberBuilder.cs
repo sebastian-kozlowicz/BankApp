@@ -28,6 +28,8 @@ namespace BankApp.Helpers.Builders
 
             var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
             var accountIdentificationNumber = PaymentCardNumberBuilder.GetAccountIdentificationNumber(length, bankAccount.AccountNumberText);
+            var numberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumber}";
+            var checkDigit = PaymentCardNumberBuilder.GenerateCheckDigit(numberWithoutCheckDigit);
 
             return null;
         }
