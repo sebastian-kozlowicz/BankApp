@@ -27,11 +27,21 @@ namespace BankApp.Helpers.Builders
                 throw new ArgumentException("Visa bank identifiaction number found in database is invalid.");
 
             var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
-            var accountIdentificationNumber = PaymentCardNumberBuilder.GetAccountIdentificationNumber(length, bankAccount.AccountNumberText);
-            var numberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumber}";
-            var checkDigit = PaymentCardNumberBuilder.GenerateCheckDigit(numberWithoutCheckDigit);
 
-            return null;
+            var accountIdentificationNumber = PaymentCardNumberBuilder.GetAccountIdentificationNumber(length, bankAccount.AccountNumberText);
+            var paymentCardNumberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumber}";
+            var checkDigit = PaymentCardNumberBuilder.GenerateCheckDigit(paymentCardNumberWithoutCheckDigit);
+            var paymentCardNumber = $"{paymentCardNumberWithoutCheckDigit}{checkDigit}";
+
+            return new PaymentCardNumber
+            {
+                MajorIndustryIdentifier = byte.Parse(paymentCardNumber.Substring(0, 1)),
+                BankIdentificationNumber = bankIdentificationNumber.BankIdentificationNumber,
+                AccountIdentificationNumber = long.Parse(accountIdentificationNumber),
+                CheckDigit = checkDigit,
+                Number = paymentCardNumber,
+                IssuingNetwork = IssuingNetwork.Visa
+            };
         }
     }
 }
