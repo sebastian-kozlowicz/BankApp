@@ -38,6 +38,7 @@ namespace BankApp.Helpers.Builders
                 MajorIndustryIdentifier = byte.Parse(paymentCardNumber.Substring(0, 1)),
                 BankIdentificationNumber = bankIdentificationNumber.BankIdentificationNumber,
                 AccountIdentificationNumber = long.Parse(accountIdentificationNumber),
+                AccountIdentificationNumberText = accountIdentificationNumber,
                 CheckDigit = checkDigit,
                 Number = paymentCardNumber,
                 IssuingNetwork = IssuingNetwork.Visa
