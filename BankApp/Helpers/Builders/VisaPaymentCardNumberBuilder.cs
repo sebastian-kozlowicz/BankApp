@@ -24,7 +24,7 @@ namespace BankApp.Helpers.Builders
 
             var bankIdentificationNumber = _context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa);
             if (!IssuingNetworkSettings.Visa.Prefix.ValidPrefixes.Any(prefix => bankIdentificationNumber.BankIdentificationNumber.ToString().StartsWith(prefix)))
-                throw new ArgumentException("Visa bank identifiaction number found in database is invalid.");
+                throw new ArgumentException("Visa bank identification number found in database is invalid.");
 
             var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
 
