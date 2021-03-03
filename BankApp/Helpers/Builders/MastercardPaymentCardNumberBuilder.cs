@@ -24,7 +24,7 @@ namespace BankApp.Helpers.Builders
 
             var bankIdentificationNumber = _context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Mastercard);
             if (!IssuingNetworkSettings.Mastercard.Prefix.ValidPrefixes.Any(prefix => bankIdentificationNumber.BankIdentificationNumber.ToString().StartsWith(prefix)))
-                throw new ArgumentException("Mastercard bank identifiaction number found in database is invalid.");
+                throw new ArgumentException("Mastercard bank identification number found in database is invalid.");
 
             var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
             var accountIdentificationNumber = PaymentCardNumberBuilder.GetAccountIdentificationNumber(length, bankAccount.AccountNumberText);

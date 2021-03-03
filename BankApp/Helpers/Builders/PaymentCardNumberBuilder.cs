@@ -4,7 +4,7 @@ namespace BankApp.Helpers.Builders
 {
     public static class PaymentCardNumberBuilder
     {
-        private static readonly int BankIdentificationNumberAndCheckDigitLength = 7;
+        private const int BankIdentificationNumberAndCheckDigitLength = 7;
 
         public static string GetAccountIdentificationNumber(int length, string accountNumberText)
         {
@@ -14,13 +14,13 @@ namespace BankApp.Helpers.Builders
         public static byte GenerateCheckDigit(string number)
         {
             var sum = 0;
-            var oddPositon = false;
+            var oddPosition = false;
             number += "0";
             var numberDigitsArray = number.Select(digit => int.Parse(digit.ToString())).ToArray().Reverse();
 
             foreach (var digit in numberDigitsArray)
             {
-                if (oddPositon)
+                if (oddPosition)
                 {
                     var digitSquared = digit * 2;
                     var digitSquaredText = digitSquared.ToString();
@@ -41,7 +41,7 @@ namespace BankApp.Helpers.Builders
                     sum += digit;
                 }
 
-                oddPositon = !oddPositon;
+                oddPosition = !oddPosition;
             }
 
             return (byte)((10 - sum % 10) % 10);
