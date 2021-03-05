@@ -28,10 +28,20 @@ namespace BankApp.Helpers.Builders
 
             var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
             var accountIdentificationNumber = PaymentCardNumberBuilder.GetAccountIdentificationNumber(length, bankAccount.AccountNumberText);
-            var numberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumber}";
-            var checkDigit = PaymentCardNumberBuilder.GenerateCheckDigit(numberWithoutCheckDigit);
+            var paymentCardNumberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumber}";
+            var checkDigit = PaymentCardNumberBuilder.GenerateCheckDigit(paymentCardNumberWithoutCheckDigit);
+            var paymentCardNumber = $"{paymentCardNumberWithoutCheckDigit}{checkDigit}";
 
-            return null;
+            return new PaymentCardNumber
+            {
+                MajorIndustryIdentifier = byte.Parse(paymentCardNumber.Substring(0, 1)),
+                BankIdentificationNumber = bankIdentificationNumber.BankIdentificationNumber,
+                AccountIdentificationNumber = long.Parse(accountIdentificationNumber),
+                AccountIdentificationNumberText = accountIdentificationNumber,
+                CheckDigit = checkDigit,
+                Number = paymentCardNumber,
+                IssuingNetwork = IssuingNetwork.Mastercard
+            };
         }
     }
 }
