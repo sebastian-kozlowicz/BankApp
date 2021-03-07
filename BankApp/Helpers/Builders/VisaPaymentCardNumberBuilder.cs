@@ -19,14 +19,19 @@ namespace BankApp.Helpers.Builders
 
         public PaymentCardNumber GeneratePaymentCardNumber(int length, int bankAccountId)
         {
+            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
+            if (bankAccount == null)
+                throw new ArgumentException($"Bank account with id {bankAccountId} doesn't exist.");
+
             if (!IssuingNetworkSettings.Visa.Length.AcceptedLengths.Contains(length))
                 throw new ArgumentException("Requested Visa payment card number length is invalid.");
 
             var bankIdentificationNumber = _context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa);
+            if (bankIdentificationNumber == null)
+                throw new Exception($"Bank identification number data for {IssuingNetwork.Visa} issuing network doesn't exist in database.");
+
             if (!IssuingNetworkSettings.Visa.Prefix.ValidPrefixes.Any(prefix => bankIdentificationNumber.BankIdentificationNumber.ToString().StartsWith(prefix)))
                 throw new ArgumentException("Visa bank identification number found in database is invalid.");
-
-            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
 
             var accountIdentificationNumber = PaymentCardNumberBuilder.GetAccountIdentificationNumber(length, bankAccount.AccountNumberText);
             var paymentCardNumberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumber}";
