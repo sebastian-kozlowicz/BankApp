@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text.RegularExpressions;
 using BankApp.Data;
 using BankApp.Interfaces;
@@ -144,9 +146,19 @@ namespace BankApp.Helpers.Builders
         private string GetBranchCode(int? branchId)
         {
             if (branchId == null)
-                return _context.Branches.SingleOrDefault(b => b.Id == _context.Headquarters.FirstOrDefault().Id).BranchCode;
+            {
+                var headquarters = _context.Branches.SingleOrDefault(b => b.Id == _context.Headquarters.FirstOrDefault().Id);
+                if (headquarters == null)
+                    throw new Exception("Headquarters doesn't exist in database.");
 
-            return _context.Branches.SingleOrDefault(b => b.Id == branchId).BranchCode;
+                return headquarters.BranchCode;
+            }
+
+            var branch = _context.Branches.SingleOrDefault(b => b.Id == branchId);
+            if (branch == null)
+                throw new ArgumentException($"Branch with id {branchId} doesn't exist.");
+
+            return branch.BranchCode;
         }
 
         private long GenerateAccountNumber()
