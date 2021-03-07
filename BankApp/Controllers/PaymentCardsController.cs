@@ -39,7 +39,13 @@ namespace BankApp.Controllers
             var visaPaymentCardNumberBuilder = _paymentCardNumberFactory.GetPaymentCardNumberBuilder(IssuingNetwork.Visa);
             var visaPaymentCardNumber = visaPaymentCardNumberBuilder.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen, (int)model.BankAccountId);
 
-            return Ok();
+            var paymentCard = _mapper.Map<PaymentCard>(visaPaymentCardNumber);
+            paymentCard.BankAccountId = (int)model.BankAccountId;
+
+            _context.PaymentCards.Add(paymentCard);
+            _context.SaveChanges();
+
+            return Ok(_mapper.Map<PaymentCardDto>(paymentCard));
         }
     }
 }

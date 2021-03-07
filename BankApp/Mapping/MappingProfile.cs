@@ -64,6 +64,15 @@ namespace BankApp.Mapping
               .ForPath(dest => dest.BranchAddress.ApartmentNumber, opt => opt.MapFrom(src => src.Address.ApartmentNumber))
               .ForPath(dest => dest.BranchAddress.PostalCode, opt => opt.MapFrom(src => src.Address.PostalCode))
               .AfterMap((src, dest) => dest.BranchAddress.Id = dest.Id);
+
+            CreateMap<PaymentCardNumber, PaymentCard>()
+                .ForMember(dest => dest.MajorIndustryIdentifier, opt => opt.MapFrom(src => src.MajorIndustryIdentifier))
+                .ForMember(dest => dest.BankIdentificationNumber, opt => opt.MapFrom(src => src.BankIdentificationNumber))
+                .ForMember(dest => dest.AccountIdentificationNumber, opt => opt.MapFrom(src => src.AccountIdentificationNumber))
+                .ForMember(dest => dest.AccountIdentificationNumberText, opt => opt.MapFrom(src => src.AccountIdentificationNumberText))
+                .ForMember(dest => dest.CheckDigit, opt => opt.MapFrom(src => src.CheckDigit))
+                .ForMember(dest => dest.Number, opt => opt.MapFrom(src => src.Number))
+                .ForMember(dest => dest.IssuingNetwork, opt => opt.MapFrom(src => src.IssuingNetwork));
         }
     }
 }
