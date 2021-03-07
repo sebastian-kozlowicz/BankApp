@@ -36,6 +36,16 @@ namespace BankApp.Controllers
         [HttpPost]
         public ActionResult<PaymentCardDto> CreateCard([FromBody] CardCreationDto model)
         {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var bankAccount = _context.BankAccounts.SingleOrDefault(b => b.Id == model.BankAccountId);
+            if (bankAccount == null)
+            {
+                ModelState.AddModelError(nameof(model.BankAccountId), $"Bank account with id {model.BankAccountId} doesn't exist.");
+                return BadRequest(ModelState);
+            }
+
             var visaPaymentCardNumberBuilder = _paymentCardNumberFactory.GetPaymentCardNumberBuilder(IssuingNetwork.Visa);
             var visaPaymentCardNumber = visaPaymentCardNumberBuilder.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen, (int)model.BankAccountId);
 
