@@ -16,22 +16,11 @@ namespace BankApp.UnitTests.Helpers.Builders
     {
         private MastercardPaymentCardNumberBuilder _sut;
         private ApplicationDbContext _context;
-        private readonly BankAccount _firstBankAccount = new BankAccount
+        private readonly BankAccount _bankAccount = new BankAccount
         {
             Id = 1,
-            AccountType = AccountType.Checking,
-            Currency = Currency.Eur,
-            CountryCode = "PL",
-            CheckDigits = "61",
-            NationalBankCode = "1080",
-            BranchCode = "000",
-            NationalCheckDigit = 1,
-            AccountNumber = 0,
-            AccountNumberText = "0000000000000000",
-            Iban = "PL61108000010000000000000000",
-            IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000",
-            Balance = 0,
-            DebitLimit = 0,
+            AccountNumber = 12000000000000,
+            AccountNumberText = "0012000000000000",
             CustomerId = 1,
             CreatedById = 1
         };
@@ -45,7 +34,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             var context = new ApplicationDbContext(options);
 
             context.BankIdentificationNumberData.Add(new BankIdentificationNumberData { Id = 1, BankIdentificationNumber = 510918, IssuingNetwork = IssuingNetwork.Mastercard });
-            context.BankAccounts.Add(_firstBankAccount);
+            context.BankAccounts.Add(_bankAccount);
             context.Users.Add(new ApplicationUser { Id = 1, Customer = new Customer { Id = 1 } });
             context.SaveChanges();
 
@@ -60,22 +49,22 @@ namespace BankApp.UnitTests.Helpers.Builders
         }
 
         [TestMethod]
-        public void GeneratePaymentCardNumber_Should_ReturnValidPaymentCardNumber()
+        public void GeneratePaymentCardNumber_Should_ReturnPaymentCardNumber_When_ValidLengthPassed()
         {
             // Arrange
             var expectedPaymentCardNumber = new PaymentCardNumber
             {
                 MajorIndustryIdentifier = 5,
                 BankIdentificationNumber = 510918,
-                AccountIdentificationNumber = 0,
-                AccountIdentificationNumberText = "000000000",
-                CheckDigit = 9,
-                Number = "5109180000000009",
+                AccountIdentificationNumber = 1200000,
+                AccountIdentificationNumberText = "001200000",
+                CheckDigit = 5,
+                Number = "5109180012000005",
                 IssuingNetwork = IssuingNetwork.Mastercard
             };
 
             // Act
-            var result = _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Mastercard.Length.Sixteen, _firstBankAccount.Id);
+            var result = _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Mastercard.Length.Sixteen, _bankAccount.Id);
 
             // Assert
             result.Should().BeEquivalentTo(expectedPaymentCardNumber);
