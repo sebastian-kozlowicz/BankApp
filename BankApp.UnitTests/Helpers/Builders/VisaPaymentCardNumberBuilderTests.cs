@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Enumerators;
@@ -96,6 +97,30 @@ namespace BankApp.UnitTests.Helpers.Builders
 
             // Assert
             result.Should().BeEquivalentTo(expectedPaymentCardNumber);
+        }
+
+        [TestMethod]
+        public void GeneratePaymentCardNumber_Should_ThrowArgumentException_When_InvalidLengthPassed()
+        {
+            // Act
+            Action act = () => _sut.GeneratePaymentCardNumber(1, _bankAccount.Id);
+
+            // Assert
+            act.Should().Throw<ArgumentException>().WithMessage("Requested Visa payment card number length is invalid.");
+        }
+
+        [TestMethod]
+        public void GeneratePaymentCardNumber_Should_ThrowArgumentException_When_BankAccountNotExist()
+        {
+            // Arrange
+            _context.BankIdentificationNumberData.RemoveRange(_context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa));
+            _context.SaveChanges();
+
+            // Act
+            Action act = () => _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen, _bankAccount.Id);
+
+            // Assert
+            act.Should().Throw<Exception>().WithMessage($"Bank identification number data for {IssuingNetwork.Visa} issuing network doesn't exist in database.");
         }
     }
 }
