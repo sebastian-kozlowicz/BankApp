@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Enumerators;
+using BankApp.Exceptions;
 using BankApp.Helpers.Builders;
 using BankApp.Models;
 using FluentAssertions;
@@ -15,7 +17,9 @@ namespace BankApp.UnitTests.Helpers.Builders
     [TestClass]
     public class VisaPaymentCardNumberBuilderTests
     {
-        private readonly BankAccount _bankAccount = new()
+        private VisaPaymentCardNumberBuilder _sut;
+        private ApplicationDbContext _context;
+        private readonly BankAccount _bankAccount = new BankAccount
         {
             Id = 1,
             AccountNumber = 12000000000000,
@@ -23,9 +27,6 @@ namespace BankApp.UnitTests.Helpers.Builders
             CustomerId = 1,
             CreatedById = 1
         };
-
-        private ApplicationDbContext _context;
-        private VisaPaymentCardNumberBuilder _sut;
 
         public static IEnumerable<object[]> PaymentCardNumberTestData
         {
@@ -100,6 +101,19 @@ namespace BankApp.UnitTests.Helpers.Builders
         }
 
         [TestMethod]
+        public void GeneratePaymentCardNumber_Should_ThrowArgumentException_When_BankAccountNotExist()
+        {
+            // Arrange
+            var bankAccountId = 999;
+
+            // Act
+            Action act = () => _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen, bankAccountId);
+
+            // Assert
+            act.Should().Throw<ArgumentException>().WithMessage($"Bank account with id {bankAccountId} doesn't exist.");
+        }
+
+        [TestMethod]
         public void GeneratePaymentCardNumber_Should_ThrowArgumentException_When_InvalidLengthPassed()
         {
             // Act
@@ -110,7 +124,7 @@ namespace BankApp.UnitTests.Helpers.Builders
         }
 
         [TestMethod]
-        public void GeneratePaymentCardNumber_Should_ThrowArgumentException_When_BankAccountNotExist()
+        public void GeneratePaymentCardNumber_Should_ThrowInvalidDataInDatabaseException_When_BankIdentificationNumberDataNotExist()
         {
             // Arrange
             _context.BankIdentificationNumberData.RemoveRange(_context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa));
@@ -120,7 +134,22 @@ namespace BankApp.UnitTests.Helpers.Builders
             Action act = () => _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen, _bankAccount.Id);
 
             // Assert
-            act.Should().Throw<Exception>().WithMessage($"Bank identification number data for {IssuingNetwork.Visa} issuing network doesn't exist in database.");
+            act.Should().Throw<InvalidDataInDatabaseException>().WithMessage($"Bank identification number data for {IssuingNetwork.Visa} issuing network doesn't exist in database.");
+        }
+
+        [TestMethod]
+        public void GeneratePaymentCardNumber_Should_ThrowInvalidDataInDatabaseException_When_BankIdentificationNumberPrefixIsInvalid()
+        {
+            // Arrange
+            _context.BankIdentificationNumberData.RemoveRange(_context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa));
+            _context.BankIdentificationNumberData.Add(new BankIdentificationNumberData { Id = 1, BankIdentificationNumber = 127329, IssuingNetwork = IssuingNetwork.Visa });
+            _context.SaveChanges();
+
+            // Act
+            Action act = () => _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen, _bankAccount.Id);
+
+            // Assert
+            act.Should().Throw<InvalidDataInDatabaseException>().WithMessage("Visa bank identification number found in database is invalid.");
         }
     }
 }
