@@ -5,6 +5,7 @@ using BankApp.Interfaces;
 using BankApp.Models;
 using System;
 using System.Linq;
+using BankApp.Exceptions;
 
 namespace BankApp.Helpers.Builders
 {
@@ -28,10 +29,10 @@ namespace BankApp.Helpers.Builders
 
             var bankIdentificationNumber = _context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Mastercard);
             if (bankIdentificationNumber == null)
-                throw new Exception($"Bank identification number data for {IssuingNetwork.Mastercard} issuing network doesn't exist in database.");
+                throw new InvalidDataInDatabaseException($"Bank identification number data for {IssuingNetwork.Mastercard} issuing network doesn't exist in database.");
 
             if (!IssuingNetworkSettings.Mastercard.Prefix.ValidPrefixes.Any(prefix => bankIdentificationNumber.BankIdentificationNumber.ToString().StartsWith(prefix)))
-                throw new ArgumentException("Mastercard bank identification number found in database is invalid.");
+                throw new InvalidDataInDatabaseException("Mastercard bank identification number found in database is invalid.");
 
             var accountIdentificationNumber = PaymentCardNumberBuilder.GetAccountIdentificationNumber(length, bankAccount.AccountNumberText);
             var paymentCardNumberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumber}";

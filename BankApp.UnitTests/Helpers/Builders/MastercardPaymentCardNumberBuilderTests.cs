@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Enumerators;
+using BankApp.Exceptions;
 using BankApp.Helpers.Builders;
 using BankApp.Models;
 using FluentAssertions;
@@ -68,6 +70,58 @@ namespace BankApp.UnitTests.Helpers.Builders
 
             // Assert
             result.Should().BeEquivalentTo(expectedPaymentCardNumber);
+        }
+
+        [TestMethod]
+        public void GeneratePaymentCardNumber_Should_ThrowArgumentException_When_BankAccountNotExist()
+        {
+            // Arrange
+            var bankAccountId = 999;
+
+            // Act
+            Action act = () => _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Mastercard.Length.Sixteen, bankAccountId);
+
+            // Assert
+            act.Should().Throw<ArgumentException>().WithMessage($"Bank account with id {bankAccountId} doesn't exist.");
+        }
+
+        [TestMethod]
+        public void GeneratePaymentCardNumber_Should_ThrowArgumentException_When_InvalidLengthPassed()
+        {
+            // Act
+            Action act = () => _sut.GeneratePaymentCardNumber(1, _bankAccount.Id);
+
+            // Assert
+            act.Should().Throw<ArgumentException>().WithMessage("Requested Mastercard payment card number length is invalid.");
+        }
+
+        [TestMethod]
+        public void GeneratePaymentCardNumber_Should_ThrowInvalidDataInDatabaseException_When_BankIdentificationNumberDataNotExist()
+        {
+            // Arrange
+            _context.BankIdentificationNumberData.RemoveRange(_context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Mastercard));
+            _context.SaveChanges();
+
+            // Act
+            Action act = () => _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Mastercard.Length.Sixteen, _bankAccount.Id);
+
+            // Assert
+            act.Should().Throw<InvalidDataInDatabaseException>().WithMessage($"Bank identification number data for {IssuingNetwork.Mastercard} issuing network doesn't exist in database.");
+        }
+
+        [TestMethod]
+        public void GeneratePaymentCardNumber_Should_ThrowInvalidDataInDatabaseException_When_BankIdentificationNumberPrefixIsInvalid()
+        {
+            // Arrange
+            _context.BankIdentificationNumberData.RemoveRange(_context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Mastercard));
+            _context.BankIdentificationNumberData.Add(new BankIdentificationNumberData { Id = 1, BankIdentificationNumber = 127329, IssuingNetwork = IssuingNetwork.Mastercard });
+            _context.SaveChanges();
+
+            // Act
+            Action act = () => _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Mastercard.Length.Sixteen, _bankAccount.Id);
+
+            // Assert
+            act.Should().Throw<InvalidDataInDatabaseException>().WithMessage("Mastercard bank identification number found in database is invalid.");
         }
     }
 }
