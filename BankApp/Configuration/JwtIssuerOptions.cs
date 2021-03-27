@@ -1,5 +1,5 @@
-﻿using Microsoft.IdentityModel.Tokens;
-using System;
+﻿using System;
+using Microsoft.IdentityModel.Tokens;
 
 namespace BankApp.Configuration
 {
@@ -10,7 +10,7 @@ namespace BankApp.Configuration
         public DateTime Expiration => IssuedAt.Add(ValidFor);
         public DateTime NotBefore => DateTime.UtcNow;
         public DateTime IssuedAt => DateTime.UtcNow;
-        public TimeSpan ValidFor => TimeSpan.FromMinutes(10);
+        public TimeSpan ValidFor { get; set; }
         public string Jti => Guid.NewGuid().ToString();
         public SigningCredentials SigningCredentials { get; set; }
     }
