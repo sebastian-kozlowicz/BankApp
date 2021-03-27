@@ -50,11 +50,6 @@ namespace BankApp
                .AddEntityFrameworkStores<ApplicationDbContext>()
                .AddDefaultTokenProviders();
 
-            services.AddIdentityServer()
-                .AddInMemoryCaching()
-                .AddClientStore<InMemoryClientStore>()
-                .AddResourceStore<InMemoryResourcesStore>();
-
             services.AddSingleton<IAuthorizationHandler, UserIdRequirementHandler>();
             services.AddSingleton<IJwtBuilder, JwtBuilder>();
             services.AddScoped<IPaymentCardNumberFactory, PaymentCardNumberFactory>();
