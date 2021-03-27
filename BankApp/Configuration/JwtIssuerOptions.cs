@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
 namespace BankApp.Configuration
@@ -12,6 +13,8 @@ namespace BankApp.Configuration
         public DateTime IssuedAt => DateTime.UtcNow;
         public TimeSpan ValidFor { get; set; }
         public string Jti => Guid.NewGuid().ToString();
-        public SigningCredentials SigningCredentials { get; set; }
+        public string SecretKey { get; set; }
+        public SymmetricSecurityKey SymmetricSecurityKey => new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
+        public SigningCredentials SigningCredentials => new SigningCredentials(SymmetricSecurityKey, SecurityAlgorithms.HmacSha256);
     }
 }

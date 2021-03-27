@@ -30,9 +30,6 @@ namespace BankApp
 {
     public class Startup
     {
-        private const string SecretKey = "d51a8156f0c3e1f5296c475eb41b174a75dfff782aaf5c135b805e5089e1ab89";
-        private readonly SymmetricSecurityKey _signingKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
-
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -61,7 +58,7 @@ namespace BankApp
             services.AddSingleton<IAuthorizationHandler, UserIdRequirementHandler>();
             services.AddSingleton<IJwtBuilder, JwtBuilder>();
             services.AddScoped<IPaymentCardNumberFactory, PaymentCardNumberFactory>();
-            services.AddScoped<IBankAccountNumberBuilder, BankAccountNumberBuilder>(); 
+            services.AddScoped<IBankAccountNumberBuilder, BankAccountNumberBuilder>();
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
             services.AddScoped<BankIdentificationNumberData>();
@@ -76,30 +73,25 @@ namespace BankApp
                 options.Password.RequiredLength = 8;
             });
 
-            var jwtAppSettingOptions = Configuration.GetSection(nameof(JwtIssuerOptions));
-
-            services.Configure<JwtIssuerOptions>(options =>
-            {
-                options.Issuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
-                options.Audience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)];
-                options.SigningCredentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
-            });
+            var jwtIssuerOptionsSection = Configuration.GetSection(nameof(JwtIssuerOptions));
+            var jwtIssuerOptions = jwtIssuerOptionsSection.Get<JwtIssuerOptions>();
+            services.Configure<JwtIssuerOptions>(jwtIssuerOptionsSection);
 
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
                 ValidateIssuer = true,
-                ValidIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)],
+                ValidIssuer = jwtIssuerOptions.Issuer,
                 ValidateAudience = true,
-                ValidAudience = jwtAppSettingOptions[nameof(JwtIssuerOptions.Audience)],
-                IssuerSigningKey = _signingKey,
+                ValidAudience = jwtIssuerOptions.Audience,
+                IssuerSigningKey = jwtIssuerOptions.SymmetricSecurityKey,
                 ClockSkew = TimeSpan.Zero
             };
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
-                    options.ClaimsIssuer = jwtAppSettingOptions[nameof(JwtIssuerOptions.Issuer)];
+                    options.ClaimsIssuer = jwtIssuerOptions.Issuer;
                     options.TokenValidationParameters = tokenValidationParameters;
                     options.SaveToken = false;
                 });
@@ -172,7 +164,7 @@ namespace BankApp
                     spa.UseAngularCliServer(npmScript: "start");
                 }
             });
-            
+
             AsyncContext.Run(async () => await DataInitializer.SeedData(userManager, roleManager, context));
         }
     }
