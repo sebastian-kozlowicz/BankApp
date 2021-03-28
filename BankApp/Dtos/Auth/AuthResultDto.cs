@@ -1,6 +1,6 @@
 ﻿namespace BankApp.Dtos.Auth
 {
-    public class AuthResult
+    public class AuthResultDto
     {
         public string Token { get; set; }
     }

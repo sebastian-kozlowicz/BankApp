@@ -83,6 +83,8 @@ namespace BankApp
                 ClockSkew = TimeSpan.Zero
             };
 
+            services.AddSingleton(tokenValidationParameters);
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
                 {
