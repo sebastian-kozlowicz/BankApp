@@ -8,13 +8,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AutoMapper;
-using IdentityServer4.Stores;
 using Microsoft.AspNetCore.Identity;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using BankApp.Interfaces;
 using BankApp.Configuration;
 using System.Globalization;
 using BankApp.Helpers.Services;
@@ -55,13 +52,12 @@ namespace BankApp
 
             services.AddSingleton<IAuthorizationHandler, UserIdRequirementHandler>();
             services.AddSingleton<IJwtBuilder, JwtBuilder>();
-            services.AddScoped<IPaymentCardNumberFactory, PaymentCardNumberFactory>();
             services.AddScoped<IBankAccountNumberBuilder, BankAccountNumberBuilder>();
+            services.AddScoped<IPaymentCardNumberFactory, PaymentCardNumberFactory>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
-            services.AddScoped<BankIdentificationNumberData>();
-            services.AddScoped<BankAccount>();
-
+           
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = true;

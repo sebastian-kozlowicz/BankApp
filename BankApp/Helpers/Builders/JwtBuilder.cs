@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using BankApp.Configuration;
-using BankApp.Interfaces;
 using BankApp.Interfaces.Builders;
 using BankApp.Models;
 using Microsoft.Extensions.Options;
@@ -20,7 +18,6 @@ namespace BankApp.Helpers.Builders
         public JwtBuilder(IOptions<JwtIssuerOptions> jwtOptions)
         {
             _jwtOptions = jwtOptions.Value;
-            ThrowIfInvalidOptions(_jwtOptions);
         }
 
         public string GenerateEncodedToken(ClaimsIdentity claimsIdentity)
@@ -53,21 +50,6 @@ namespace BankApp.Helpers.Builders
 
             claimsIdentity.AddClaims(roles.Select(r => new Claim(ClaimTypes.Role, r)));
             return claimsIdentity;
-        }
-
-        private static void ThrowIfInvalidOptions(JwtIssuerOptions options)
-        {
-            if (options == null)
-                throw new ArgumentNullException(nameof(options));
-
-            if (options.ValidFor <= TimeSpan.Zero)
-                throw new ArgumentException("Must be a non-zero TimeSpan.", nameof(JwtIssuerOptions.ValidFor));
-
-            if (options.SigningCredentials == null)
-                throw new ArgumentNullException(nameof(JwtIssuerOptions.SigningCredentials));
-
-            if (options.Jti == null)
-                throw new ArgumentNullException(nameof(JwtIssuerOptions.Jti));
         }
     }
 }
