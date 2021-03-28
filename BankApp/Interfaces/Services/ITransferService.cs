@@ -1,6 +1,6 @@
 ﻿using BankApp.Models;
 
-namespace BankApp.Interfaces
+namespace BankApp.Interfaces.Services
 {
     public interface ITransferService<T> where T : class, ITransferService<T>
     {

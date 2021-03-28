@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using BankApp.Dtos.Auth;
 using BankApp.Interfaces;
+using BankApp.Interfaces.Builders;
 using BankApp.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;

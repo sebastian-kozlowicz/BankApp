@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using BankApp.Configuration;
 using BankApp.Interfaces;
+using BankApp.Interfaces.Builders;
 using BankApp.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;

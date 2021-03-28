@@ -6,6 +6,7 @@ using BankApp.Models;
 using System;
 using System.Linq;
 using BankApp.Exceptions;
+using BankApp.Interfaces.Builders;
 
 namespace BankApp.Helpers.Builders
 {

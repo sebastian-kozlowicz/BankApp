@@ -1,6 +1,7 @@
 ﻿using BankApp.Enumerators;
+using BankApp.Interfaces.Builders;
 
-namespace BankApp.Interfaces
+namespace BankApp.Interfaces.Factories
 {
     public interface IPaymentCardNumberFactory
     {

@@ -1,8 +1,8 @@
-﻿using BankApp.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Security.Claims;
+using BankApp.Models;
 
-namespace BankApp.Interfaces
+namespace BankApp.Interfaces.Builders
 {
     public interface IJwtBuilder
     {
