@@ -25,7 +25,7 @@ namespace BankApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("login")]
-        public async Task<ActionResult<string>> Login([FromBody] LoginDto model)
+        public async Task<ActionResult<AuthResultDto>> Login([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -34,7 +34,10 @@ namespace BankApp.Controllers
             {
                 var jwt = _jwtBuilder.GenerateEncodedToken(claimsIdentity);
 
-                return Ok(new { token = jwt });
+                return new AuthResultDto
+                {
+                    Token = jwt
+                };
             }
 
             ModelState.AddModelError("", "Invalid login attempt.");
