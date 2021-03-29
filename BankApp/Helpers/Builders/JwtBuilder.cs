@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -14,10 +15,12 @@ namespace BankApp.Helpers.Builders
     public class JwtBuilder : IJwtBuilder
     {
         private readonly JwtIssuerOptions _jwtOptions;
+        private readonly TokenValidationParameters _tokenValidationParameters;
 
-        public JwtBuilder(IOptions<JwtIssuerOptions> jwtOptions)
+        public JwtBuilder(IOptions<JwtIssuerOptions> jwtOptions, TokenValidationParameters tokenValidationParameters)
         {
             _jwtOptions = jwtOptions.Value;
+            _tokenValidationParameters = tokenValidationParameters;
         }
 
         public string GenerateEncodedToken(ClaimsIdentity claimsIdentity)
@@ -50,6 +53,29 @@ namespace BankApp.Helpers.Builders
 
             claimsIdentity.AddClaims(roles.Select(r => new Claim(ClaimTypes.Role, r)));
             return claimsIdentity;
+        }
+
+        public ClaimsPrincipal GetPrincipalFromToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, _tokenValidationParameters, out var validatedToken);
+
+                return !IsJwtWithValidSecurityAlgorithm(validatedToken) ? null : principal;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        private static bool IsJwtWithValidSecurityAlgorithm(SecurityToken validatedToken)
+        {
+            return validatedToken is JwtSecurityToken jwtSecurityToken &&
+                   jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                       StringComparison.InvariantCultureIgnoreCase);
         }
     }
 }

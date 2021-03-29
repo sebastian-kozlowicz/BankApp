@@ -74,11 +74,11 @@ namespace BankApp
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
+                IssuerSigningKey = jwtIssuerOptions.SymmetricSecurityKey,
                 ValidateIssuer = true,
                 ValidIssuer = jwtIssuerOptions.Issuer,
                 ValidateAudience = true,
                 ValidAudience = jwtIssuerOptions.Audience,
-                IssuerSigningKey = jwtIssuerOptions.SymmetricSecurityKey,
                 ClockSkew = TimeSpan.Zero
             };
 

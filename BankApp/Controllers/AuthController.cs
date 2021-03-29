@@ -27,5 +27,16 @@ namespace BankApp.Controllers
 
             return await _authService.LoginAsync(model);
         }
+
+        [HttpPost]
+        [AllowAnonymous]
+        [Route("refresh")]
+        public async Task<ActionResult<AuthResultDto>> Refresh([FromBody] RefreshTokenRequestDto model)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            return await _authService.RefreshTokenAsync(model.Token, model.RefreshToken);
+        }
     }
 }

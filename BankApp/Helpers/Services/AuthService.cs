@@ -35,5 +35,10 @@ namespace BankApp.Helpers.Services
                 Token = jwt
             };
         }
+
+        public async Task<AuthResultDto> RefreshTokenAsync(string token, string refreshToken)
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }
