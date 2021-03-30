@@ -19,5 +19,6 @@ namespace BankApp.Models
         public IList<TellerAtBranchHistory> ExpelledTellersFromBranchHistory { get; set; }
         public IList<ManagerAtBranchHistory> AssignedManagersToBranchHistory { get; set; }
         public IList<ManagerAtBranchHistory> ExpelledManagersFromBranchHistory { get; set; }
+        public IList<RefreshTokenData> RefreshTokens { get; set; }
     }
 }

@@ -23,6 +23,7 @@ namespace BankApp.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Teller> Tellers { get; set; }
         public DbSet<Manager> Managers { get; set; }
+        public DbSet<RefreshTokenData> RefreshTokens { get; set; }
 
         public ApplicationDbContext(DbContextOptions options) : base(options)
         {
