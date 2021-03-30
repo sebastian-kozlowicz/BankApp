@@ -8,7 +8,7 @@ namespace BankApp.Models
         public string RefreshToken { get; set; }
         public string Jti { get; set; }
         public DateTime CreationDate { get; set; }
-        public DateTime ExpiryDate { get; set; }
+        public DateTime ExpirationDate { get; set; }
         public bool IsUsed { get; set; }
         public bool IsInvalidated { get; set; }
         public int ApplicationUserId { get; set; }

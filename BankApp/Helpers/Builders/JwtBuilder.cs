@@ -23,7 +23,7 @@ namespace BankApp.Helpers.Builders
             _tokenValidationParameters = tokenValidationParameters;
         }
 
-        public string GenerateEncodedToken(ClaimsIdentity claimsIdentity)
+        public SecurityToken GenerateSecurityToken(ClaimsIdentity claimsIdentity)
         {
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -36,9 +36,7 @@ namespace BankApp.Helpers.Builders
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();
-            var securityToken = tokenHandler.CreateToken(tokenDescriptor);
-            var token = tokenHandler.WriteToken(securityToken);
-            return token;
+            return tokenHandler.CreateToken(tokenDescriptor);
         }
 
         public ClaimsIdentity GenerateClaimsIdentity(ApplicationUser user, IEnumerable<string> roles)

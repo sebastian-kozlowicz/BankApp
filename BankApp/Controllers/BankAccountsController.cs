@@ -8,7 +8,6 @@ using BankApp.Data;
 using BankApp.Dtos.BankAccount;
 using BankApp.Dtos.BankAccount.WithCustomerCreation;
 using BankApp.Enumerators;
-using BankApp.Interfaces;
 using BankApp.Interfaces.Builders;
 using BankApp.Models;
 using BankApp.Policies;
@@ -146,7 +145,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var currentUserId = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value);
+            var currentUserId = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
 
             var currentUser = _context.Users.SingleOrDefault(u => u.Id == currentUserId);
             if (currentUser == null)

@@ -94,7 +94,7 @@ namespace BankApp.Controllers
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
                 TellerId = teller.Id,
-                AssignedById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value)
+                AssignedById = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value)
             };
 
             _context.TellerAtBranchHistory.Add(tellerAtBranch);
@@ -137,7 +137,7 @@ namespace BankApp.Controllers
                 AssignDate = DateTime.UtcNow,
                 BranchId = branch.Id,
                 ManagerId = manager.Id,
-                AssignedById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value)
+                AssignedById = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value)
             };
 
             _context.ManagerAtBranchHistory.Add(managerAtBranch);
@@ -185,7 +185,7 @@ namespace BankApp.Controllers
             if (tellerAtBranchFromDb != null)
             {
                 tellerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-                tellerAtBranchFromDb.ExpelledById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value);
+                tellerAtBranchFromDb.ExpelledById = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
             }
 
             _context.SaveChanges();
@@ -232,7 +232,7 @@ namespace BankApp.Controllers
             if (managerAtBranchFromDb != null)
             {
                 managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-                managerAtBranchFromDb.ExpelledById = int.Parse(User.FindFirst(CustomClaimTypes.UserId).Value);
+                managerAtBranchFromDb.ExpelledById = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
             }
 
             _context.SaveChanges();
