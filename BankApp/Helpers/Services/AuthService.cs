@@ -36,29 +36,7 @@ namespace BankApp.Helpers.Services
             if (user == null || !await _userManager.CheckPasswordAsync(user, model.Password))
                 throw new InvalidLoginException("Invalid login attempt");
 
-            var roles = await _userManager.GetRolesAsync(user);
-            var claimsIdentity = _jwtBuilder.GenerateClaimsIdentity(user, roles);
-            var securityToken = _jwtBuilder.GenerateSecurityToken(claimsIdentity);
-
-            var newRefreshToken = new RefreshTokenData
-            {
-                RefreshToken = Guid.NewGuid().ToString(),
-                Jti = securityToken.Id,
-                CreationDate = DateTime.UtcNow,
-                ExpirationDate = DateTime.UtcNow.AddDays(1),
-                IsUsed = false,
-                IsInvalidated = false,
-                ApplicationUserId = user.Id
-            };
-
-            await _context.RefreshTokens.AddAsync(newRefreshToken);
-            await _context.SaveChangesAsync();
-
-            return new AuthResultDto
-            {
-                Token = new JwtSecurityTokenHandler().WriteToken(securityToken),
-                RefreshToken = newRefreshToken.RefreshToken
-            };
+            return await GenerateAuthResult(user);
         }
 
         public async Task<AuthResultDto> RefreshTokenAsync(string token, string refreshToken)
@@ -87,6 +65,11 @@ namespace BankApp.Helpers.Services
             var userId = int.Parse(validatedToken.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
             var user = await _context.Users.SingleOrDefaultAsync(u => u.Id == userId);
 
+            return await GenerateAuthResult(user);
+        }
+
+        private async Task<AuthResultDto> GenerateAuthResult(ApplicationUser user)
+        {
             var roles = await _userManager.GetRolesAsync(user);
             var claimsIdentity = _jwtBuilder.GenerateClaimsIdentity(user, roles);
             var securityToken = _jwtBuilder.GenerateSecurityToken(claimsIdentity);
@@ -99,7 +82,7 @@ namespace BankApp.Helpers.Services
                 ExpirationDate = DateTime.UtcNow.AddDays(1),
                 IsUsed = false,
                 IsInvalidated = false,
-                ApplicationUserId = userId
+                ApplicationUserId = user.Id
             };
 
             await _context.RefreshTokens.AddAsync(newRefreshToken);
