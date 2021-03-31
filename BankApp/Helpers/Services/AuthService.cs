@@ -46,18 +46,30 @@ namespace BankApp.Helpers.Services
             if (validatedToken == null)
                 throw new RefreshTokenException("Invalid token");
 
-            var expirationDateUnixEpoch =
-                long.Parse(validatedToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Exp).Value);
+            var expirationDateUnixEpoch = long.Parse(validatedToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Exp).Value);
             var expirationDateUtc = EpochTime.DateTime(expirationDateUnixEpoch);
 
             if (expirationDateUtc > DateTime.UtcNow)
                 throw new RefreshTokenException("JWT is not expired yet");
 
-            var jti = validatedToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value;
             var refreshTokenInDb = await _context.RefreshTokens.SingleOrDefaultAsync(t => t.RefreshToken == refreshToken);
 
             if (refreshTokenInDb == null)
                 throw new RefreshTokenException("Refresh token in database does not exist");
+
+            if (DateTime.UtcNow > refreshTokenInDb.ExpirationDate)
+                throw new RefreshTokenException("Refresh token has expired");
+
+            if (refreshTokenInDb.IsInvalidated)
+                throw new RefreshTokenException("Refresh token has been invalidated");
+
+            if (refreshTokenInDb.IsUsed)
+                throw new RefreshTokenException("Refresh token has been used");
+
+            var jti = validatedToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Jti).Value;
+
+            if (refreshTokenInDb.Jti != jti)
+                throw new RefreshTokenException("Refresh token does not match JWT");
 
             refreshTokenInDb.IsUsed = true;
             await _context.SaveChangesAsync();
