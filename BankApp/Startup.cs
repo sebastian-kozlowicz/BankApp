@@ -7,13 +7,13 @@ using BankApp.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using System;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using BankApp.Configuration;
 using System.Globalization;
+using BankApp.Extensions;
 using BankApp.Helpers.Services;
 using BankApp.Policies;
 using BankApp.Policies.Handlers;
@@ -49,6 +49,9 @@ namespace BankApp
             services.AddIdentity<ApplicationUser, IdentityRole<int>>()
                .AddEntityFrameworkStores<ApplicationDbContext>()
                .AddDefaultTokenProviders();
+
+            services.AddHealthChecks()
+                .AddDbContextCheck<ApplicationDbContext>();
 
             services.AddSingleton<IAuthorizationHandler, UserIdRequirementHandler>();
             services.AddSingleton<IJwtBuilder, JwtBuilder>();
@@ -146,6 +149,8 @@ namespace BankApp
                     pattern: "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
+
+            app.AddHealthChecksMiddleware();
 
             app.UseSpa(spa =>
             {
