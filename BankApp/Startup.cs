@@ -50,6 +50,8 @@ namespace BankApp
                .AddEntityFrameworkStores<ApplicationDbContext>()
                .AddDefaultTokenProviders();
 
+            services.AddDatabaseDeveloperPageExceptionFilter();
+
             services.AddHealthChecks()
                 .AddDbContextCheck<ApplicationDbContext>();
 
@@ -115,7 +117,6 @@ namespace BankApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
