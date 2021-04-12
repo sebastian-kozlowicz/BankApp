@@ -17,6 +17,14 @@ namespace BankApp.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        /// Logs user in
+        /// </summary>
+        /// <param name="model">Login credentials</param>
+        /// <returns>JWT with refresh token</returns>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         [HttpPost]
         [AllowAnonymous]
         [Route("login")]
@@ -28,6 +36,14 @@ namespace BankApp.Controllers
             return await _authService.LoginAsync(model);
         }
 
+        /// <summary>
+        /// Refreshes expired JWT
+        /// </summary>
+        /// <param name="model">Expired JWT with refresh token</param>
+        /// <returns>JWT with refresh token</returns>
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
         [HttpPost]
         [AllowAnonymous]
         [Route("refresh")]

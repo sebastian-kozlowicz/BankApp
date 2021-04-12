@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using BankApp.Configuration;
 using System.Globalization;
+using System.IO;
+using System.Reflection;
 using BankApp.Extensions;
 using BankApp.Helpers.Services;
 using BankApp.Policies;
@@ -25,6 +27,7 @@ using BankApp.Helpers.Factories;
 using BankApp.Interfaces.Builders;
 using BankApp.Interfaces.Factories;
 using BankApp.Interfaces.Services;
+using Microsoft.OpenApi.Models;
 
 namespace BankApp
 {
@@ -41,6 +44,16 @@ namespace BankApp
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddAutoMapper(typeof(Startup));
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BankApp", Version = "v1" });
+                c.CustomSchemaIds(t => t.ToString());
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath, true);
+            });
 
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
@@ -62,7 +75,7 @@ namespace BankApp
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
-           
+
             services.Configure<IdentityOptions>(options =>
             {
                 options.Password.RequireDigit = true;
@@ -117,6 +130,8 @@ namespace BankApp
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BankApp V1"));
             }
             else
             {
