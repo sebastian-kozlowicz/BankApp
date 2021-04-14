@@ -27,6 +27,7 @@ using BankApp.Helpers.Factories;
 using BankApp.Interfaces.Builders;
 using BankApp.Interfaces.Factories;
 using BankApp.Interfaces.Services;
+using BankApp.Middlewares;
 using Microsoft.OpenApi.Models;
 
 namespace BankApp
@@ -127,6 +128,8 @@ namespace BankApp
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<int>> roleManager, ApplicationDbContext context)
         {
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
