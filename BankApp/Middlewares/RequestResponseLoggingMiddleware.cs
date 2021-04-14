@@ -15,6 +15,7 @@ namespace BankApp.Middlewares
         private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
         private readonly RequestDelegate _next;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
+        private Stream _originalResponseBodyStream;
         private readonly IList<string> _ignoredPaths = new List<string>
         {
             "/swagger",
@@ -51,9 +52,9 @@ namespace BankApp.Middlewares
                     await _next(context);
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                LogError(context, ex.ToString());
+                await LogError(context, e.ToString());
             }
         }
 
@@ -77,9 +78,9 @@ namespace BankApp.Middlewares
 
         private async Task LogResponse(HttpContext context)
         {
-            var originalBodyStream = context.Response.Body;
-            await using var responseBody = _recyclableMemoryStreamManager.GetStream();
-            context.Response.Body = responseBody;
+            _originalResponseBodyStream = context.Response.Body;
+            await using var responseStream = _recyclableMemoryStreamManager.GetStream();
+            context.Response.Body = responseStream;
 
             await _next(context);
 
@@ -94,12 +95,20 @@ namespace BankApp.Middlewares
                                    $"Query String: {context.Request.QueryString} | " +
                                    $"Status Code: {context.Response.StatusCode} | " +
                                    $"Response Body: {responseBodyText}");
-            await responseBody.CopyToAsync(originalBodyStream);
+            await responseStream.CopyToAsync(_originalResponseBodyStream);
         }
 
-        private void LogError(HttpContext context, string errorMessage)
+        private async Task LogError(HttpContext context, string errorMessage)
         {
+            await using var responseStream = _recyclableMemoryStreamManager.GetStream();
+            context.Response.Body = responseStream;
+
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+            context.Response.ContentType = "text/plain";
+            await context.Response.WriteAsync("Unexpected error occurred");
+
+            context.Response.Body.Position = 0;
+            await responseStream.CopyToAsync(_originalResponseBodyStream);
 
             _logger.LogInformation($"Http Response Information:{Environment.NewLine}" +
                                    $"Scheme:{context.Request.Scheme} | " +

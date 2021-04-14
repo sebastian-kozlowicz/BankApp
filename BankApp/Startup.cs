@@ -143,6 +143,8 @@ namespace BankApp
                 app.UseHsts();
             }
 
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
             app.UseRequestLocalization();
 
             var cultureInfo = new CultureInfo("en-US");
