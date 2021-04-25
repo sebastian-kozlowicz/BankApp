@@ -110,7 +110,7 @@ namespace BankApp.Middlewares
             context.Response.Body.Position = 0;
             await responseStream.CopyToAsync(_originalResponseBodyStream);
 
-            _logger.LogInformation($"Http Response Information:{Environment.NewLine}" +
+            _logger.LogError($"Http Response Information:{Environment.NewLine}" +
                                    $"Scheme:{context.Request.Scheme} | " +
                                    $"Host: {context.Request.Host} | " +
                                    $"Path: {context.Request.Path} | " +
