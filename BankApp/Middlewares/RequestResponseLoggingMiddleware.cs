@@ -10,10 +10,10 @@ using Microsoft.IO;
 
 namespace BankApp.Middlewares
 {
-    public class RequestResponseLoggingMiddleware
+    public class RequestResponseLoggingMiddleware : IMiddleware
     {
         private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
-        private readonly RequestDelegate _next;
+        private RequestDelegate _next;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
         private Stream _originalResponseBodyStream;
         private readonly IList<string> _ignoredPaths = new List<string>
@@ -26,20 +26,19 @@ namespace BankApp.Middlewares
             "/swagger/swagger-ui-bundle.js",
             "/swagger/swagger-ui.css",
             "/favicon.ico",
-            "/healthcheck",
-            "/status",
             "/"
         };
 
-        public RequestResponseLoggingMiddleware(RequestDelegate next, ILogger<RequestResponseLoggingMiddleware> logger)
+        public RequestResponseLoggingMiddleware(ILogger<RequestResponseLoggingMiddleware> logger)
         {
-            _next = next;
             _logger = logger;
             _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
+            _next = next;
+
             try
             {
                 if (!IsPathIgnored(context))

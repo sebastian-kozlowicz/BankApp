@@ -76,6 +76,7 @@ namespace BankApp
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
+            services.AddScoped<RequestResponseLoggingMiddleware>();
 
             services.Configure<IdentityOptions>(options =>
             {
