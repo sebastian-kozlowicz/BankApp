@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.IO;
+using Newtonsoft.Json.Linq;
 
 namespace BankApp.Middlewares
 {
@@ -16,6 +17,7 @@ namespace BankApp.Middlewares
         private RequestDelegate _next;
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
         private Stream _originalResponseBodyStream;
+        private readonly IList<string> _propertyNamesToSanitize = new List<string> { "email" };
         private readonly IList<string> _ignoredPaths = new List<string>
         {
             "/swagger",
@@ -67,8 +69,8 @@ namespace BankApp.Middlewares
             var requestBodyText = await new StreamReader(requestStream, Encoding.UTF8).ReadToEndAsync();
             context.Request.Body.Position = 0;
 
-            _logger.LogInformation($"Http Request Information:{Environment.NewLine}" +
-                                   $"Scheme:{context.Request.Scheme} | " +
+            _logger.LogInformation($"Http Request Information: {Environment.NewLine}" +
+                                   $"Scheme: {context.Request.Scheme} | " +
                                    $"Host: {context.Request.Host} | " +
                                    $"Path: {context.Request.Path} | " +
                                    $"Query String: {context.Request.QueryString} | " +
@@ -87,8 +89,8 @@ namespace BankApp.Middlewares
             var responseBodyText = await new StreamReader(context.Response.Body, Encoding.UTF8).ReadToEndAsync();
             context.Response.Body.Position = 0;
 
-            _logger.LogInformation($"Http Response Information:{Environment.NewLine}" +
-                                   $"Scheme:{context.Request.Scheme} | " +
+            _logger.LogInformation($"Http Response Information: {Environment.NewLine}" +
+                                   $"Scheme: {context.Request.Scheme} | " +
                                    $"Host: {context.Request.Host} | " +
                                    $"Path: {context.Request.Path} | " +
                                    $"Query String: {context.Request.QueryString} | " +
@@ -109,13 +111,13 @@ namespace BankApp.Middlewares
             context.Response.Body.Position = 0;
             await responseStream.CopyToAsync(_originalResponseBodyStream);
 
-            _logger.LogError($"Http Response Information:{Environment.NewLine}" +
-                                   $"Scheme:{context.Request.Scheme} | " +
-                                   $"Host: {context.Request.Host} | " +
-                                   $"Path: {context.Request.Path} | " +
-                                   $"Query String: {context.Request.QueryString} | " +
-                                   $"Status Code: {context.Response.StatusCode} | " +
-                                   $"Error message: {errorMessage}");
+            _logger.LogError($"Http Response Information: {Environment.NewLine}" +
+                             $"Scheme: {context.Request.Scheme} | " +
+                             $"Host: {context.Request.Host} | " +
+                             $"Path: {context.Request.Path} | " +
+                             $"Query String: {context.Request.QueryString} | " +
+                             $"Status Code: {context.Response.StatusCode} | " +
+                             $"Error message: {errorMessage}");
         }
 
         private bool IsPathIgnored(HttpContext context)
