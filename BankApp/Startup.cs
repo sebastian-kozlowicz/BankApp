@@ -1,34 +1,34 @@
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
-using Microsoft.EntityFrameworkCore;
-using BankApp.Data;
-using BankApp.Models;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.AspNetCore.Identity;
 using System;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.IdentityModel.Tokens;
-using BankApp.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using BankApp.Configuration;
+using BankApp.Data;
 using BankApp.Extensions;
-using BankApp.Helpers.Services;
-using BankApp.Policies;
-using BankApp.Policies.Handlers;
-using BankApp.Policies.Requirement;
-using Microsoft.AspNetCore.Authorization;
-using Nito.AsyncEx;
 using BankApp.Helpers.Builders;
 using BankApp.Helpers.Factories;
+using BankApp.Helpers.Services;
 using BankApp.Interfaces.Builders;
 using BankApp.Interfaces.Factories;
 using BankApp.Interfaces.Services;
 using BankApp.Middlewares;
+using BankApp.Models;
+using BankApp.Policies;
+using BankApp.Policies.Handlers;
+using BankApp.Policies.Requirement;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Nito.AsyncEx;
 
 namespace BankApp
 {
@@ -48,7 +48,7 @@ namespace BankApp
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BankApp", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo {Title = "BankApp", Version = "v1"});
                 c.CustomSchemaIds(t => t.ToString());
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
@@ -61,8 +61,8 @@ namespace BankApp
                     Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddIdentity<ApplicationUser, IdentityRole<int>>()
-               .AddEntityFrameworkStores<ApplicationDbContext>()
-               .AddDefaultTokenProviders();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -76,6 +76,7 @@ namespace BankApp
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
+            services.AddScoped<ILogSanitizedPayloadBuilder, LogSanitizedPayloadBuilder>();
             services.AddScoped<RequestResponseLoggingMiddleware>();
 
             services.Configure<IdentityOptions>(options =>
@@ -86,6 +87,8 @@ namespace BankApp
                 options.Password.RequireUppercase = true;
                 options.Password.RequiredLength = 8;
             });
+
+            services.Configure<LogSanitizationOptions>(Configuration.GetSection(nameof(LogSanitizationOptions)));
 
             var jwtIssuerOptionsSection = Configuration.GetSection(nameof(JwtIssuerOptions));
             var jwtIssuerOptions = jwtIssuerOptionsSection.Get<JwtIssuerOptions>();
@@ -114,7 +117,8 @@ namespace BankApp
 
             services.AddAuthorization(options =>
             {
-                options.AddPolicy(PolicyName.UserIdIncludedInJwtToken, policy => policy.Requirements.Add(new UserIdRequirement()));
+                options.AddPolicy(PolicyName.UserIdIncludedInJwtToken,
+                    policy => policy.Requirements.Add(new UserIdRequirement()));
             });
 
             services.AddControllersWithViews();
@@ -127,7 +131,9 @@ namespace BankApp
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<int>> roleManager, ApplicationDbContext context)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,
+            UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<int>> roleManager,
+            ApplicationDbContext context)
         {
             app.UseMiddleware<RequestResponseLoggingMiddleware>();
 
@@ -158,7 +164,6 @@ namespace BankApp
             {
                 app.UseSpaStaticFiles();
             }
-
             app.UseRouting();
 
             app.UseAuthentication();
@@ -167,8 +172,8 @@ namespace BankApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "{controller}/{action=Index}/{id?}");
+                    "default",
+                    "{controller}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
 
@@ -180,7 +185,6 @@ namespace BankApp
                 // see https://go.microsoft.com/fwlink/?linkid=864501
 
                 spa.Options.SourcePath = "ClientApp";
-                spa.Options.StartupTimeout = new TimeSpan(days: 0, hours: 0, minutes: 1, seconds: 0);
 
                 if (env.IsDevelopment())
                 {

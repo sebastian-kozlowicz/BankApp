@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using BankApp.Interfaces.Builders;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BankApp.Helpers.Builders
 {
-    public class LogSanitizedPayloadBuilder
+    public class LogSanitizedPayloadBuilder : ILogSanitizedPayloadBuilder
     {
         private IList<string> _propertyNamesToSanitize;
         private const string _sanitizedValue = "[Sanitized]";

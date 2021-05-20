@@ -4,20 +4,19 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using BankApp.Configuration;
+using BankApp.Interfaces.Builders;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Microsoft.IO;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
 namespace BankApp.Middlewares
 {
     public class RequestResponseLoggingMiddleware : IMiddleware
     {
-        private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
-        private RequestDelegate _next;
-        private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
-        private Stream _originalResponseBodyStream;
-        private readonly IList<string> _propertyNamesToSanitize = new List<string> { "email" };
         private readonly IList<string> _ignoredPaths = new List<string>
         {
             "/swagger",
@@ -31,9 +30,21 @@ namespace BankApp.Middlewares
             "/"
         };
 
-        public RequestResponseLoggingMiddleware(ILogger<RequestResponseLoggingMiddleware> logger)
+        private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
+        private readonly LogSanitizationOptions _logSanitizationOptions;
+        private readonly ILogSanitizedPayloadBuilder _logSanitizedPayloadBuilder;
+        private readonly List<string> _propertyNamesToSanitize = new() { "email" };
+        private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
+        private RequestDelegate _next;
+        private Stream _originalResponseBodyStream;
+
+        public RequestResponseLoggingMiddleware(ILogger<RequestResponseLoggingMiddleware> logger,
+            IOptions<LogSanitizationOptions> logSanitizationOptions,
+            ILogSanitizedPayloadBuilder logSanitizedPayloadBuilder)
         {
             _logger = logger;
+            _logSanitizedPayloadBuilder = logSanitizedPayloadBuilder;
+            _logSanitizationOptions = logSanitizationOptions.Value;
             _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
         }
 
@@ -69,6 +80,11 @@ namespace BankApp.Middlewares
             var requestBodyText = await new StreamReader(requestStream, Encoding.UTF8).ReadToEndAsync();
             context.Request.Body.Position = 0;
 
+            if (_logSanitizationOptions.IsEnabled)
+                requestBodyText =
+                    _logSanitizedPayloadBuilder.SanitizePayload(JToken.Parse(requestBodyText),
+                        _propertyNamesToSanitize);
+
             _logger.LogInformation($"Http Request Information: {Environment.NewLine}" +
                                    $"Scheme: {context.Request.Scheme} | " +
                                    $"Host: {context.Request.Host} | " +
@@ -88,6 +104,11 @@ namespace BankApp.Middlewares
             context.Response.Body.Position = 0;
             var responseBodyText = await new StreamReader(context.Response.Body, Encoding.UTF8).ReadToEndAsync();
             context.Response.Body.Position = 0;
+
+            if (_logSanitizationOptions.IsEnabled)
+                responseBodyText =
+                    _logSanitizedPayloadBuilder.SanitizePayload(JToken.Parse(responseBodyText),
+                        _propertyNamesToSanitize);
 
             _logger.LogInformation($"Http Response Information: {Environment.NewLine}" +
                                    $"Scheme: {context.Request.Scheme} | " +
