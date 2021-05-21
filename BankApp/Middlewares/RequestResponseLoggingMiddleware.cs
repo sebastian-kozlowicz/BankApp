@@ -80,13 +80,23 @@ namespace BankApp.Middlewares
             var requestBodyText = await new StreamReader(requestStream, Encoding.UTF8).ReadToEndAsync();
             context.Request.Body.Position = 0;
 
-            var requestBodyJToken = JToken.Parse(requestBodyText);
+            if (!string.IsNullOrEmpty(requestBodyText))
+            {
+                try
+                {
+                    var requestBodyJToken = JToken.Parse(requestBodyText);
 
-            if (_logSanitizationOptions.IsEnabled)
-                requestBodyText =
-                    _logSanitizedPayloadBuilder.SanitizePayload(requestBodyJToken, _propertyNamesToSanitize);
-            else
-                requestBodyText = requestBodyJToken.ToString(Formatting.None);
+                    if (_logSanitizationOptions.IsEnabled)
+                        requestBodyText =
+                            _logSanitizedPayloadBuilder.SanitizePayload(requestBodyJToken, _propertyNamesToSanitize);
+                    else
+                        requestBodyText = requestBodyJToken.ToString(Formatting.None);
+                }
+                catch (Exception)
+                {
+                }
+
+            }
 
             _logger.LogInformation($"Http Request Information: {Environment.NewLine}" +
                                    $"Scheme: {context.Request.Scheme} | " +
@@ -108,13 +118,23 @@ namespace BankApp.Middlewares
             var responseBodyText = await new StreamReader(context.Response.Body, Encoding.UTF8).ReadToEndAsync();
             context.Response.Body.Position = 0;
 
-            var responseBodyJToken = JToken.Parse(responseBodyText);
+            if (!string.IsNullOrEmpty(responseBodyText))
+            {
+                try
+                {
+                    var responseBodyJToken = JToken.Parse(responseBodyText);
 
-            if (_logSanitizationOptions.IsEnabled)
-                responseBodyText =
-                    _logSanitizedPayloadBuilder.SanitizePayload(responseBodyJToken, _propertyNamesToSanitize);
-            else
-                responseBodyText = responseBodyJToken.ToString(Formatting.None);
+                    if (_logSanitizationOptions.IsEnabled)
+                        responseBodyText =
+                            _logSanitizedPayloadBuilder.SanitizePayload(responseBodyJToken, _propertyNamesToSanitize);
+                    else
+                        responseBodyText = responseBodyJToken.ToString(Formatting.None);
+                }
+                catch (Exception)
+                {
+                }
+
+            }
 
             _logger.LogInformation($"Http Response Information: {Environment.NewLine}" +
                                    $"Scheme: {context.Request.Scheme} | " +
