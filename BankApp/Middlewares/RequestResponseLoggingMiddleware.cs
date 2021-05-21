@@ -80,10 +80,13 @@ namespace BankApp.Middlewares
             var requestBodyText = await new StreamReader(requestStream, Encoding.UTF8).ReadToEndAsync();
             context.Request.Body.Position = 0;
 
+            var requestBodyJToken = JToken.Parse(requestBodyText);
+
             if (_logSanitizationOptions.IsEnabled)
                 requestBodyText =
-                    _logSanitizedPayloadBuilder.SanitizePayload(JToken.Parse(requestBodyText),
-                        _propertyNamesToSanitize);
+                    _logSanitizedPayloadBuilder.SanitizePayload(requestBodyJToken, _propertyNamesToSanitize);
+            else
+                requestBodyText = requestBodyJToken.ToString(Formatting.None);
 
             _logger.LogInformation($"Http Request Information: {Environment.NewLine}" +
                                    $"Scheme: {context.Request.Scheme} | " +
@@ -105,10 +108,13 @@ namespace BankApp.Middlewares
             var responseBodyText = await new StreamReader(context.Response.Body, Encoding.UTF8).ReadToEndAsync();
             context.Response.Body.Position = 0;
 
+            var responseBodyJToken = JToken.Parse(responseBodyText);
+
             if (_logSanitizationOptions.IsEnabled)
                 responseBodyText =
-                    _logSanitizedPayloadBuilder.SanitizePayload(JToken.Parse(responseBodyText),
-                        _propertyNamesToSanitize);
+                    _logSanitizedPayloadBuilder.SanitizePayload(responseBodyJToken, _propertyNamesToSanitize);
+            else
+                responseBodyText = responseBodyJToken.ToString(Formatting.None);
 
             _logger.LogInformation($"Http Response Information: {Environment.NewLine}" +
                                    $"Scheme: {context.Request.Scheme} | " +
