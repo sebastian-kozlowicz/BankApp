@@ -191,6 +191,7 @@
 
 	<ItemGroup>
 		<Folder Include="ClientApp\src\app\branch\" />
+		<Folder Include="Models\RequestResponseLogging\" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -32,7 +32,7 @@ namespace BankApp.Middlewares
 
         private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
         private readonly LogSanitizationOptions _logSanitizationOptions;
-        private readonly ILogSanitizedPayloadBuilder _logSanitizedPayloadBuilder;
+        private readonly ILogSanitizedBuilder _logSanitizedBuilder;
         private readonly List<string> _propertyNamesToSanitize = new() { "email" };
         private readonly RecyclableMemoryStreamManager _recyclableMemoryStreamManager;
         private RequestDelegate _next;
@@ -40,10 +40,10 @@ namespace BankApp.Middlewares
 
         public RequestResponseLoggingMiddleware(ILogger<RequestResponseLoggingMiddleware> logger,
             IOptions<LogSanitizationOptions> logSanitizationOptions,
-            ILogSanitizedPayloadBuilder logSanitizedPayloadBuilder)
+            ILogSanitizedBuilder logSanitizedBuilder)
         {
             _logger = logger;
-            _logSanitizedPayloadBuilder = logSanitizedPayloadBuilder;
+            _logSanitizedBuilder = logSanitizedBuilder;
             _logSanitizationOptions = logSanitizationOptions.Value;
             _recyclableMemoryStreamManager = new RecyclableMemoryStreamManager();
         }
@@ -88,7 +88,7 @@ namespace BankApp.Middlewares
 
                     if (_logSanitizationOptions.IsEnabled)
                         requestBodyText =
-                            _logSanitizedPayloadBuilder.SanitizePayload(requestBodyJToken, _propertyNamesToSanitize);
+                            _logSanitizedBuilder.SanitizePayload(requestBodyJToken, _propertyNamesToSanitize);
                     else
                         requestBodyText = requestBodyJToken.ToString(Formatting.None);
                 }
@@ -126,7 +126,7 @@ namespace BankApp.Middlewares
 
                     if (_logSanitizationOptions.IsEnabled)
                         responseBodyText =
-                            _logSanitizedPayloadBuilder.SanitizePayload(responseBodyJToken, _propertyNamesToSanitize);
+                            _logSanitizedBuilder.SanitizePayload(responseBodyJToken, _propertyNamesToSanitize);
                     else
                         responseBodyText = responseBodyJToken.ToString(Formatting.None);
                 }

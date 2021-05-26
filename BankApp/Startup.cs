@@ -2,6 +2,7 @@ using System;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using BankApp.ActionFilters;
 using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Extensions;
@@ -76,8 +77,10 @@ namespace BankApp
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
-            services.AddScoped<ILogSanitizedPayloadBuilder, LogSanitizedPayloadBuilder>();
+            services.AddScoped<ILogSanitizedBuilder, LogSanitizedBuilder>();
+            services.AddScoped<IRequestResponseLoggingBuilder, RequestResponseLoggingBuilder>();
             services.AddScoped<RequestResponseLoggingMiddleware>();
+            services.AddScoped<RequestResponseLoggingFilter>();
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -121,8 +124,11 @@ namespace BankApp
                     policy => policy.Requirements.Add(new UserIdRequirement()));
             });
 
-            services.AddControllersWithViews();
-            services.AddRazorPages();
+            services.AddControllers(c =>
+            {
+                c.Filters.AddService(typeof(RequestResponseLoggingFilter));
+            });
+
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
@@ -135,7 +141,8 @@ namespace BankApp
             UserManager<ApplicationUser> userManager, RoleManager<IdentityRole<int>> roleManager,
             ApplicationDbContext context)
         {
-            app.UseMiddleware<RequestResponseLoggingMiddleware>();
+            // Replaced by RequestResponseLoggingFilter
+            //app.UseMiddleware<RequestResponseLoggingMiddleware>(); 
 
             if (env.IsDevelopment())
             {
@@ -171,10 +178,7 @@ namespace BankApp
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllerRoute(
-                    "default",
-                    "{controller}/{action=Index}/{id?}");
-                endpoints.MapRazorPages();
+                endpoints.MapControllers();
             });
 
             app.AddHealthChecksMiddleware();
