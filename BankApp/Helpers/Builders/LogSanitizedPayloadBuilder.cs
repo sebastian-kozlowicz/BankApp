@@ -38,22 +38,25 @@ namespace BankApp.Helpers.Builders
 
         private void SetSanitizedValue(JObject jObject)
         {
-            foreach (var prop in jObject.Properties())
+            foreach (var jProperty in jObject.Properties())
             {
-                var children = prop.Children();
+                var children = jProperty.Children();
 
                 if (children.Any())
                     foreach (var child in children)
                         if (child is JObject childJObject)
                             SetSanitizedValue(childJObject);
 
-                if (prop.Value.Type == JTokenType.Array)
-                    foreach (var jToken in prop.Value)
-                        if (jToken is JObject childJObject)
-                            SetSanitizedValue(childJObject);
+                if (jProperty.Value.Type == JTokenType.Array)
+                    if (jProperty.First.Type == JTokenType.Object)
+                    {
+                        foreach (var jToken in jProperty.Value)
+                            if (jToken is JObject childJObject)
+                                SetSanitizedValue(childJObject);
+                    }
 
-                if (_propertyNamesToSanitize.Contains(prop.Name))
-                    prop.Value = _sanitizedValue;
+                if (_propertyNamesToSanitize.Contains(jProperty.Name))
+                    jProperty.Value = _sanitizedValue;
             }
         }
     }
