@@ -23,10 +23,11 @@ namespace BankApp.ActionFilters
             var requestInfo = new RequestInfo
             {
                 TraceIdentifier = context.HttpContext.TraceIdentifier,
-                Headers = context.HttpContext.Request.Headers,
-                ActionArguments = context.ActionArguments,
                 Method = context.HttpContext.Request.Method,
-                Path = context.HttpContext.Request.Path
+                Scheme = context.HttpContext.Request.Scheme,
+                Path = context.HttpContext.Request.Path,
+                Headers = context.HttpContext.Request.Headers,
+                ActionArguments = context.ActionArguments
             };
 
             var requestLogMessage = _requestResponseLoggingBuilder.GenerateRequestLogMessage(requestInfo);
@@ -40,8 +41,8 @@ namespace BankApp.ActionFilters
             var responseInfo = new ResponseInfo
             {
                 TraceIdentifier = context.HttpContext.TraceIdentifier,
-                Headers = context.HttpContext.Response.Headers,
                 Path = context.HttpContext.Request.Path,
+                Headers = context.HttpContext.Response.Headers,
                 Result = result?.Value
             };
 

@@ -59,6 +59,7 @@ namespace BankApp.Helpers.Builders
             return $"Http Request Information: {Environment.NewLine}" +
                    $"Trace Identifier: {requestInfo.TraceIdentifier} {Environment.NewLine}" +
                    $"Method: {requestInfo.Method} {Environment.NewLine}" +
+                   $"Scheme: {requestInfo.Scheme} {Environment.NewLine}" +
                    $"Path: {requestInfo.Path} {Environment.NewLine}" +
                    $"Headers: {Environment.NewLine}{string.Join($"{Environment.NewLine}", headersAsString)} {Environment.NewLine}" +
                    $"Action Arguments: {Environment.NewLine}{string.Join($"{Environment.NewLine}", actionArgumentsAsString)}";
