@@ -57,12 +57,12 @@ namespace BankApp.ActionFilters
 
             responseInfo.ExceptionMessage = context.Exception?.ToString();
 
-            var requestLogMessage = _requestResponseLoggingBuilder.GenerateResponseLogMessage(responseInfo);
+            var responseLogMessage = _requestResponseLoggingBuilder.GenerateResponseLogMessage(responseInfo);
 
             if (responseInfo.IsServerErrorStatusCode)
-                _logger.LogError(requestLogMessage);
+                _logger.LogError(responseLogMessage);
             else
-                _logger.LogInformation(requestLogMessage);
+                _logger.LogInformation(responseLogMessage);
         }
     }
 }

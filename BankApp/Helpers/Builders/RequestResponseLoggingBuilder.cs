@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using BankApp.Configuration;
 using BankApp.Interfaces.Builders;
 using BankApp.Models.RequestResponseLogging;
@@ -11,10 +13,10 @@ namespace BankApp.Helpers.Builders
 {
     public class RequestResponseLoggingBuilder : IRequestResponseLoggingBuilder
     {
-        private readonly List<string> _headersNamesToSanitize = new() { "Authentication" };
+        private readonly List<string> _headersNamesToSanitize = new() {"Authentication"};
         private readonly LogSanitizationOptions _logSanitizationOptions;
         private readonly ILogSanitizedBuilder _logSanitizedBuilder;
-        private readonly List<string> _propertyNamesToSanitize = new() { "email", "login", "password" };
+        private readonly List<string> _propertyNamesToSanitize = new() {"email", "login", "password"};
 
         public RequestResponseLoggingBuilder(IOptions<LogSanitizationOptions> logSanitizationOptions,
             ILogSanitizedBuilder logSanitizedBuilder)
@@ -36,7 +38,7 @@ namespace BankApp.Helpers.Builders
             }
             else
             {
-                foreach (var (key, value) in requestInfo.Headers) 
+                foreach (var (key, value) in requestInfo.Headers)
                     headersAsString.Add($"{key}: {value}");
             }
 
@@ -50,21 +52,52 @@ namespace BankApp.Helpers.Builders
             else
                 foreach (var (key, value) in requestInfo.ActionArguments)
                 {
-                    var payload = JToken.FromObject(value);
-                    actionArgumentsAsString.Add($"{key}: {payload.ToString(Formatting.None)}");
+                    var payload = JToken.FromObject(value).ToString(Formatting.None);
+                    actionArgumentsAsString.Add($"{key}: {payload}");
                 }
 
             return $"Http Request Information: {Environment.NewLine}" +
+                   $"Trace Identifier: {requestInfo.TraceIdentifier} {Environment.NewLine}" +
                    $"Method: {requestInfo.Method} {Environment.NewLine}" +
                    $"Path: {requestInfo.Path} {Environment.NewLine}" +
-                   $"Trace Identifier: {requestInfo.TraceIdentifier} {Environment.NewLine}" +
                    $"Headers: {Environment.NewLine}{string.Join($"{Environment.NewLine}", headersAsString)} {Environment.NewLine}" +
                    $"Action Arguments: {Environment.NewLine}{string.Join($"{Environment.NewLine}", actionArgumentsAsString)}";
         }
 
         public string GenerateResponseLogMessage(ResponseInfo responseInfo)
         {
-            return "";
+            var headersAsString = new List<string>();
+
+            if (_logSanitizationOptions.IsEnabled)
+            {
+                var sanitizedHeaders =
+                    _logSanitizedBuilder.SanitizeHeaders(responseInfo.Headers, _headersNamesToSanitize);
+                headersAsString = sanitizedHeaders;
+            }
+            else
+            {
+                foreach (var (key, value) in responseInfo.Headers)
+                    headersAsString.Add($"{key}: {value}");
+            }
+
+            var result = responseInfo.IsServerErrorStatusCode
+                ? responseInfo.ExceptionMessage
+                : _logSanitizedBuilder.SanitizePayload(JToken.FromObject(responseInfo.Result),
+                    _propertyNamesToSanitize);
+
+            var responseStringBuilder = new StringBuilder();
+            responseStringBuilder.Append($"Http Response Information: {Environment.NewLine}" +
+                                         $"Trace Identifier: {responseInfo.TraceIdentifier} {Environment.NewLine}" +
+                                         $"Path: {responseInfo.Path} {Environment.NewLine}" +
+                                         $"Status Code: {responseInfo.StatusCode} {Environment.NewLine}");
+
+            if (headersAsString.Any())
+                responseStringBuilder.Append(
+                    $"Headers: {Environment.NewLine}{string.Join($"{Environment.NewLine}", headersAsString)} {Environment.NewLine}");
+
+            responseStringBuilder.Append($"Response: {Environment.NewLine}{result}");
+
+            return responseStringBuilder.ToString();
         }
     }
 }
