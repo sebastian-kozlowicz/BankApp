@@ -40,7 +40,7 @@ namespace BankApp.Helpers.Builders
             var sanitizedHeadersAsString = new List<string>();
 
             foreach (var (key, value) in headers)
-                sanitizedHeadersAsString.Add(_propertyNamesToSanitize.Contains(key)
+                sanitizedHeadersAsString.Add(headerNamesToSanitize.Contains(key)
                     ? $"{key}: {_sanitizedValue}"
                     : $"{key}: {value}");
 

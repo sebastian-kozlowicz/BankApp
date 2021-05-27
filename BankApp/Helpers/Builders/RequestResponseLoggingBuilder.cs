@@ -36,7 +36,8 @@ namespace BankApp.Helpers.Builders
             }
             else
             {
-                foreach (var (key, value) in requestInfo.Headers) headersAsString.Add($"{key}: {value}");
+                foreach (var (key, value) in requestInfo.Headers) 
+                    headersAsString.Add($"{key}: {value}");
             }
 
             if (_logSanitizationOptions.IsEnabled)
