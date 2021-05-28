@@ -8,7 +8,7 @@ namespace BankApp.Helpers.Builders
 
         public static string GetAccountIdentificationNumber(int length, string accountNumberText)
         {
-            return accountNumberText.Substring(0, length - BankIdentificationNumberAndCheckDigitLength);
+            return accountNumberText.Substring(length - BankIdentificationNumberAndCheckDigitLength, length);
         }
 
         public static byte GenerateCheckDigit(string number)
@@ -44,7 +44,7 @@ namespace BankApp.Helpers.Builders
                 oddPosition = !oddPosition;
             }
 
-            return (byte)((10 - sum % 10) % 10);
+            return (byte) ((10 - sum % 10) % 10);
         }
     }
 }

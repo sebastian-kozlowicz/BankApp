@@ -1,7 +1,6 @@
 ﻿using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Enumerators;
-using BankApp.Interfaces;
 using BankApp.Models;
 using System;
 using System.Linq;
