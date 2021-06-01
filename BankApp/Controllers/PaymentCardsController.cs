@@ -3,7 +3,6 @@ using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Dtos.Card;
 using BankApp.Enumerators;
-using BankApp.Interfaces;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;

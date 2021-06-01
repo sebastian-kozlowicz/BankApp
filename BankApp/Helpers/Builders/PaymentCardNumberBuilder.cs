@@ -1,17 +1,35 @@
 ﻿using System.Linq;
+using BankApp.Data;
 
 namespace BankApp.Helpers.Builders
 {
-    public static class PaymentCardNumberBuilder
+    public abstract class PaymentCardNumberBuilder
     {
+        protected readonly ApplicationDbContext Context;
         private const int BankIdentificationNumberAndCheckDigitLength = 7;
 
-        public static string GetAccountIdentificationNumber(int length, string accountNumberText)
+        protected PaymentCardNumberBuilder(ApplicationDbContext context)
         {
-            return accountNumberText.Substring(length - BankIdentificationNumberAndCheckDigitLength, length);
+            Context = context;
         }
 
-        public static byte GenerateCheckDigit(string number)
+        protected long GenerateAccountIdentificationNumber()
+        {
+            var maxAccountIdentificationNumber = Context.PaymentCards
+                .Max(p => (long?)p.AccountIdentificationNumber);
+
+            if (maxAccountIdentificationNumber == null)
+                return 0;
+
+            return (long)(maxAccountIdentificationNumber + 1);
+        }
+
+        protected string GetAccountIdentificationNumber(int length, long accountNumber)
+        {
+            return accountNumber.ToString($"D{length - BankIdentificationNumberAndCheckDigitLength}");
+        }
+
+        public byte GenerateCheckDigit(string number)
         {
             var sum = 0;
             var oddPosition = false;

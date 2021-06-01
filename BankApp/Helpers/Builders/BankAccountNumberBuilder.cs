@@ -166,12 +166,12 @@ namespace BankApp.Helpers.Builders
 
         private long GenerateAccountNumber()
         {
-            var maxAccountNumber = _context.BankAccounts.Max(b => (long?)b.AccountNumber) ?? -1;
+            var maxAccountNumber = _context.BankAccounts.Max(b => (long?)b.AccountNumber);
 
-            if (maxAccountNumber == -1)
+            if (maxAccountNumber == null)
                 return 0;
 
-            return maxAccountNumber + 1;
+            return (long)(maxAccountNumber + 1);
         }
 
         private string GetAccountNumberText(long accountNumber)

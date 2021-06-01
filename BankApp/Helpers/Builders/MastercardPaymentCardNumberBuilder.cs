@@ -9,18 +9,16 @@ using BankApp.Models;
 
 namespace BankApp.Helpers.Builders
 {
-    public class MastercardPaymentCardNumberBuilder : IPaymentCardNumberBuilder
+    public class MastercardPaymentCardNumberBuilder : PaymentCardNumberBuilder, IPaymentCardNumberBuilder
     {
-        private readonly ApplicationDbContext _context;
-
         public MastercardPaymentCardNumberBuilder(ApplicationDbContext context)
+            : base(context)
         {
-            _context = context;
         }
 
         public PaymentCardNumber GeneratePaymentCardNumber(int length, int bankAccountId)
         {
-            var bankAccount = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
+            var bankAccount = Context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountId);
             if (bankAccount == null)
                 throw new ArgumentException($"Bank account with id {bankAccountId} doesn't exist.");
 
@@ -28,7 +26,7 @@ namespace BankApp.Helpers.Builders
                 throw new ArgumentException("Requested Mastercard payment card number length is invalid.");
 
             var bankIdentificationNumber =
-                _context.BankIdentificationNumberData.FirstOrDefault(bin =>
+                Context.BankIdentificationNumberData.FirstOrDefault(bin =>
                     bin.IssuingNetwork == IssuingNetwork.Mastercard);
             if (bankIdentificationNumber == null)
                 throw new InvalidDataInDatabaseException(
@@ -39,30 +37,18 @@ namespace BankApp.Helpers.Builders
                 throw new InvalidDataInDatabaseException(
                     "Mastercard bank identification number found in database is invalid.");
 
-            var accountIdentificationNumber =
-                PaymentCardNumberBuilder.GetAccountIdentificationNumber(length, bankAccount.AccountNumberText);
-
-            var maxAccountIdentificationNumber = _context.PaymentCards
-                .Where(p => p.BankIdentificationNumber == bankIdentificationNumber.BankIdentificationNumber)
-                .Where(p => p.AccountIdentificationNumber == long.Parse(accountIdentificationNumber))
-                .Max(p => (int?)p.AccountIdentificationNumber);
-
-            if (maxAccountIdentificationNumber != null)
-                accountIdentificationNumber =
-                    PaymentCardNumberBuilder.GetAccountIdentificationNumber(length,
-                        ((int)maxAccountIdentificationNumber + 1).ToString("D16"));
-
-            var paymentCardNumberWithoutCheckDigit =
-                $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumber}";
-            var checkDigit = PaymentCardNumberBuilder.GenerateCheckDigit(paymentCardNumberWithoutCheckDigit);
+            var accountIdentificationNumber = GenerateAccountIdentificationNumber();
+            var accountIdentificationNumberText = GetAccountIdentificationNumber(length, accountIdentificationNumber);
+            var paymentCardNumberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumberText}";
+            var checkDigit = GenerateCheckDigit(paymentCardNumberWithoutCheckDigit);
             var paymentCardNumber = $"{paymentCardNumberWithoutCheckDigit}{checkDigit}";
 
             return new PaymentCardNumber
             {
                 MajorIndustryIdentifier = byte.Parse(paymentCardNumber.Substring(0, 1)),
                 BankIdentificationNumber = bankIdentificationNumber.BankIdentificationNumber,
-                AccountIdentificationNumber = long.Parse(accountIdentificationNumber),
-                AccountIdentificationNumberText = accountIdentificationNumber,
+                AccountIdentificationNumber = accountIdentificationNumber,
+                AccountIdentificationNumberText = accountIdentificationNumberText,
                 CheckDigit = checkDigit,
                 Number = paymentCardNumber,
                 IssuingNetwork = IssuingNetwork.Mastercard
