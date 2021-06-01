@@ -24,7 +24,7 @@ namespace BankApp.Helpers.Builders
 
                 case JTokenType.Array:
                 {
-                    if (((JArray) jToken).First.Type == JTokenType.Object)
+                    if (((JArray) jToken).First?.Type == JTokenType.Object)
                         foreach (var arrayItem in (JArray) jToken)
                             if (arrayItem.Type == JTokenType.Object)
                                 SetSanitizedValue((JObject) arrayItem);
