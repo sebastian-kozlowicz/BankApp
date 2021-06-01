@@ -9,7 +9,7 @@ namespace BankApp.Helpers.Builders
 {
     public class LogSanitizedBuilder : ILogSanitizedBuilder
     {
-        private const string _sanitizedValue = "[Sanitized]";
+        private const string SanitizedValue = "[Sanitized]";
         private IList<string> _propertyNamesToSanitize;
 
         public string SanitizePayload(JToken jToken, List<string> propertyNamesToSanitize)
@@ -19,7 +19,7 @@ namespace BankApp.Helpers.Builders
             switch (jToken.Type)
             {
                 case JTokenType.Object:
-                    SetSanitizedValue((JObject) jToken);
+                    SetSanitizedValueInProperties((JObject) jToken);
                     break;
 
                 case JTokenType.Array:
@@ -27,7 +27,7 @@ namespace BankApp.Helpers.Builders
                     if (((JArray) jToken).First?.Type == JTokenType.Object)
                         foreach (var arrayItem in (JArray) jToken)
                             if (arrayItem.Type == JTokenType.Object)
-                                SetSanitizedValue((JObject) arrayItem);
+                                SetSanitizedValueInProperties((JObject) arrayItem);
                     break;
                 }
             }
@@ -41,13 +41,13 @@ namespace BankApp.Helpers.Builders
 
             foreach (var (key, value) in headers)
                 sanitizedHeadersAsString.Add(headerNamesToSanitize.Contains(key)
-                    ? $"{key}: {_sanitizedValue}"
+                    ? $"{key}: {SanitizedValue}"
                     : $"{key}: {value}");
 
             return sanitizedHeadersAsString;
         }
 
-        private void SetSanitizedValue(JObject jObject)
+        private void SetSanitizedValueInProperties(JObject jObject)
         {
             foreach (var jProperty in jObject.Properties())
             {
@@ -56,16 +56,16 @@ namespace BankApp.Helpers.Builders
                 if (children.Any())
                     foreach (var child in children)
                         if (child is JObject childJObject)
-                            SetSanitizedValue(childJObject);
+                            SetSanitizedValueInProperties(childJObject);
 
                 if (jProperty.Value.Type == JTokenType.Array)
-                    if (jProperty.First.Type == JTokenType.Object)
+                    if (jProperty.First?.Type == JTokenType.Object)
                         foreach (var jToken in jProperty.Value)
                             if (jToken is JObject childJObject)
-                                SetSanitizedValue(childJObject);
+                                SetSanitizedValueInProperties(childJObject);
 
                 if (_propertyNamesToSanitize.Contains(jProperty.Name))
-                    jProperty.Value = _sanitizedValue;
+                    jProperty.Value = SanitizedValue;
             }
         }
     }
