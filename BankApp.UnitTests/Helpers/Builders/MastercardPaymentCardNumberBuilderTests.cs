@@ -18,7 +18,7 @@ namespace BankApp.UnitTests.Helpers.Builders
     {
         private MastercardPaymentCardNumberBuilder _sut;
         private ApplicationDbContext _context;
-        private readonly BankAccount _bankAccount = new BankAccount
+        private readonly BankAccount _bankAccount = new()
         {
             Id = 1,
             AccountNumber = 12000000000000,
