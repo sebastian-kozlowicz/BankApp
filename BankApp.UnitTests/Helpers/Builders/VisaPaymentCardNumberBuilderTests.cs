@@ -19,8 +19,6 @@ namespace BankApp.UnitTests.Helpers.Builders
         private readonly BankAccount _bankAccount = new()
         {
             Id = 1,
-            AccountNumber = 12000000000000,
-            AccountNumberText = "0012000000000000",
             CustomerId = 1,
             CreatedById = 1
         };
@@ -97,6 +95,33 @@ namespace BankApp.UnitTests.Helpers.Builders
         {
             // Act
             var result = _sut.GeneratePaymentCardNumber(length, _bankAccount.Id);
+
+            // Assert
+            result.Should().BeEquivalentTo(expectedPaymentCardNumber);
+        }
+
+        [TestMethod]
+        public void
+            GeneratePaymentCardNumber_Should_ReturnPaymentCardNumberWithIteratedAccountIdentificationNumber_When_SomePaymentCardExistsInDb()
+        {
+            // Arrange
+            _context.PaymentCards.Add(new PaymentCard());
+            _context.SaveChanges();
+
+            var expectedPaymentCardNumber = new PaymentCardNumber
+            {
+                MajorIndustryIdentifier = 4,
+                BankIdentificationNumber = 427329,
+                AccountIdentificationNumber = 1,
+                AccountIdentificationNumberText = "000001",
+                CheckDigit = 6,
+                Number = "4273290000016",
+                IssuingNetwork = IssuingNetwork.Visa
+            };
+
+            // Act
+            var result =
+                _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Thirteen, _bankAccount.Id);
 
             // Assert
             result.Should().BeEquivalentTo(expectedPaymentCardNumber);

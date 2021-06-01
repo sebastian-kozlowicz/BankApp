@@ -10,12 +10,12 @@ namespace BankApp.Configuration
             {
                 public const int Thirteen = 13;
                 public const int Sixteen = 16;
-                public static readonly List<int> AcceptedLengths = new List<int> { Thirteen, Sixteen };
+                public static readonly List<int> AcceptedLengths = new() {Thirteen, Sixteen};
             }
 
             public static class Prefix
             {
-                public static readonly List<string> ValidPrefixes = new List<string> { "4" };
+                public static readonly List<string> ValidPrefixes = new() {"4"};
             }
         }
 
@@ -24,12 +24,12 @@ namespace BankApp.Configuration
             public static class Length
             {
                 public const int Sixteen = 16;
-                public static readonly List<int> AcceptedLengths = new List<int> { Sixteen };
+                public static readonly List<int> AcceptedLengths = new() {Sixteen};
             }
 
             public static class Prefix
             {
-                public static readonly List<string> ValidPrefixes = new List<string> { "51", "52", "53", "54", "55" };
+                public static readonly List<string> ValidPrefixes = new() {"51", "52", "53", "54", "55"};
             }
         }
     }

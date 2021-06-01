@@ -18,8 +18,6 @@ namespace BankApp.UnitTests.Helpers.Builders
         private readonly BankAccount _bankAccount = new()
         {
             Id = 1,
-            AccountNumber = 12000000000000,
-            AccountNumberText = "0012000000000000",
             CustomerId = 1,
             CreatedById = 1
         };
@@ -36,9 +34,9 @@ namespace BankApp.UnitTests.Helpers.Builders
             var context = new ApplicationDbContext(options);
 
             context.BankIdentificationNumberData.Add(new BankIdentificationNumberData
-                {Id = 1, BankIdentificationNumber = 510918, IssuingNetwork = IssuingNetwork.Mastercard});
+            { Id = 1, BankIdentificationNumber = 510918, IssuingNetwork = IssuingNetwork.Mastercard });
             context.BankAccounts.Add(_bankAccount);
-            context.Users.Add(new ApplicationUser {Id = 1, Customer = new Customer {Id = 1}});
+            context.Users.Add(new ApplicationUser { Id = 1, Customer = new Customer { Id = 1 } });
             context.SaveChanges();
 
             return context;
@@ -63,6 +61,33 @@ namespace BankApp.UnitTests.Helpers.Builders
                 AccountIdentificationNumberText = "000000000",
                 CheckDigit = 9,
                 Number = "5109180000000009",
+                IssuingNetwork = IssuingNetwork.Mastercard
+            };
+
+            // Act
+            var result =
+                _sut.GeneratePaymentCardNumber(IssuingNetworkSettings.Mastercard.Length.Sixteen, _bankAccount.Id);
+
+            // Assert
+            result.Should().BeEquivalentTo(expectedPaymentCardNumber);
+        }
+
+        [TestMethod]
+        public void
+            GeneratePaymentCardNumber_Should_ReturnPaymentCardNumberWithIteratedAccountIdentificationNumber_When_SomePaymentCardExistsInDb()
+        {
+            // Arrange
+            _context.PaymentCards.Add(new PaymentCard());
+            _context.SaveChanges();
+
+            var expectedPaymentCardNumber = new PaymentCardNumber
+            {
+                MajorIndustryIdentifier = 5,
+                BankIdentificationNumber = 510918,
+                AccountIdentificationNumber = 1,
+                AccountIdentificationNumberText = "000000001",
+                CheckDigit = 7,
+                Number = "5109180000000017",
                 IssuingNetwork = IssuingNetwork.Mastercard
             };
 
@@ -127,7 +152,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                 _context.BankIdentificationNumberData.FirstOrDefault(bin =>
                     bin.IssuingNetwork == IssuingNetwork.Mastercard));
             _context.BankIdentificationNumberData.Add(new BankIdentificationNumberData
-                {Id = 1, BankIdentificationNumber = 127329, IssuingNetwork = IssuingNetwork.Mastercard});
+            { Id = 1, BankIdentificationNumber = 127329, IssuingNetwork = IssuingNetwork.Mastercard });
             _context.SaveChanges();
 
             // Act
