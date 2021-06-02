@@ -52,7 +52,7 @@ namespace BankApp.Helpers.Builders.Logging
             else
                 foreach (var (key, value) in requestInfo.ActionArguments)
                 {
-                    var payload = JToken.FromObject(value).ToString(Formatting.None);
+                    var payload = JsonConvert.SerializeObject(value, Formatting.None);
                     actionArgumentsAsString.Add($"{key}: {payload}");
                 }
 
@@ -81,10 +81,15 @@ namespace BankApp.Helpers.Builders.Logging
                     headersAsString.Add($"{key}: {value}");
             }
 
-            var result = responseInfo.IsServerErrorStatusCode
-                ? responseInfo.ExceptionMessage
-                : _logSanitizedBuilder.SanitizePayload(JToken.FromObject(responseInfo.Result),
+            string result;
+
+            if (responseInfo.IsServerErrorStatusCode)
+                result = responseInfo.ExceptionMessage;
+            else if (_logSanitizationOptions.IsEnabled)
+                result = _logSanitizedBuilder.SanitizePayload(JToken.FromObject(responseInfo.Result),
                     _propertyNamesToSanitize);
+            else
+                result = JsonConvert.SerializeObject(responseInfo.Result);
 
             var responseStringBuilder = new StringBuilder();
             responseStringBuilder.Append($"Http Response Information: {Environment.NewLine}" +
