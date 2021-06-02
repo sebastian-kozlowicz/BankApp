@@ -32,12 +32,12 @@ namespace BankApp.Helpers.Builders.Logging
                     var nestedProperties = type.GetProperties();
                     if (nestedProperties.Length != 0)
                         AddSensitivePropertyInfoNamesToList(nestedProperties);
+
+                    var attributes = propertyInfo.GetCustomAttributes();
+
+                    if (attributes.Any(a => a is SensitiveDataAttribute))
+                        _sensitiveProperties.Add(propertyInfo.Name);
                 }
-
-                var attributes = propertyInfo.GetCustomAttributes();
-
-                if (attributes.Any(o => o is SensitiveDataAttribute))
-                    _sensitiveProperties.Add(propertyInfo.Name);
             }
         }
     }

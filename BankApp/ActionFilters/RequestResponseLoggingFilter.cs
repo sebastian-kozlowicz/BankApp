@@ -1,5 +1,4 @@
-﻿using BankApp.Interfaces.Builders;
-using BankApp.Interfaces.Builders.Logging;
+﻿using BankApp.Interfaces.Builders.Logging;
 using BankApp.Models.RequestResponseLogging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;

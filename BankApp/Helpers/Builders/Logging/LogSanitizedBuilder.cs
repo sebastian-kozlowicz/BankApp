@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using BankApp.Interfaces.Builders.Logging;
 using Microsoft.AspNetCore.Http;
@@ -24,10 +25,9 @@ namespace BankApp.Helpers.Builders.Logging
 
                 case JTokenType.Array:
                 {
-                    if (((JArray) jToken).First?.Type == JTokenType.Object)
-                        foreach (var arrayItem in (JArray) jToken)
-                            if (arrayItem.Type == JTokenType.Object)
-                                SetSanitizedValueInProperties((JObject) arrayItem);
+                    foreach (var arrayItem in jToken)
+                        if (arrayItem.Type == JTokenType.Object)
+                            SetSanitizedValueInProperties((JObject) arrayItem);
                     break;
                 }
             }
@@ -59,12 +59,11 @@ namespace BankApp.Helpers.Builders.Logging
                             SetSanitizedValueInProperties(childJObject);
 
                 if (jProperty.Value.Type == JTokenType.Array)
-                    if (jProperty.First?.Type == JTokenType.Object)
-                        foreach (var jToken in jProperty.Value)
-                            if (jToken is JObject childJObject)
-                                SetSanitizedValueInProperties(childJObject);
+                    foreach (var arrayItem in jProperty.Value)
+                        if (arrayItem is JObject childJObject)
+                            SetSanitizedValueInProperties(childJObject);
 
-                if (_propertyNamesToSanitize.Contains(jProperty.Name))
+                if (_propertyNamesToSanitize.Contains(jProperty.Name, StringComparer.OrdinalIgnoreCase))
                     jProperty.Value = SanitizedValue;
             }
         }
