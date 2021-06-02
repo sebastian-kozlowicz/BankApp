@@ -3,7 +3,7 @@ using System.Security.Claims;
 using BankApp.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BankApp.Interfaces.Builders
+namespace BankApp.Interfaces.Builders.Auth
 {
     public interface IJwtBuilder
     {

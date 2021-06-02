@@ -5,6 +5,7 @@ using BankApp.Data;
 using BankApp.Enumerators;
 using BankApp.Exceptions;
 using BankApp.Interfaces.Builders;
+using BankApp.Interfaces.Builders.Number;
 using BankApp.Models;
 
 namespace BankApp.Helpers.Builders.Number

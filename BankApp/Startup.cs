@@ -12,6 +12,9 @@ using BankApp.Helpers.Builders.Number;
 using BankApp.Helpers.Factories;
 using BankApp.Helpers.Services;
 using BankApp.Interfaces.Builders;
+using BankApp.Interfaces.Builders.Auth;
+using BankApp.Interfaces.Builders.Logging;
+using BankApp.Interfaces.Builders.Number;
 using BankApp.Interfaces.Factories;
 using BankApp.Interfaces.Services;
 using BankApp.Middlewares;
@@ -80,6 +83,7 @@ namespace BankApp
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
             services.AddScoped<ILogSanitizedBuilder, LogSanitizedBuilder>();
+            services.AddScoped<ISensitiveDataPropertyNamesBuilder, SensitiveDataPropertyNamesBuilder>();
             services.AddScoped<IRequestResponseLoggingBuilder, RequestResponseLoggingBuilder>();
             services.AddScoped<RequestResponseLoggingMiddleware>();
             services.AddScoped<RequestResponseLoggingFilter>();

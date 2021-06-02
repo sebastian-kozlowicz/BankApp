@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BankApp.Configuration;
-using BankApp.Interfaces.Builders;
+using BankApp.Interfaces.Builders.Logging;
 using BankApp.Models.RequestResponseLogging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
@@ -16,12 +16,15 @@ namespace BankApp.Helpers.Builders.Logging
         private readonly List<string> _headerNamesToSanitize = new() {"Authentication"};
         private readonly LogSanitizationOptions _logSanitizationOptions;
         private readonly ILogSanitizedBuilder _logSanitizedBuilder;
-        private readonly List<string> _propertyNamesToSanitize = new() {"email", "login", "password"};
+        private readonly ISensitiveDataPropertyNamesBuilder _sensitiveDataPropertyNamesBuilder;
+        private List<string> _propertyNamesToSanitize;
 
         public RequestResponseLoggingBuilder(IOptions<LogSanitizationOptions> logSanitizationOptions,
-            ILogSanitizedBuilder logSanitizedBuilder)
+            ILogSanitizedBuilder logSanitizedBuilder,
+            ISensitiveDataPropertyNamesBuilder sensitiveDataPropertyNamesBuilder)
         {
             _logSanitizedBuilder = logSanitizedBuilder;
+            _sensitiveDataPropertyNamesBuilder = sensitiveDataPropertyNamesBuilder;
             _logSanitizationOptions = logSanitizationOptions.Value;
         }
 
@@ -29,6 +32,11 @@ namespace BankApp.Helpers.Builders.Logging
         {
             var headersAsString = new List<string>();
             var actionArgumentsAsString = new List<string>();
+
+            if (_logSanitizationOptions.IsEnabled)
+                foreach (var value in requestInfo.ActionArguments.Values)
+                    _propertyNamesToSanitize =
+                        _sensitiveDataPropertyNamesBuilder.GetSensitivePropertiesFromObject(value);
 
             if (_logSanitizationOptions.IsEnabled)
             {

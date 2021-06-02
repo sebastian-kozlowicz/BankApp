@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using BankApp.Data;
 using BankApp.Interfaces.Builders;
+using BankApp.Interfaces.Builders.Number;
 using BankApp.Models;
 
 namespace BankApp.Helpers.Builders.Number

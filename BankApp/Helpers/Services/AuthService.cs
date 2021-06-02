@@ -7,6 +7,7 @@ using BankApp.Data;
 using BankApp.Dtos.Auth;
 using BankApp.Exceptions;
 using BankApp.Interfaces.Builders;
+using BankApp.Interfaces.Builders.Auth;
 using BankApp.Interfaces.Services;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;

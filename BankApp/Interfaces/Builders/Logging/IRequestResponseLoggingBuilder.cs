@@ -1,6 +1,6 @@
 ﻿using BankApp.Models.RequestResponseLogging;
 
-namespace BankApp.Interfaces.Builders
+namespace BankApp.Interfaces.Builders.Logging
 {
     public interface IRequestResponseLoggingBuilder
     {

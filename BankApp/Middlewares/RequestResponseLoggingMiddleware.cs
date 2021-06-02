@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using BankApp.Configuration;
 using BankApp.Interfaces.Builders;
+using BankApp.Interfaces.Builders.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
