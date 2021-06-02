@@ -6,7 +6,7 @@ using BankApp.Data;
 using BankApp.Interfaces.Builders;
 using BankApp.Models;
 
-namespace BankApp.Helpers.Builders
+namespace BankApp.Helpers.Builders.Number
 {
     public class BankAccountNumberBuilder : IBankAccountNumberBuilder
     {

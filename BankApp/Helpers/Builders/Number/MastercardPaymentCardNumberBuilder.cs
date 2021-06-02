@@ -7,11 +7,11 @@ using BankApp.Exceptions;
 using BankApp.Interfaces.Builders;
 using BankApp.Models;
 
-namespace BankApp.Helpers.Builders
+namespace BankApp.Helpers.Builders.Number
 {
-    public class VisaPaymentCardNumberBuilder : PaymentCardNumberBuilder, IPaymentCardNumberBuilder
+    public class MastercardPaymentCardNumberBuilder : PaymentCardNumberBuilder, IPaymentCardNumberBuilder
     {
-        public VisaPaymentCardNumberBuilder(ApplicationDbContext context)
+        public MastercardPaymentCardNumberBuilder(ApplicationDbContext context)
             : base(context)
         {
         }
@@ -22,19 +22,20 @@ namespace BankApp.Helpers.Builders
             if (bankAccount == null)
                 throw new ArgumentException($"Bank account with id {bankAccountId} doesn't exist.");
 
-            if (!IssuingNetworkSettings.Visa.Length.AcceptedLengths.Contains(length))
-                throw new ArgumentException("Requested Visa payment card number length is invalid.");
+            if (!IssuingNetworkSettings.Mastercard.Length.AcceptedLengths.Contains(length))
+                throw new ArgumentException("Requested Mastercard payment card number length is invalid.");
 
             var bankIdentificationNumber =
-                Context.BankIdentificationNumberData.FirstOrDefault(bin => bin.IssuingNetwork == IssuingNetwork.Visa);
+                Context.BankIdentificationNumberData.FirstOrDefault(bin =>
+                    bin.IssuingNetwork == IssuingNetwork.Mastercard);
             if (bankIdentificationNumber == null)
                 throw new InvalidDataInDatabaseException(
-                    $"Bank identification number data for {IssuingNetwork.Visa} issuing network doesn't exist in database.");
+                    $"Bank identification number data for {IssuingNetwork.Mastercard} issuing network doesn't exist in database.");
 
-            if (!IssuingNetworkSettings.Visa.Prefix.ValidPrefixes.Any(prefix =>
+            if (!IssuingNetworkSettings.Mastercard.Prefix.ValidPrefixes.Any(prefix =>
                 bankIdentificationNumber.BankIdentificationNumber.ToString().StartsWith(prefix)))
                 throw new InvalidDataInDatabaseException(
-                    "Visa bank identification number found in database is invalid.");
+                    "Mastercard bank identification number found in database is invalid.");
 
             var accountIdentificationNumber = GenerateAccountIdentificationNumber();
             var accountIdentificationNumberText = GetAccountIdentificationNumber(length, accountIdentificationNumber);
@@ -50,7 +51,7 @@ namespace BankApp.Helpers.Builders
                 AccountIdentificationNumberText = accountIdentificationNumberText,
                 CheckDigit = checkDigit,
                 Number = paymentCardNumber,
-                IssuingNetwork = IssuingNetwork.Visa
+                IssuingNetwork = IssuingNetwork.Mastercard
             };
         }
     }

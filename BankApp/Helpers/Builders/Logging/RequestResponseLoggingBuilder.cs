@@ -9,11 +9,11 @@ using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace BankApp.Helpers.Builders
+namespace BankApp.Helpers.Builders.Logging
 {
     public class RequestResponseLoggingBuilder : IRequestResponseLoggingBuilder
     {
-        private readonly List<string> _headersNamesToSanitize = new() {"Authentication"};
+        private readonly List<string> _headerNamesToSanitize = new() {"Authentication"};
         private readonly LogSanitizationOptions _logSanitizationOptions;
         private readonly ILogSanitizedBuilder _logSanitizedBuilder;
         private readonly List<string> _propertyNamesToSanitize = new() {"email", "login", "password"};
@@ -33,7 +33,7 @@ namespace BankApp.Helpers.Builders
             if (_logSanitizationOptions.IsEnabled)
             {
                 var sanitizedHeaders =
-                    _logSanitizedBuilder.SanitizeHeaders(requestInfo.Headers, _headersNamesToSanitize);
+                    _logSanitizedBuilder.SanitizeHeaders(requestInfo.Headers, _headerNamesToSanitize);
                 headersAsString = sanitizedHeaders;
             }
             else
@@ -72,7 +72,7 @@ namespace BankApp.Helpers.Builders
             if (_logSanitizationOptions.IsEnabled)
             {
                 var sanitizedHeaders =
-                    _logSanitizedBuilder.SanitizeHeaders(responseInfo.Headers, _headersNamesToSanitize);
+                    _logSanitizedBuilder.SanitizeHeaders(responseInfo.Headers, _headerNamesToSanitize);
                 headersAsString = sanitizedHeaders;
             }
             else

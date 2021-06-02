@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using BankApp.Data;
 
-namespace BankApp.Helpers.Builders
+namespace BankApp.Helpers.Builders.Number
 {
     public abstract class PaymentCardNumberBuilder
     {

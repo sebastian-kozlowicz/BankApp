@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace BankApp.Helpers.Builders
+namespace BankApp.Helpers.Builders.Logging
 {
     public class LogSanitizedBuilder : ILogSanitizedBuilder
     {

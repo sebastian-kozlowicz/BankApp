@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using BankApp.Attributes;
 
 namespace BankApp.Dtos.ApplicationUser
 {
@@ -14,6 +15,7 @@ namespace BankApp.Dtos.ApplicationUser
 
         [Required]
         [EmailAddress]
+        [SensitiveData]
         public string Email { get; set; }
 
         [Required]

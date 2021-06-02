@@ -10,7 +10,7 @@ using BankApp.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BankApp.Helpers.Builders
+namespace BankApp.Helpers.Builders.Auth
 {
     public class JwtBuilder : IJwtBuilder
     {
