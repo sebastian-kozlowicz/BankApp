@@ -13,7 +13,7 @@ namespace BankApp.Helpers.Builders.Logging
 {
     public class RequestResponseLoggingBuilder : IRequestResponseLoggingBuilder
     {
-        private readonly List<string> _headerNamesToSanitize = new() {"Authentication"};
+        private readonly List<string> _headerNamesToSanitize = new() { "Authentication" };
         private readonly LogSanitizationOptions _logSanitizationOptions;
         private readonly ILogSanitizedBuilder _logSanitizedBuilder;
         private readonly ISensitiveDataPropertyNamesBuilder _sensitiveDataPropertyNamesBuilder;
@@ -94,8 +94,13 @@ namespace BankApp.Helpers.Builders.Logging
             if (responseInfo.IsServerErrorStatusCode)
                 result = responseInfo.ExceptionMessage;
             else if (_logSanitizationOptions.IsEnabled)
+            {
+                _propertyNamesToSanitize =
+                    _sensitiveDataPropertyNamesBuilder.GetSensitivePropertiesFromObject(responseInfo.Result);
+
                 result = _logSanitizedBuilder.SanitizePayload(JToken.FromObject(responseInfo.Result),
                     _propertyNamesToSanitize);
+            }
             else
                 result = JsonConvert.SerializeObject(responseInfo.Result);
 
