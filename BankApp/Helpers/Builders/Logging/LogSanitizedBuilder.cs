@@ -15,7 +15,7 @@ namespace BankApp.Helpers.Builders.Logging
 
         public string SanitizePayload(JToken jToken, List<string> propertyNamesToSanitize)
         {
-            _propertyNamesToSanitize = propertyNamesToSanitize;
+            _propertyNamesToSanitize = propertyNamesToSanitize ?? new List<string>();
 
             switch (jToken.Type)
             {

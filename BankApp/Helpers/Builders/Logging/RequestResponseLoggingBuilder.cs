@@ -13,11 +13,10 @@ namespace BankApp.Helpers.Builders.Logging
 {
     public class RequestResponseLoggingBuilder : IRequestResponseLoggingBuilder
     {
-        private readonly List<string> _headerNamesToSanitize = new() { "Authentication" };
+        private readonly List<string> _headerNamesToSanitize = new() {"Authentication"};
         private readonly LogSanitizationOptions _logSanitizationOptions;
         private readonly ILogSanitizedBuilder _logSanitizedBuilder;
         private readonly ISensitiveDataPropertyNamesBuilder _sensitiveDataPropertyNamesBuilder;
-        private List<string> _propertyNamesToSanitize;
 
         public RequestResponseLoggingBuilder(IOptions<LogSanitizationOptions> logSanitizationOptions,
             ILogSanitizedBuilder logSanitizedBuilder,
@@ -32,11 +31,12 @@ namespace BankApp.Helpers.Builders.Logging
         {
             var headersAsString = new List<string>();
             var actionArgumentsAsString = new List<string>();
+            var propertyNamesToSanitize = new List<string>();
 
             if (_logSanitizationOptions.IsEnabled)
                 foreach (var value in requestInfo.ActionArguments.Values)
-                    _propertyNamesToSanitize =
-                        _sensitiveDataPropertyNamesBuilder.GetSensitivePropertiesFromObject(value);
+                    propertyNamesToSanitize.AddRange(
+                        _sensitiveDataPropertyNamesBuilder.GetSensitivePropertiesFromObject(value));
 
             if (_logSanitizationOptions.IsEnabled)
             {
@@ -54,7 +54,7 @@ namespace BankApp.Helpers.Builders.Logging
                 foreach (var (key, value) in requestInfo.ActionArguments)
                 {
                     var sanitizedPayload = _logSanitizedBuilder.SanitizePayload(JToken.FromObject(value),
-                        _propertyNamesToSanitize);
+                        propertyNamesToSanitize);
                     actionArgumentsAsString.Add($"{key}: {sanitizedPayload}");
                 }
             else
@@ -76,6 +76,7 @@ namespace BankApp.Helpers.Builders.Logging
         public string GenerateResponseLogMessage(ResponseInfo responseInfo)
         {
             var headersAsString = new List<string>();
+            var propertyNamesToSanitize = new List<string>();
 
             if (_logSanitizationOptions.IsEnabled)
             {
@@ -92,17 +93,21 @@ namespace BankApp.Helpers.Builders.Logging
             string result;
 
             if (responseInfo.IsServerErrorStatusCode)
+            {
                 result = responseInfo.ExceptionMessage;
+            }
             else if (_logSanitizationOptions.IsEnabled)
             {
-                _propertyNamesToSanitize =
-                    _sensitiveDataPropertyNamesBuilder.GetSensitivePropertiesFromObject(responseInfo.Result);
+                propertyNamesToSanitize.AddRange(
+                    _sensitiveDataPropertyNamesBuilder.GetSensitivePropertiesFromObject(responseInfo.Result));
 
                 result = _logSanitizedBuilder.SanitizePayload(JToken.FromObject(responseInfo.Result),
-                    _propertyNamesToSanitize);
+                    propertyNamesToSanitize);
             }
             else
+            {
                 result = JsonConvert.SerializeObject(responseInfo.Result);
+            }
 
             var responseStringBuilder = new StringBuilder();
             responseStringBuilder.Append($"Http Response Information: {Environment.NewLine}" +
