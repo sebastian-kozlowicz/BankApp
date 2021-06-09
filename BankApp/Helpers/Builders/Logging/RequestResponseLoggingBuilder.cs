@@ -13,7 +13,7 @@ namespace BankApp.Helpers.Builders.Logging
 {
     public class RequestResponseLoggingBuilder : IRequestResponseLoggingBuilder
     {
-        private readonly List<string> _headerNamesToSanitize = new() {"Authentication"};
+        private readonly List<string> _headerNamesToSanitize;
         private readonly LogSanitizationOptions _logSanitizationOptions;
         private readonly ILogSanitizedBuilder _logSanitizedBuilder;
         private readonly ISensitiveDataPropertyNamesBuilder _sensitiveDataPropertyNamesBuilder;
@@ -25,6 +25,10 @@ namespace BankApp.Helpers.Builders.Logging
             _logSanitizedBuilder = logSanitizedBuilder;
             _sensitiveDataPropertyNamesBuilder = sensitiveDataPropertyNamesBuilder;
             _logSanitizationOptions = logSanitizationOptions.Value;
+            _headerNamesToSanitize = _logSanitizationOptions.HeaderNamesToSanitize != null &&
+                                     _logSanitizationOptions.HeaderNamesToSanitize.Any()
+                ? _logSanitizationOptions.HeaderNamesToSanitize
+                : new List<string>();
         }
 
         public string GenerateRequestLogMessage(RequestInfo requestInfo)
