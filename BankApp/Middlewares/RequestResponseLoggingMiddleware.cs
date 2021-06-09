@@ -5,7 +5,6 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using BankApp.Configuration;
-using BankApp.Interfaces.Builders;
 using BankApp.Interfaces.Builders.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
@@ -96,7 +95,6 @@ namespace BankApp.Middlewares
                 catch (Exception)
                 {
                 }
-
             }
 
             _logger.LogInformation($"Http Request Information: {Environment.NewLine}" +
@@ -134,7 +132,6 @@ namespace BankApp.Middlewares
                 catch (Exception)
                 {
                 }
-
             }
 
             _logger.LogInformation($"Http Response Information: {Environment.NewLine}" +
