@@ -1,7 +1,7 @@
 ﻿using System;
 using BankApp.Attributes;
 
-namespace BankApp.UnitTests.Helpers.Builders.HelperModels
+namespace BankApp.UnitTests.Helpers.Builders.HelperModels.ListModel
 {
     public class ComplexListModel
     {

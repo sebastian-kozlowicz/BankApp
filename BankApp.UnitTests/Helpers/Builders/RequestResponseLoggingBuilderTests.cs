@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using BankApp.Configuration;
 using BankApp.Helpers.Builders.Logging;
 using BankApp.Models.RequestResponseLogging;
-using BankApp.UnitTests.Helpers.Builders.HelperModels;
+using BankApp.UnitTests.Helpers.Builders.HelperModels.ListModel;
+using BankApp.UnitTests.Helpers.Builders.HelperModels.ObjectModel;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -38,49 +39,100 @@ namespace BankApp.UnitTests.Helpers.Builders
                 },
                 ActionArguments = new Dictionary<string, object>
                 {
-                    {"queryParamIds", new List<int> {1, 2, 3}},
+                    {"queryParamIntegers", new List<int> {1, 2, 3}},
+                    {"queryParamStrings", new List<string> {"one", "two", "three"}},
                     {
-                        "inputObject", new ParentModel
+                        "inputObject", new ParentObjectModel
                         {
-                            ParentInt = 1,
-                            ParentString = "String",
-                            ParentDateTime = new DateTime(2021, 1, 1),
-                            ChildModel = new ChildModel
+                            ParentObjectInt = 1,
+                            ParentObjectString = "String",
+                            ParentObjectDateTime = new DateTime(2021, 1, 1),
+                            ChildObjectModel = new ChildObjectModel
                             {
-                                ChildInt = 2,
-                                ChildString = "String2",
-                                ChildDateTime = new DateTime(2022, 12, 31),
-                                ComplexModel = new ComplexModel
+                                ChildObjectInt = 2,
+                                ChildObjectString = "String2",
+                                ChildObjectDateTime = new DateTime(2022, 12, 31),
+                                ComplexObjectModel = new ComplexObjectModel
                                 {
-                                    ComplexInt = 3,
-                                    ComplexString = "String3",
-                                    ComplexDateTime = new DateTime(2023, 1, 1)
+                                    ComplexObjectInt = 3,
+                                    ComplexObjectString = "String3",
+                                    ComplexObjectDateTime = new DateTime(2023, 1, 1)
                                 },
-                                ComplexModelSanitized = new ComplexModel
+                                ComplexObjectModelSanitized = new ComplexObjectModel
                                 {
-                                    ComplexInt = 4,
-                                    ComplexString = "String4",
-                                    ComplexDateTime = new DateTime(2023, 12, 31)
+                                    ComplexObjectInt = 4,
+                                    ComplexObjectString = "String4",
+                                    ComplexObjectDateTime = new DateTime(2023, 12, 31)
                                 }
                             },
-                            ChildListModel = new List<ChildListModel>
+                            ChildrenObjectModel = new List<ChildrenObjectModel>
                             {
                                 new()
                                 {
-                                    ChildListInt = 5,
-                                    ChildListString = "String5",
-                                    ChildListDateTime = new DateTime(2024, 1, 1),
+                                    ChildrenObjectInt = 5,
+                                    ChildrenObjectString = "String5",
+                                    ChildrenObjectDateTime = new DateTime(2024, 1, 1),
+                                    ComplexChildrenObjectModel = new ComplexChildrenObjectModel
+                                    {
+                                        ComplexChildrenObjectInt = 6,
+                                        ComplexChildrenObjectString = "String6",
+                                        ComplexChildrenObjectDateTime = new DateTime(2024, 12, 31)
+                                    },
+                                    ComplexChildrenObjectModelSanitized = new ComplexChildrenObjectModel
+                                    {
+                                        ComplexChildrenObjectInt = 7,
+                                        ComplexChildrenObjectString = "String7",
+                                        ComplexChildrenObjectDateTime = new DateTime(2025, 1, 1)
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    {
+                        "inputList", new List<ParentListModel>
+                        {
+                            new()
+                            {
+                                ParentListInt = 1,
+                                ParentListString = "String",
+                                ParentListDateTime = new DateTime(2021, 1, 1),
+                                ChildListModel = new ChildListModel
+                                {
+                                    ChildListInt = 2,
+                                    ChildListString = "String2",
+                                    ChildListDateTime = new DateTime(2022, 12, 31),
                                     ComplexListModel = new ComplexListModel
                                     {
-                                        ComplexListInt = 6,
-                                        ComplexListString = "String6",
-                                        ComplexListDateTime = new DateTime(2024, 12, 31)
+                                        ComplexListInt = 3,
+                                        ComplexListString = "String3",
+                                        ComplexListDateTime = new DateTime(2023, 1, 1)
                                     },
                                     ComplexListModelSanitized = new ComplexListModel
                                     {
-                                        ComplexListInt = 7,
-                                        ComplexListString = "String7",
-                                        ComplexListDateTime = new DateTime(2025, 1, 1)
+                                        ComplexListInt = 4,
+                                        ComplexListString = "String4",
+                                        ComplexListDateTime = new DateTime(2023, 12, 31)
+                                    }
+                                },
+                                ChildrenListModel = new List<ChildrenListModel>
+                                {
+                                    new()
+                                    {
+                                        ChildrenListInt = 5,
+                                        ChildrenListString = "String5",
+                                        ChildrenListDateTime = new DateTime(2024, 1, 1),
+                                        ComplexChildrenListModel = new ComplexChildrenListModel
+                                        {
+                                            ComplexChildrenListInt = 6,
+                                            ComplexChildrenListString = "String6",
+                                            ComplexChildrenListDateTime = new DateTime(2024, 12, 31)
+                                        },
+                                        ComplexChildrenListModelSanitized = new ComplexChildrenListModel
+                                        {
+                                            ComplexChildrenListInt = 7,
+                                            ComplexChildrenListString = "String7",
+                                            ComplexChildrenListDateTime = new DateTime(2025, 1, 1)
+                                        }
                                     }
                                 }
                             }
@@ -105,7 +157,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             // Assert
             result.Should()
                 .Be(
-                    "Http Request Information: \r\nTrace Identifier: 80000006-0000-fc00-b63f-84710c7967bb \r\nMethod: POST \r\nScheme:  \r\nPath: /api/unit-test \r\nHeaders: \r\nHost: {localhost:44387}\r\nAuthentication: {Bearer qwerty} \r\nAction Arguments: \r\nqueryParamIds: [1,2,3]\r\ninputObject: {\"ParentInt\":1,\"ParentString\":\"String\",\"ParentDateTime\":\"2021-01-01T00:00:00\",\"ChildModel\":{\"ChildInt\":2,\"ChildString\":\"String2\",\"ChildDateTime\":\"2022-12-31T00:00:00\",\"ComplexModel\":{\"ComplexInt\":3,\"ComplexString\":\"String3\",\"ComplexDateTime\":\"2023-01-01T00:00:00\"},\"ComplexModelSanitized\":{\"ComplexInt\":4,\"ComplexString\":\"String4\",\"ComplexDateTime\":\"2023-12-31T00:00:00\"}},\"ChildListModel\":[{\"ChildListInt\":5,\"ChildListString\":\"String5\",\"ChildListDateTime\":\"2024-01-01T00:00:00\",\"ComplexListModel\":{\"ComplexListInt\":6,\"ComplexListString\":\"String6\",\"ComplexListDateTime\":\"2024-12-31T00:00:00\"},\"ComplexListModelSanitized\":{\"ComplexListInt\":7,\"ComplexListString\":\"String7\",\"ComplexListDateTime\":\"2025-01-01T00:00:00\"}}]}");
+                    "Http Request Information: \r\nTrace Identifier: 80000006-0000-fc00-b63f-84710c7967bb \r\nMethod: POST \r\nScheme:  \r\nPath: /api/unit-test \r\nHeaders: \r\nHost: {localhost:44387}\r\nAuthentication: {Bearer qwerty} \r\nAction Arguments: \r\nqueryParamIntegers: [1,2,3]\r\nqueryParamStrings: [\"one\",\"two\",\"three\"]\r\ninputObject: {\"ParentObjectInt\":1,\"ParentObjectString\":\"String\",\"ParentObjectDateTime\":\"2021-01-01T00:00:00\",\"ChildObjectModel\":{\"ChildObjectInt\":2,\"ChildObjectString\":\"String2\",\"ChildObjectDateTime\":\"2022-12-31T00:00:00\",\"ComplexObjectModel\":{\"ComplexObjectInt\":3,\"ComplexObjectString\":\"String3\",\"ComplexObjectDateTime\":\"2023-01-01T00:00:00\"},\"ComplexObjectModelSanitized\":{\"ComplexObjectInt\":4,\"ComplexObjectString\":\"String4\",\"ComplexObjectDateTime\":\"2023-12-31T00:00:00\"}},\"ChildrenObjectModel\":[{\"ChildrenObjectInt\":5,\"ChildrenObjectString\":\"String5\",\"ChildrenObjectDateTime\":\"2024-01-01T00:00:00\",\"ComplexChildrenObjectModel\":{\"ComplexChildrenObjectInt\":6,\"ComplexChildrenObjectString\":\"String6\",\"ComplexChildrenObjectDateTime\":\"2024-12-31T00:00:00\"},\"ComplexChildrenObjectModelSanitized\":{\"ComplexChildrenObjectInt\":7,\"ComplexChildrenObjectString\":\"String7\",\"ComplexChildrenObjectDateTime\":\"2025-01-01T00:00:00\"}}]}\r\ninputList: [{\"ParentListInt\":1,\"ParentListString\":\"String\",\"ParentListDateTime\":\"2021-01-01T00:00:00\",\"ChildListModel\":{\"ChildListInt\":2,\"ChildListString\":\"String2\",\"ChildListDateTime\":\"2022-12-31T00:00:00\",\"ComplexListModel\":{\"ComplexListInt\":3,\"ComplexListString\":\"String3\",\"ComplexListDateTime\":\"2023-01-01T00:00:00\"},\"ComplexListModelSanitized\":{\"ComplexListInt\":4,\"ComplexListString\":\"String4\",\"ComplexListDateTime\":\"2023-12-31T00:00:00\"}},\"ChildrenListModel\":[{\"ChildrenListInt\":5,\"ChildrenListString\":\"String5\",\"ChildrenListDateTime\":\"2024-01-01T00:00:00\",\"ComplexChildrenListModel\":{\"ComplexChildrenListInt\":6,\"ComplexChildrenListString\":\"String6\",\"ComplexChildrenListDateTime\":\"2024-12-31T00:00:00\"},\"ComplexChildrenListModelSanitized\":{\"ComplexChildrenListInt\":7,\"ComplexChildrenListString\":\"String7\",\"ComplexChildrenListDateTime\":\"2025-01-01T00:00:00\"}}]}]");
         }
     }
 }
