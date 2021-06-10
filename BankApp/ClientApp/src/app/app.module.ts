@@ -30,11 +30,6 @@ import { AddressFormComponent } from "./forms/address-form/address-form.componen
 import { PersonalInformationFormComponent } from './forms/personal-information-form/personal-information-form.component';
 import { NewUserComponent } from './user/new-user/new-user.component';
 
-
-export function tokenGetter() {
-  return sessionStorage.getItem("token");
-}
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -65,7 +60,7 @@ export function tokenGetter() {
     ToastrModule.forRoot(),
     JwtModule.forRoot({
       config: {
-        tokenGetter: tokenGetter,
+        tokenGetter: () => sessionStorage.getItem("token"),
         allowedDomains: ["localhost:44387"]
       }
     }),

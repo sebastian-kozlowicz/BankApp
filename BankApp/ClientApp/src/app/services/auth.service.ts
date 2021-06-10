@@ -55,11 +55,11 @@ export class AuthService {
   }
 
   isLoggedIn() {
-    return this.jwtHelper.getTokenExpirationDate();
+    return this.jwtHelper.tokenGetter();
   }
 
   get currentUser(): JwtToken {
-    let token = sessionStorage.getItem('token');
+    let token = this.jwtHelper.tokenGetter();
 
     if (!token)
       return null;
