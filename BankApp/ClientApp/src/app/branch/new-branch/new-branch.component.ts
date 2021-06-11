@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Validators, FormBuilder } from '@angular/forms';
-import { BranchService } from "../../services/branch.service";
+import { BranchService } from '../../services/branch.service';
 import { ToastrService } from 'ngx-toastr';
-import { BranchWithAddressCreation } from "../../interfaces/branch/with-address/branch-with-address-creation";
-import { AddressFormValues } from "../../interfaces/forms/address-form-values";
+import { BranchWithAddressCreation } from '../../interfaces/branch/with-address/branch-with-address-creation';
+import { AddressFormValues } from '../../interfaces/forms/address-form-values';
 
 @Component({
   selector: 'app-new-branch',
@@ -14,7 +14,8 @@ export class NewBranchComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     private branchService: BranchService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService) {
+  }
 
   get branchCode() {
     return this.branchForm.get('branchCode');
@@ -37,7 +38,7 @@ export class NewBranchComponent implements OnInit {
   });
 
   submit() {
-    let branchModel: BranchWithAddressCreation = {
+    const branchModel: BranchWithAddressCreation = {
       branch: {
         branchCode: this.branchCode.value
       },
@@ -62,10 +63,11 @@ export class NewBranchComponent implements OnInit {
             if (element == 'Branch code is already in use.')
               this.toastr.error('Branch code is already in use.', 'Branch creation failed.');
           });
-        else if (Array.isArray(badRequest.error.errors["Branch.BranchCode"]))
-          badRequest.error.errors["Branch.BranchCode"].forEach(element => {
+        else if (Array.isArray(badRequest.error.errors['Branch.BranchCode']))
+          badRequest.error.errors['Branch.BranchCode'].forEach(element => {
             if (element == 'String length can only contain digits and must be of length 3 characters.')
-              this.toastr.error('String length can only contain digits and must be of length 3 characters.', 'Branch creation failed.');
+              this.toastr.error('String length can only contain digits and must be of length 3 characters.',
+                'Branch creation failed.');
           });
         else
           this.toastr.error('Branch creation failed');

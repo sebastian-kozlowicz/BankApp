@@ -7,7 +7,7 @@ import { BankTransferCreation } from '../interfaces/bank-transfer/bank-transfer-
 })
 export class BankTransferService {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   private readonly bankTransfersEndpoint = '/api/banktransfers';
 

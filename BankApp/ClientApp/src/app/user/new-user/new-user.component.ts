@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from "@angular/forms";
-import { ToastrService } from "ngx-toastr";
-import { AuthService } from "../../services/auth.service";
-import { PersonalInformationFormValues } from "../../interfaces/forms/personal-information-form-values";
-import { AddressFormValues } from "../../interfaces/forms/address-form-values";
+import { FormBuilder, Validators } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+import { AuthService } from '../../services/auth.service';
+import { PersonalInformationFormValues } from '../../interfaces/forms/personal-information-form-values';
+import { AddressFormValues } from '../../interfaces/forms/address-form-values';
 import { UserRole } from '../../enumerators/userRole';
-import { RegisterByAnotherUser } from "../../interfaces/auth/register-by-another-user";
+import { RegisterByAnotherUser } from '../../interfaces/auth/register-by-another-user';
 
 @Component({
   selector: 'app-new-user',
@@ -16,7 +16,8 @@ export class NewUserComponent {
 
   constructor(private fb: FormBuilder,
     private authService: AuthService,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService) {
+  }
 
   UserRole = UserRole;
   USER_ROLES: Array<UserRole> = [UserRole.Administrator, UserRole.Teller, UserRole.Manager];
@@ -24,18 +25,23 @@ export class NewUserComponent {
   get userRole() {
     return this.accountInformationForm.get('userRole');
   }
+
   get userRoleValue(): UserRole {
     return this.userRole.value;
   }
+
   get personalInformation() {
     return this.personalInformationForm.get('personalInformation');
   }
+
   get personalInformationValue(): PersonalInformationFormValues {
     return this.personalInformation.value;
   }
+
   get address() {
     return this.residentialAddressForm.get('address');
   }
+
   get addressValue(): AddressFormValues {
     return this.address.value;
   }
@@ -53,7 +59,7 @@ export class NewUserComponent {
   });
 
   submit() {
-    let registerModel: RegisterByAnotherUser = {
+    const registerModel: RegisterByAnotherUser = {
       user: {
         name: this.personalInformationValue.name,
         surname: this.personalInformationValue.surname,
@@ -70,19 +76,16 @@ export class NewUserComponent {
       }
     };
 
-    let serviceMethodName; 
+    let serviceMethodName: string;
 
     if (this.userRoleValue === UserRole.Administrator) {
-      serviceMethodName = "registerAdministrator";
-    }
-    else if (this.userRoleValue === UserRole.Customer) {
-      serviceMethodName = "registerCustomer";
-    }
-    else if (this.userRoleValue === UserRole.Teller) {
-      serviceMethodName = "registerTeller";
-    }
-    else if (this.userRoleValue === UserRole.Manager) {
-      serviceMethodName = "registerManager";
+      serviceMethodName = 'registerAdministrator';
+    } else if (this.userRoleValue === UserRole.Customer) {
+      serviceMethodName = 'registerCustomer';
+    } else if (this.userRoleValue === UserRole.Teller) {
+      serviceMethodName = 'registerTeller';
+    } else if (this.userRoleValue === UserRole.Manager) {
+      serviceMethodName = 'registerManager';
     }
 
     this.authService[serviceMethodName](registerModel).subscribe(

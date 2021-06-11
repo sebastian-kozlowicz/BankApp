@@ -6,14 +6,14 @@ import { JwtHelperService } from '@auth0/angular-jwt';
 import { JwtToken } from '../interfaces/auth/jwtToken';
 import { UserRole } from '../enumerators/userRole';
 import { Login } from '../interfaces/auth/login';
-import { RegisterByAnotherUser } from "../interfaces/auth/register-by-another-user";
+import { RegisterByAnotherUser } from '../interfaces/auth/register-by-another-user';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
+  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {}
 
   private readonly administratorsEndpoint = '/api/administrators';
   private readonly customersEndpoint = '/api/customers';
@@ -59,7 +59,7 @@ export class AuthService {
   }
 
   get currentUser(): JwtToken {
-    let token = this.jwtHelper.tokenGetter();
+    const token = this.jwtHelper.tokenGetter();
 
     if (!token)
       return null;
@@ -68,7 +68,7 @@ export class AuthService {
   }
 
   isAdministrator() {
-    let user = this.currentUser;
+    const user = this.currentUser;
 
     if (user && user.role.includes(UserRole[UserRole.Administrator]))
       return true;
@@ -77,7 +77,7 @@ export class AuthService {
   }
 
   isCustomer() {
-    let user = this.currentUser;
+    const user = this.currentUser;
 
     if (user && user.role.includes(UserRole[UserRole.Customer]))
       return true;
@@ -86,7 +86,7 @@ export class AuthService {
   }
 
   isEmployee() {
-    let user = this.currentUser;
+    const user = this.currentUser;
 
     if (user && user.role.includes(UserRole[UserRole.Teller]))
       return true;
@@ -95,7 +95,7 @@ export class AuthService {
   }
 
   isManager() {
-    let user = this.currentUser;
+    const user = this.currentUser;
 
     if (user && user.role.includes(UserRole[UserRole.Manager]))
       return true;

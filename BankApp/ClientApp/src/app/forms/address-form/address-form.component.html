@@ -32,7 +32,7 @@
   <div class="form-group">
     <mat-form-field>
       <mat-label>Postal code</mat-label>
-      <input type="number" matInput id="postal-code" placeholder="Ex. 94105" formControlName="postalCode" />
+      <input [type]="number" matInput id="postal-code" placeholder="Ex. 94105" formControlName="postalCode" />
       <mat-error *ngIf="postalCode.errors?.required">
         The Postal code field is required
       </mat-error>

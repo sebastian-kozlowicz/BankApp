@@ -11,11 +11,17 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private toastr: ToastrService, private router: Router, private route: ActivatedRoute) { }
+  constructor(private fb: FormBuilder,
+    private authService: AuthService,
+    private toastr: ToastrService,
+    private router: Router,
+    private route: ActivatedRoute) {
+  }
 
   get email() {
     return this.loginFormModel.get('email');
   }
+
   get password() {
     return this.loginFormModel.get('password');
   }
@@ -32,7 +38,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginFormModel.value).subscribe(
       response => {
         if (response) {
-          let returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
           this.router.navigate([returnUrl || '/']);
         }
       },

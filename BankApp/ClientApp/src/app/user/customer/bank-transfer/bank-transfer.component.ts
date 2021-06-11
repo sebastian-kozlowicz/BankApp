@@ -19,13 +19,15 @@ export class BankTransferComponent implements OnInit {
     private bankAccountService: BankAccountService,
     private bankTransferService: BankTransferService,
     private router: Router,
-    private toastr: ToastrService) { }
+    private toastr: ToastrService) {
+  }
 
   requesterBankAccountId: number;
 
   get receiverIban() {
     return this.bankTransferForm.get('receiverIban');
   }
+
   get value() {
     return this.bankTransferForm.get('value');
   }
@@ -34,19 +36,19 @@ export class BankTransferComponent implements OnInit {
     this.requesterBankAccountId = history.state.requesterBankAccountId;
 
     if (!this.requesterBankAccountId) {
-      this.router.navigate(['/no-access'], { skipLocationChange: true })
+      this.router.navigate(['/no-access'], { skipLocationChange: true });
       return;
     }
 
-    let user = this.authService.currentUser;
+    const user = this.authService.currentUser;
 
     this.bankAccountService.getBankAccount(this.requesterBankAccountId).subscribe(
       bankAccount => {
         if (bankAccount.customerId != user.userId)
-          this.router.navigate(['/no-access'], { skipLocationChange: true })
+          this.router.navigate(['/no-access'], { skipLocationChange: true });
       },
       error => {
-        this.router.navigate(['/no-access'], { skipLocationChange: true }) // Todo: Add error page
+        this.router.navigate(['/no-access'], { skipLocationChange: true }); // Todo: Add error page
       });
   }
 
@@ -56,7 +58,7 @@ export class BankTransferComponent implements OnInit {
   });
 
   submit() {
-    let bankTransferModel: BankTransferCreation = {
+    const bankTransferModel: BankTransferCreation = {
       requesterBankAccountId: this.requesterBankAccountId,
       receiverIban: this.receiverIban.value,
       value: this.value.value

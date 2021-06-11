@@ -1,8 +1,9 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
+import { FormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from
+  '@angular/forms';
 import { Subscription } from 'rxjs';
-import { AddressFormValues } from "../../interfaces/forms/address-form-values";
-import { COUNTRIES } from "../../constants/app-constants";
+import { AddressFormValues } from '../../interfaces/forms/address-form-values';
+import { COUNTRIES } from '../../constants/app-constants';
 
 @Component({
   selector: 'app-address-form',
@@ -48,18 +49,23 @@ export class AddressFormComponent implements ControlValueAccessor {
   get street() {
     return this.addressForm.get('street');
   }
+
   get houseNumber() {
     return this.addressForm.get('houseNumber');
   }
+
   get apartmentNumber() {
     return this.addressForm.get('apartmentNumber');
   }
+
   get postalCode() {
     return this.addressForm.get('postalCode');
   }
+
   get city() {
     return this.addressForm.get('city');
   }
+
   get country() {
     return this.addressForm.get('country');
   }
@@ -77,8 +83,8 @@ export class AddressFormComponent implements ControlValueAccessor {
     return this.addressForm.valid ? null : { address: { valid: false } };
   }
 
-  onChange: any = () => { };
-  onTouched: any = () => { };
+  onChange: any = () => {};
+  onTouched: any = () => {};
 
   writeValue(value: AddressFormValues): void {
     if (value) {

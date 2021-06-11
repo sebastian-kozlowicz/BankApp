@@ -1,8 +1,9 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from '@angular/forms';
-import { NumberLimitValidator } from "../../validators/number-limit-validator";
+import { FormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from
+  '@angular/forms';
+import { NumberLimitValidator } from '../../validators/number-limit-validator';
 import { Subscription } from 'rxjs';
-import { PersonalInformationFormValues } from "../../interfaces/forms/personal-information-form-values";
+import { PersonalInformationFormValues } from '../../interfaces/forms/personal-information-form-values';
 
 @Component({
   selector: 'app-personal-information-form',
@@ -47,12 +48,15 @@ export class PersonalInformationFormComponent implements ControlValueAccessor {
   get name() {
     return this.personalInformationForm.get('name');
   }
+
   get surname() {
     return this.personalInformationForm.get('surname');
   }
+
   get phoneNumber() {
     return this.personalInformationForm.get('phoneNumber');
   }
+
   get email() {
     return this.personalInformationForm.get('email');
   }
@@ -60,7 +64,9 @@ export class PersonalInformationFormComponent implements ControlValueAccessor {
   personalInformationForm = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
-    phoneNumber: ['', [Validators.required, NumberLimitValidator.limitValidator(100000, 100000000000, { invalidLimit: true })]],
+    phoneNumber: [
+      '', [Validators.required, NumberLimitValidator.limitValidator(100000, 100000000000, { invalidLimit: true })]
+    ],
     email: ['', [Validators.required, Validators.email]]
   });
 
@@ -68,8 +74,8 @@ export class PersonalInformationFormComponent implements ControlValueAccessor {
     return this.personalInformationForm.valid ? null : { personalInformation: { valid: false } };
   }
 
-  onChange: any = () => { };
-  onTouched: any = () => { };
+  onChange: any = () => {};
+  onTouched: any = () => {};
 
   writeValue(value: PersonalInformationFormValues): void {
     if (value) {

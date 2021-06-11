@@ -34,7 +34,7 @@
   <div class="form-group">
     <mat-form-field>
       <mat-label>Phone number</mat-label>
-      <input type="number" matInput id="phone-number" formControlName="phoneNumber" />
+      <input [type]="number" matInput id="phone-number" formControlName="phoneNumber" />
       <mat-error *ngIf="phoneNumber.errors?.required">
         The Phone number field is required
       </mat-error>

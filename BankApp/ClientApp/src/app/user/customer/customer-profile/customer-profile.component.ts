@@ -10,14 +10,15 @@ import { BankAccountService } from '../../../services/bank-account.service';
 export class CustomerProfileComponent implements OnInit {
 
   constructor(private bankAccountService: BankAccountService,
-    private authService: AuthService) { }
+    private authService: AuthService) {
+  }
 
   bankAccounts;
 
   ngOnInit(): void {
     this.bankAccountService.getBankAccounts(this.authService.currentUser.userId)
       .subscribe(bankAccounts => {
-        this.bankAccounts = bankAccounts
-      })
+        this.bankAccounts = bankAccounts;
+      });
   }
 }
