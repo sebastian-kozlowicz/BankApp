@@ -12,32 +12,32 @@ namespace BankApp.Helpers.Builders.Number
     {
         private static readonly Dictionary<string, int> CountryCharactersAssignedToNumbers = new()
         {
-            { "A", 10 },
-            { "B", 11 },
-            { "C", 12 },
-            { "D", 13 },
-            { "E", 14 },
-            { "F", 15 },
-            { "G", 16 },
-            { "H", 17 },
-            { "I", 18 },
-            { "J", 19 },
-            { "K", 20 },
-            { "L", 21 },
-            { "M", 22 },
-            { "N", 23 },
-            { "O", 24 },
-            { "P", 25 },
-            { "Q", 26 },
-            { "R", 27 },
-            { "S", 28 },
-            { "T", 29 },
-            { "U", 30 },
-            { "V", 31 },
-            { "W", 32 },
-            { "X", 33 },
-            { "Y", 34 },
-            { "Z", 35 }
+            {"A", 10},
+            {"B", 11},
+            {"C", 12},
+            {"D", 13},
+            {"E", 14},
+            {"F", 15},
+            {"G", 16},
+            {"H", 17},
+            {"I", 18},
+            {"J", 19},
+            {"K", 20},
+            {"L", 21},
+            {"M", 22},
+            {"N", 23},
+            {"O", 24},
+            {"P", 25},
+            {"Q", 26},
+            {"R", 27},
+            {"S", 28},
+            {"T", 29},
+            {"U", 30},
+            {"V", 31},
+            {"W", 32},
+            {"X", 33},
+            {"Y", 34},
+            {"Z", 35}
         };
 
         private readonly ApplicationDbContext _context;
@@ -75,7 +75,7 @@ namespace BankApp.Helpers.Builders.Number
 
         public int GenerateNationalCheckDigit(string nationalBankCode, string branchCode)
         {
-            var weights = new[] { 3, 9, 7, 1, 3, 9, 7 };
+            var weights = new[] {3, 9, 7, 1, 3, 9, 7};
             var nationalBankCodeDigitsArray = nationalBankCode.Select(digit => int.Parse(digit.ToString())).ToArray();
             var branchCodeDigitsArray = branchCode.Select(digit => int.Parse(digit.ToString())).ToArray();
             var concatenatedDigitsArray = nationalBankCodeDigitsArray.Concat(branchCodeDigitsArray).ToArray();
@@ -166,12 +166,12 @@ namespace BankApp.Helpers.Builders.Number
 
         private long GenerateAccountNumber()
         {
-            var maxAccountNumber = _context.BankAccounts.Max(b => (long?)b.AccountNumber);
+            var maxAccountNumber = _context.BankAccounts.Max(b => (long?) b.AccountNumber);
 
             if (maxAccountNumber == null)
                 return 0;
 
-            return (long)(maxAccountNumber + 1);
+            return (long) (maxAccountNumber + 1);
         }
 
         private string GetAccountNumberText(long accountNumber)

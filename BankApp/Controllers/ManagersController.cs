@@ -17,11 +17,12 @@ namespace BankApp.Controllers
     [Route("api/[controller]")]
     public class ManagersController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ManagersController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper)
+        public ManagersController(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
+            IMapper mapper)
         {
             _userManager = userManager;
             _context = context;
@@ -57,7 +58,7 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
 
             var user = _mapper.Map<ApplicationUser>(model);
-            user.Manager = new Manager { Id = user.Id };
+            user.Manager = new Manager {Id = user.Id};
 
             var result = await _userManager.CreateAsync(user);
 
@@ -67,7 +68,7 @@ namespace BankApp.Controllers
                 return BadRequest(result.Errors);
 
             var manager = _mapper.Map<ManagerDto>(user.Manager);
-            return CreatedAtRoute("GetManager", new { userId = manager.Id }, manager);
+            return CreatedAtRoute("GetManager", new {userId = manager.Id}, manager);
         }
     }
 }

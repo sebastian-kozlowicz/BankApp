@@ -1,15 +1,15 @@
 ﻿using System;
+using System.Linq;
 using AutoMapper;
+using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Dtos.Branch;
 using BankApp.Dtos.Branch.WithAddress;
 using BankApp.Models;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using BankApp.Configuration;
 using BankApp.Policies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {
@@ -57,7 +57,7 @@ namespace BankApp.Controllers
 
             var branchDto = _mapper.Map<Branch, BranchDto>(branch);
 
-            return CreatedAtRoute("GetBranch", new { branchId = branchDto.Id }, branchDto);
+            return CreatedAtRoute("GetBranch", new {branchId = branchDto.Id}, branchDto);
         }
 
         [HttpPost]
@@ -84,7 +84,8 @@ namespace BankApp.Controllers
 
             if (teller.WorkAtId != null)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently assigned to branch with id {teller.WorkAtId}.");
+                ModelState.AddModelError(nameof(model.BranchId),
+                    $"Teller with id {model.WorkerId} is currently assigned to branch with id {teller.WorkAtId}.");
                 return BadRequest(ModelState);
             }
 
@@ -127,7 +128,8 @@ namespace BankApp.Controllers
 
             if (manager.WorkAtId != null)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Manager with id {model.WorkerId} is currently assigned to branch with id {manager.WorkAtId}.");
+                ModelState.AddModelError(nameof(model.BranchId),
+                    $"Manager with id {model.WorkerId} is currently assigned to branch with id {manager.WorkAtId}.");
                 return BadRequest(ModelState);
             }
 
@@ -170,22 +172,26 @@ namespace BankApp.Controllers
 
             if (teller.WorkAtId == null)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently not assigned to any branch.");
+                ModelState.AddModelError(nameof(model.BranchId),
+                    $"Teller with id {model.WorkerId} is currently not assigned to any branch.");
                 return BadRequest(ModelState);
             }
 
             if (teller.WorkAtId != branch.Id)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Teller with id {model.WorkerId} is currently not assigned to branch with id {teller.WorkAtId}.");
+                ModelState.AddModelError(nameof(model.BranchId),
+                    $"Teller with id {model.WorkerId} is currently not assigned to branch with id {teller.WorkAtId}.");
                 return BadRequest(ModelState);
             }
 
             teller.WorkAtId = null;
-            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(t => t.TellerId == model.WorkerId).ToList().LastOrDefault();
+            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(t => t.TellerId == model.WorkerId).ToList()
+                .LastOrDefault();
             if (tellerAtBranchFromDb != null)
             {
                 tellerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-                tellerAtBranchFromDb.ExpelledById = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
+                tellerAtBranchFromDb.ExpelledById =
+                    int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
             }
 
             _context.SaveChanges();
@@ -217,22 +223,26 @@ namespace BankApp.Controllers
 
             if (manager.WorkAtId == null)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Manager with id {model.WorkerId} is currently not assigned to any branch.");
+                ModelState.AddModelError(nameof(model.BranchId),
+                    $"Manager with id {model.WorkerId} is currently not assigned to any branch.");
                 return BadRequest(ModelState);
             }
 
             if (manager.WorkAtId != model.BranchId)
             {
-                ModelState.AddModelError(nameof(model.BranchId), $"Manager with id {model.WorkerId} is currently not assigned to branch with id {manager.WorkAtId}.");
+                ModelState.AddModelError(nameof(model.BranchId),
+                    $"Manager with id {model.WorkerId} is currently not assigned to branch with id {manager.WorkAtId}.");
                 return BadRequest(ModelState);
             }
 
             manager.WorkAtId = null;
-            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == model.WorkerId).ToList().LastOrDefault();
+            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == model.WorkerId)
+                .ToList().LastOrDefault();
             if (managerAtBranchFromDb != null)
             {
                 managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-                managerAtBranchFromDb.ExpelledById = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
+                managerAtBranchFromDb.ExpelledById =
+                    int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
             }
 
             _context.SaveChanges();

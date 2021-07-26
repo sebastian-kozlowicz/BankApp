@@ -45,7 +45,8 @@ namespace BankApp.Helpers.Builders.Auth
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, _jwtOptions.Jti),
-                new Claim(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(_jwtOptions.IssuedAt).ToString(), ClaimValueTypes.Integer64),
+                new Claim(JwtRegisteredClaimNames.Iat, EpochTime.GetIntDate(_jwtOptions.IssuedAt).ToString(),
+                    ClaimValueTypes.Integer64),
                 new Claim(CustomClaimTypes.UserId, user.Id.ToString(), ClaimValueTypes.Integer32)
             });
 

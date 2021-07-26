@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using BankAccountCreationDto = BankApp.Dtos.BankAccount.BankAccountCreationDto;
 
 namespace BankApp.Controllers
 {
@@ -22,13 +23,13 @@ namespace BankApp.Controllers
     [Route("api/[controller]")]
     public class BankAccountsController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IBankAccountNumberBuilder _bankAccountNumberBuilder;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IBankAccountNumberBuilder _bankAccountNumberBuilder;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public BankAccountsController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper,
-            IBankAccountNumberBuilder bankAccountNumberBuilder)
+        public BankAccountsController(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
+            IMapper mapper, IBankAccountNumberBuilder bankAccountNumberBuilder)
         {
             _userManager = userManager;
             _context = context;
@@ -61,7 +62,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public ActionResult<BankAccountDto> CreateBankAccount([FromBody] Dtos.BankAccount.BankAccountCreationDto model)
+        public ActionResult<BankAccountDto> CreateBankAccount([FromBody] BankAccountCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -70,8 +71,8 @@ namespace BankApp.Controllers
 
             var bankAccount = new BankAccount
             {
-                AccountType = (AccountType)model.AccountType,
-                Currency = (Currency)model.Currency,
+                AccountType = (AccountType) model.AccountType,
+                Currency = (Currency) model.Currency,
                 CountryCode = generatedAccountNumber.CountryCode,
                 CheckDigits = generatedAccountNumber.CheckDigits,
                 NationalBankCode = generatedAccountNumber.NationalBankCode,
@@ -82,20 +83,21 @@ namespace BankApp.Controllers
                 Iban = generatedAccountNumber.Iban,
                 IbanSeparated = generatedAccountNumber.IbanSeparated,
                 OpenedDate = DateTime.UtcNow,
-                CustomerId = (int)model.CustomerId,
-                CreatedById = (int)model.CustomerId
+                CustomerId = (int) model.CustomerId,
+                CreatedById = (int) model.CustomerId
             };
 
             _context.BankAccounts.Add(bankAccount);
             _context.SaveChanges();
 
             var bankAccountDto = _mapper.Map<BankAccount, BankAccountDto>(bankAccount);
-            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccountDto.Id }, bankAccountDto);
+            return CreatedAtRoute("GetBankAccount", new {bankAccountId = bankAccountDto.Id}, bankAccountDto);
         }
 
         [HttpPost]
         [Route("CreateWithCustomerByCustomer")]
-        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByCustomer([FromBody] BankAccountWithCustomerCreationByCustomerDto model)
+        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByCustomer(
+            [FromBody] BankAccountWithCustomerCreationByCustomerDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -103,12 +105,12 @@ namespace BankApp.Controllers
             var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber();
 
             var user = _mapper.Map<ApplicationUser>(model.Register);
-            user.Customer = new Customer { Id = user.Id };
+            user.Customer = new Customer {Id = user.Id};
 
             var bankAccount = new BankAccount
             {
-                AccountType = (AccountType)model.BankAccount.AccountType,
-                Currency = (Currency)model.BankAccount.Currency,
+                AccountType = (AccountType) model.BankAccount.AccountType,
+                Currency = (Currency) model.BankAccount.Currency,
                 CountryCode = generatedAccountNumber.CountryCode,
                 CheckDigits = generatedAccountNumber.CheckDigits,
                 NationalBankCode = generatedAccountNumber.NationalBankCode,
@@ -123,8 +125,8 @@ namespace BankApp.Controllers
                 CreatedById = user.Id
             };
 
-            user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
-            user.CreatedBankAccounts = new List<BankAccount> { bankAccount };
+            user.Customer.BankAccounts = new List<BankAccount> {bankAccount};
+            user.CreatedBankAccounts = new List<BankAccount> {bankAccount};
 
             var result = await _userManager.CreateAsync(user, model.Register.User.Password);
 
@@ -134,13 +136,14 @@ namespace BankApp.Controllers
                 return BadRequest(result.Errors);
 
             var bankAccountDto = _mapper.Map<BankAccount, BankAccountDto>(bankAccount);
-            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccountDto.Id }, bankAccountDto);
+            return CreatedAtRoute("GetBankAccount", new {bankAccountId = bankAccountDto.Id}, bankAccountDto);
         }
 
         [HttpPost]
         [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("CreateWithCustomerByWorker")]
-        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByWorker([FromBody] BankAccountWithCustomerCreationByWorkerDto model)
+        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByWorker(
+            [FromBody] BankAccountWithCustomerCreationByWorkerDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -150,7 +153,8 @@ namespace BankApp.Controllers
             var currentUser = _context.Users.SingleOrDefault(u => u.Id == currentUserId);
             if (currentUser == null)
             {
-                ModelState.AddModelError(nameof(currentUser), $"User with id {currentUserId} found in claims doesn't exist in database.");
+                ModelState.AddModelError(nameof(currentUser),
+                    $"User with id {currentUserId} found in claims doesn't exist in database.");
                 return BadRequest(ModelState);
             }
 
@@ -162,7 +166,8 @@ namespace BankApp.Controllers
 
                 if (currentUser.Teller.WorkAtId == null)
                 {
-                    ModelState.AddModelError(nameof(currentUser.Teller), $"Worker with id {currentUserId} is currently not assigned to any branch.");
+                    ModelState.AddModelError(nameof(currentUser.Teller),
+                        $"Worker with id {currentUserId} is currently not assigned to any branch.");
                     return BadRequest(ModelState);
                 }
 
@@ -174,7 +179,8 @@ namespace BankApp.Controllers
 
                 if (currentUser.Manager.WorkAtId == null)
                 {
-                    ModelState.AddModelError(nameof(currentUser.Manager), $"Worker with id {currentUserId} is currently not assigned to any branch.");
+                    ModelState.AddModelError(nameof(currentUser.Manager),
+                        $"Worker with id {currentUserId} is currently not assigned to any branch.");
                     return BadRequest(ModelState);
                 }
 
@@ -184,13 +190,13 @@ namespace BankApp.Controllers
             var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber(workerBranchId);
 
             var user = _mapper.Map<ApplicationUser>(model.Register);
-            user.Customer = new Customer { Id = user.Id };
+            user.Customer = new Customer {Id = user.Id};
             user.CreatedById = currentUserId;
 
             var bankAccount = new BankAccount
             {
-                AccountType = (AccountType)model.BankAccount.AccountType,
-                Currency = (Currency)model.BankAccount.Currency,
+                AccountType = (AccountType) model.BankAccount.AccountType,
+                Currency = (Currency) model.BankAccount.Currency,
                 CountryCode = generatedAccountNumber.CountryCode,
                 CheckDigits = generatedAccountNumber.CheckDigits,
                 NationalBankCode = generatedAccountNumber.NationalBankCode,
@@ -205,7 +211,7 @@ namespace BankApp.Controllers
                 CreatedById = currentUserId
             };
 
-            user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
+            user.Customer.BankAccounts = new List<BankAccount> {bankAccount};
 
             var result = await _userManager.CreateAsync(user);
 
@@ -215,7 +221,7 @@ namespace BankApp.Controllers
                 return BadRequest(result.Errors);
 
             var bankAccountDto = _mapper.Map<BankAccount, BankAccountDto>(bankAccount);
-            return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccountDto.Id }, bankAccountDto);
+            return CreatedAtRoute("GetBankAccount", new {bankAccountId = bankAccountDto.Id}, bankAccountDto);
         }
     }
 }

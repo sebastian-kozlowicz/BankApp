@@ -6,21 +6,21 @@
     <members>
         <member name="M:BankApp.Controllers.AuthController.Login(BankApp.Dtos.Auth.LoginDto)">
             <summary>
-            Logs user in
+                Logs user in
             </summary>
             <param name="model">Login credentials</param>
             <returns>JWT with refresh token</returns>
         </member>
         <member name="M:BankApp.Controllers.AuthController.Refresh(BankApp.Dtos.Auth.RefreshTokenRequestDto)">
             <summary>
-            Refreshes expired JWT
+                Refreshes expired JWT
             </summary>
             <param name="model">Expired JWT with refresh token</param>
             <returns>JWT with refresh token</returns>
         </member>
         <member name="M:BankApp.Services.ExternalTransferService.Create(BankApp.Models.BankAccount,BankApp.Models.BankAccount,System.Decimal)">
             <summary>
-            Method that fakes real transfer order in external system like Elixir
+                Method that fakes real transfer order in external system like Elixir
             </summary>
         </member>
     </members>

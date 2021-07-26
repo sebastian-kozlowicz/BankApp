@@ -1,13 +1,13 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using System.Linq;
+using AutoMapper;
 using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Dtos.Card;
 using BankApp.Enumerators;
+using BankApp.Interfaces.Helpers.Factories;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
-using BankApp.Interfaces.Helpers.Factories;
 
 namespace BankApp.Controllers
 {
@@ -19,7 +19,8 @@ namespace BankApp.Controllers
         private readonly IMapper _mapper;
         private readonly IPaymentCardNumberFactory _paymentCardNumberFactory;
 
-        public PaymentCardsController(ApplicationDbContext context, IMapper mapper, IPaymentCardNumberFactory paymentCardNumberFactory)
+        public PaymentCardsController(ApplicationDbContext context, IMapper mapper,
+            IPaymentCardNumberFactory paymentCardNumberFactory)
         {
             _context = context;
             _mapper = mapper;
@@ -42,15 +43,19 @@ namespace BankApp.Controllers
             var bankAccount = _context.BankAccounts.SingleOrDefault(b => b.Id == model.BankAccountId);
             if (bankAccount == null)
             {
-                ModelState.AddModelError(nameof(model.BankAccountId), $"Bank account with id {model.BankAccountId} doesn't exist.");
+                ModelState.AddModelError(nameof(model.BankAccountId),
+                    $"Bank account with id {model.BankAccountId} doesn't exist.");
                 return BadRequest(ModelState);
             }
 
-            var visaPaymentCardNumberBuilder = _paymentCardNumberFactory.GetPaymentCardNumberBuilder(IssuingNetwork.Visa);
-            var visaPaymentCardNumber = visaPaymentCardNumberBuilder.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen, (int)model.BankAccountId);
+            var visaPaymentCardNumberBuilder =
+                _paymentCardNumberFactory.GetPaymentCardNumberBuilder(IssuingNetwork.Visa);
+            var visaPaymentCardNumber =
+                visaPaymentCardNumberBuilder.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen,
+                    (int) model.BankAccountId);
 
             var paymentCard = _mapper.Map<PaymentCard>(visaPaymentCardNumber);
-            paymentCard.BankAccountId = (int)model.BankAccountId;
+            paymentCard.BankAccountId = (int) model.BankAccountId;
 
             _context.PaymentCards.Add(paymentCard);
             _context.SaveChanges();

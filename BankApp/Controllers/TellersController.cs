@@ -17,9 +17,9 @@ namespace BankApp.Controllers
     [Route("api/[controller]")]
     public class TellersController : ControllerBase
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public TellersController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper)
         {
@@ -57,7 +57,7 @@ namespace BankApp.Controllers
                 return BadRequest(ModelState);
 
             var user = _mapper.Map<ApplicationUser>(model);
-            user.Teller = new Teller { Id = user.Id };
+            user.Teller = new Teller {Id = user.Id};
 
             var result = await _userManager.CreateAsync(user);
 
@@ -68,7 +68,7 @@ namespace BankApp.Controllers
 
             var teller = _mapper.Map<TellerDto>(user.Teller);
 
-            return CreatedAtRoute("GetTeller", new { userId = teller.Id }, teller);
+            return CreatedAtRoute("GetTeller", new {userId = teller.Id}, teller);
         }
     }
 }

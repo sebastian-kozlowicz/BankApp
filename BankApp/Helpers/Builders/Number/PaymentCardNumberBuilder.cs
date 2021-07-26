@@ -5,8 +5,8 @@ namespace BankApp.Helpers.Builders.Number
 {
     public abstract class PaymentCardNumberBuilder
     {
-        protected readonly ApplicationDbContext Context;
         private const int BankIdentificationNumberAndCheckDigitLength = 7;
+        protected readonly ApplicationDbContext Context;
 
         protected PaymentCardNumberBuilder(ApplicationDbContext context)
         {
@@ -16,12 +16,12 @@ namespace BankApp.Helpers.Builders.Number
         protected long GenerateAccountIdentificationNumber()
         {
             var maxAccountIdentificationNumber = Context.PaymentCards
-                .Max(p => (long?)p.AccountIdentificationNumber);
+                .Max(p => (long?) p.AccountIdentificationNumber);
 
             if (maxAccountIdentificationNumber == null)
                 return 0;
 
-            return (long)(maxAccountIdentificationNumber + 1);
+            return (long) (maxAccountIdentificationNumber + 1);
         }
 
         protected string GetAccountIdentificationNumberText(int length, long accountNumber)

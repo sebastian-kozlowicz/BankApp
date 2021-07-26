@@ -18,7 +18,7 @@ namespace BankApp.Controllers
         }
 
         /// <summary>
-        /// Logs user in
+        ///     Logs user in
         /// </summary>
         /// <param name="model">Login credentials</param>
         /// <returns>JWT with refresh token</returns>
@@ -37,7 +37,7 @@ namespace BankApp.Controllers
         }
 
         /// <summary>
-        /// Refreshes expired JWT
+        ///     Refreshes expired JWT
         /// </summary>
         /// <param name="model">Expired JWT with refresh token</param>
         /// <returns>JWT with refresh token</returns>

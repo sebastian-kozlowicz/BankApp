@@ -37,8 +37,10 @@ namespace BankApp.Helpers.Builders.Number
                     "Visa bank identification number found in database is invalid.");
 
             var accountIdentificationNumber = GenerateAccountIdentificationNumber();
-            var accountIdentificationNumberText = GetAccountIdentificationNumberText(length, accountIdentificationNumber);
-            var paymentCardNumberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumberText}";
+            var accountIdentificationNumberText =
+                GetAccountIdentificationNumberText(length, accountIdentificationNumber);
+            var paymentCardNumberWithoutCheckDigit =
+                $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumberText}";
             var checkDigit = GenerateCheckDigit(paymentCardNumberWithoutCheckDigit);
             var paymentCardNumber = $"{paymentCardNumberWithoutCheckDigit}{checkDigit}";
 
