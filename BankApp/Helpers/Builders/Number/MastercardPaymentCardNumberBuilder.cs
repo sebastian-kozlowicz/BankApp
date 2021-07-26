@@ -4,8 +4,7 @@ using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Enumerators;
 using BankApp.Exceptions;
-using BankApp.Interfaces.Builders;
-using BankApp.Interfaces.Builders.Number;
+using BankApp.Interfaces.Helpers.Builders.Number;
 using BankApp.Models;
 
 namespace BankApp.Helpers.Builders.Number
@@ -39,7 +38,7 @@ namespace BankApp.Helpers.Builders.Number
                     "Mastercard bank identification number found in database is invalid.");
 
             var accountIdentificationNumber = GenerateAccountIdentificationNumber();
-            var accountIdentificationNumberText = GetAccountIdentificationNumber(length, accountIdentificationNumber);
+            var accountIdentificationNumberText = GetAccountIdentificationNumberText(length, accountIdentificationNumber);
             var paymentCardNumberWithoutCheckDigit = $"{bankIdentificationNumber.BankIdentificationNumber}{accountIdentificationNumberText}";
             var checkDigit = GenerateCheckDigit(paymentCardNumberWithoutCheckDigit);
             var paymentCardNumber = $"{paymentCardNumberWithoutCheckDigit}{checkDigit}";

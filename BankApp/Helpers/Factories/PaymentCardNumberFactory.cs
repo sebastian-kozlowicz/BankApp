@@ -1,10 +1,8 @@
 ﻿using BankApp.Data;
 using BankApp.Enumerators;
-using BankApp.Helpers.Builders;
 using BankApp.Helpers.Builders.Number;
-using BankApp.Interfaces.Builders;
-using BankApp.Interfaces.Builders.Number;
-using BankApp.Interfaces.Factories;
+using BankApp.Interfaces.Helpers.Builders.Number;
+using BankApp.Interfaces.Helpers.Factories;
 
 namespace BankApp.Helpers.Factories
 {

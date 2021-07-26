@@ -6,15 +6,14 @@ using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Dtos.Auth;
 using BankApp.Exceptions;
-using BankApp.Interfaces.Builders;
-using BankApp.Interfaces.Builders.Auth;
+using BankApp.Interfaces.Helpers.Builders.Auth;
 using BankApp.Interfaces.Services;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BankApp.Helpers.Services
+namespace BankApp.Services
 {
     public class AuthService : IAuthService
     {
@@ -47,13 +46,15 @@ namespace BankApp.Helpers.Services
             if (validatedToken == null)
                 throw new RefreshTokenException("Invalid token");
 
-            var expirationDateUnixEpoch = long.Parse(validatedToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Exp).Value);
+            var expirationDateUnixEpoch =
+                long.Parse(validatedToken.Claims.Single(c => c.Type == JwtRegisteredClaimNames.Exp).Value);
             var expirationDateUtc = EpochTime.DateTime(expirationDateUnixEpoch);
 
             if (expirationDateUtc > DateTime.UtcNow)
                 throw new RefreshTokenException("JWT is not expired yet");
 
-            var refreshTokenInDb = await _context.RefreshTokens.SingleOrDefaultAsync(t => t.RefreshToken == refreshToken);
+            var refreshTokenInDb =
+                await _context.RefreshTokens.SingleOrDefaultAsync(t => t.RefreshToken == refreshToken);
 
             if (refreshTokenInDb == null)
                 throw new RefreshTokenException("Refresh token in database does not exist");

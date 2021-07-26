@@ -1,11 +1,10 @@
 ﻿using System;
 using BankApp.Data;
 using BankApp.Enumerators;
-using BankApp.Interfaces;
 using BankApp.Interfaces.Services;
 using BankApp.Models;
 
-namespace BankApp.Helpers.Services
+namespace BankApp.Services
 {
     public class InternalTransferService : ITransferService<InternalTransferService>
     {

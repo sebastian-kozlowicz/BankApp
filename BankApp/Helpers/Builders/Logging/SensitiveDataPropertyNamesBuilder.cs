@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using BankApp.Attributes;
-using BankApp.Interfaces.Builders.Logging;
+using BankApp.Interfaces.Helpers.Builders.Logging;
 
 namespace BankApp.Helpers.Builders.Logging
 {

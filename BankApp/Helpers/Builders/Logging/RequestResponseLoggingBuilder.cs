@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BankApp.Configuration;
-using BankApp.Interfaces.Builders.Logging;
+using BankApp.Interfaces.Helpers.Builders.Logging;
 using BankApp.Models.RequestResponseLogging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;

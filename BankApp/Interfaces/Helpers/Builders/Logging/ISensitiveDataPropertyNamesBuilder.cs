@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace BankApp.Interfaces.Builders.Logging
+namespace BankApp.Interfaces.Helpers.Builders.Logging
 {
     public interface ISensitiveDataPropertyNamesBuilder
     {

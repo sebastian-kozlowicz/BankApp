@@ -1,6 +1,6 @@
 ﻿using BankApp.Models;
 
-namespace BankApp.Interfaces.Builders.Number
+namespace BankApp.Interfaces.Helpers.Builders.Number
 {
     public interface IBankAccountNumberBuilder
     {

@@ -24,7 +24,7 @@ namespace BankApp.Helpers.Builders.Number
             return (long)(maxAccountIdentificationNumber + 1);
         }
 
-        protected string GetAccountIdentificationNumber(int length, long accountNumber)
+        protected string GetAccountIdentificationNumberText(int length, long accountNumber)
         {
             return accountNumber.ToString($"D{length - BankIdentificationNumberAndCheckDigitLength}");
         }

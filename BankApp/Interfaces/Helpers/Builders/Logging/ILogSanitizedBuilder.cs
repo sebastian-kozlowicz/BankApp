@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json.Linq;
 
-namespace BankApp.Interfaces.Builders.Logging
+namespace BankApp.Interfaces.Helpers.Builders.Logging
 {
     public interface ILogSanitizedBuilder
     {
