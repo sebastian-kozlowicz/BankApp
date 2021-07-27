@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using BankApp.Dtos.Auth;
 
-namespace BankApp.Interfaces.Services
+namespace BankApp.Interfaces.Helpers.Services
 {
     public interface IAuthService
     {

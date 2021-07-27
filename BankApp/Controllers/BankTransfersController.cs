@@ -2,9 +2,9 @@
 using System.Linq;
 using BankApp.Data;
 using BankApp.Dtos.BankTransfer;
-using BankApp.Interfaces.Services;
+using BankApp.Helpers.Services;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
-using BankApp.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BankApp.Controllers

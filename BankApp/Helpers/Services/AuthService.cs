@@ -7,13 +7,13 @@ using BankApp.Data;
 using BankApp.Dtos.Auth;
 using BankApp.Exceptions;
 using BankApp.Interfaces.Helpers.Builders.Auth;
-using BankApp.Interfaces.Services;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
-namespace BankApp.Services
+namespace BankApp.Helpers.Services
 {
     public class AuthService : IAuthService
     {

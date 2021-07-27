@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using BankApp.Dtos.Auth;
-using BankApp.Interfaces.Services;
+using BankApp.Interfaces.Helpers.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
