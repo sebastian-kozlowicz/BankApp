@@ -18,7 +18,7 @@
             <param name="model">Expired JWT with refresh token</param>
             <returns>JWT with refresh token</returns>
         </member>
-        <member name="M:BankApp.Services.ExternalTransferService.Create(BankApp.Models.BankAccount,BankApp.Models.BankAccount,System.Decimal)">
+        <member name="M:BankApp.Helpers.Services.ExternalTransferService.Create(BankApp.Models.BankAccount,BankApp.Models.BankAccount,System.Decimal)">
             <summary>
                 Method that fakes real transfer order in external system like Elixir
             </summary>
