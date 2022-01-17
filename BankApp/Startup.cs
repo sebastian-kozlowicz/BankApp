@@ -114,13 +114,17 @@ namespace BankApp
 
             services.AddSingleton(tokenValidationParameters);
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.ClaimsIssuer = jwtIssuerOptions.Issuer;
-                    options.TokenValidationParameters = tokenValidationParameters;
-                    options.SaveToken = false;
-                });
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+            }).AddJwtBearer(options =>
+            {
+                options.ClaimsIssuer = jwtIssuerOptions.Issuer;
+                options.TokenValidationParameters = tokenValidationParameters;
+                options.SaveToken = false;
+            });
 
             services.AddAuthorization(options =>
             {
