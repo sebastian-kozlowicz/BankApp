@@ -52,8 +52,33 @@ namespace BankApp
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo {Title = "BankApp", Version = "v1"});
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BankApp", Version = "v1" });
                 c.CustomSchemaIds(t => t.ToString());
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the bearer scheme",
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "bearer"
+                });
+
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -118,7 +143,6 @@ namespace BankApp
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-
             }).AddJwtBearer(options =>
             {
                 options.ClaimsIssuer = jwtIssuerOptions.Issuer;
@@ -172,9 +196,7 @@ namespace BankApp
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             if (!env.IsDevelopment())
-            {
                 app.UseSpaStaticFiles();
-            }
             app.UseRouting();
 
             app.UseAuthentication();
@@ -195,9 +217,7 @@ namespace BankApp
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
+                    spa.UseAngularCliServer("start");
             });
 
             AsyncContext.Run(async () => await DataInitializer.SeedData(userManager, roleManager, context));
