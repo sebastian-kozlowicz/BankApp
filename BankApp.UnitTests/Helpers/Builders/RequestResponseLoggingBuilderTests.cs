@@ -305,7 +305,7 @@ namespace BankApp.UnitTests.Helpers.Builders
 
         [TestMethod]
         public void
-            GenerateResponseLogMessage_Should_ReturnExpectedNotSanitizedLogMessage_When_LogSanitizationIsDisabled_AndItIsNotServerErrorStatusCode()
+            GenerateResponseLogMessage_Should_ReturnExpectedNotSanitizedLogMessage_When_LogSanitizationIsDisabled_And_ExceptionWasNotThrown()
         {
             // Arrange
             var responseInfo = new ResponseInfo
@@ -367,7 +367,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                         }
                     }
                 },
-                ExceptionMessage = string.Empty
+                ExceptionMessage = null
             };
 
             _logSanitizationOptionsMock.Setup(o => o.Value).Returns(new LogSanitizationOptions
@@ -389,7 +389,7 @@ namespace BankApp.UnitTests.Helpers.Builders
 
         [TestMethod]
         public void
-            GenerateResponseLogMessage_Should_ReturnExpectedSanitizedLogMessage_When_LogSanitizationIsEnabled_AndItIsNotServerErrorStatusCode()
+            GenerateResponseLogMessage_Should_ReturnExpectedSanitizedLogMessage_When_LogSanitizationIsEnabled_And_ExceptionWasNotThrown()
         {
             // Arrange
             var responseInfo = new ResponseInfo
@@ -451,7 +451,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                         }
                     }
                 },
-                ExceptionMessage = string.Empty
+                ExceptionMessage = null
             };
 
             _logSanitizationOptionsMock.Setup(o => o.Value).Returns(new LogSanitizationOptions
@@ -472,9 +472,12 @@ namespace BankApp.UnitTests.Helpers.Builders
                     "Http Response Information: \r\nTrace Identifier: 80000006-0000-fc00-b63f-84710c7967bb \r\nPath: /api/unit-test \r\nStatus Code: 200 \r\nHeaders: \r\nHost: {localhost:44387}\r\nAuthorization: [Sanitized] \r\nResponse: \r\n{\"ParentObjectInt\":\"[Sanitized]\",\"ParentObjectString\":\"String\",\"ParentObjectDateTime\":\"2021-01-01T00:00:00\",\"ChildObjectModel\":{\"ChildObjectInt\":2,\"ChildObjectString\":\"[Sanitized]\",\"ChildObjectDateTime\":\"2022-12-31T00:00:00\",\"ComplexObjectModel\":{\"ComplexObjectInt\":3,\"ComplexObjectString\":\"[Sanitized]\",\"ComplexObjectDateTime\":\"2023-01-01T00:00:00\"},\"ComplexObjectModelSanitized\":\"[Sanitized]\"},\"ChildrenObjectModel\":[{\"ChildrenObjectInt\":5,\"ChildrenObjectString\":\"[Sanitized]\",\"ChildrenObjectDateTime\":\"2024-01-01T00:00:00\",\"ComplexChildrenObjectModel\":{\"ComplexChildrenObjectInt\":6,\"ComplexChildrenObjectString\":\"[Sanitized]\",\"ComplexChildrenObjectDateTime\":\"2024-12-31T00:00:00\"},\"ComplexChildrenObjectModelSanitized\":\"[Sanitized]\"}]}");
         }
 
-        [TestMethod]
+        [DataTestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow("exception message")]
         public void
-            GenerateResponseLogMessage_Should_ReturnExpectedNotSanitizedLogMessage_When_LogSanitizationIsDisabled_AndItIsServerErrorStatusCode()
+            GenerateResponseLogMessage_Should_ReturnExpectedNotSanitizedLogMessage_When_LogSanitizationIsDisabled_And_ExceptionWasThrown(string exceptionMessage)
         {
             // Arrange
             var responseInfo = new ResponseInfo
@@ -536,7 +539,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                         }
                     }
                 },
-                ExceptionMessage = "exception message"
+                ExceptionMessage = exceptionMessage
             };
 
             _logSanitizationOptionsMock.Setup(o => o.Value).Returns(new LogSanitizationOptions
@@ -553,12 +556,15 @@ namespace BankApp.UnitTests.Helpers.Builders
             // Assert
             result.Should()
                 .Be(
-                    "Http Response Information: \r\nTrace Identifier: 80000006-0000-fc00-b63f-84710c7967bb \r\nPath: /api/unit-test \r\nStatus Code: 500 \r\nHeaders: \r\nHost: {localhost:44387}\r\nAuthorization: {Bearer qwerty} \r\nResponse: \r\nexception message");
+                    $"Http Response Information: \r\nTrace Identifier: 80000006-0000-fc00-b63f-84710c7967bb \r\nPath: /api/unit-test \r\nStatus Code: 500 \r\nHeaders: \r\nHost: {{localhost:44387}}\r\nAuthorization: {{Bearer qwerty}} \r\nResponse: \r\n{exceptionMessage}");
         }
 
-        [TestMethod]
+        [DataTestMethod]
+        [DataRow("")]
+        [DataRow(" ")]
+        [DataRow("exception message")]
         public void
-            GenerateResponseLogMessage_Should_ReturnExpectedSanitizedLogMessage_When_LogSanitizationIsEnabled_AndItIsServerErrorStatusCode()
+            GenerateResponseLogMessage_Should_ReturnExpectedSanitizedLogMessage_When_LogSanitizationIsEnabled_AndItIsServerErrorStatusCode(string exceptionMessage)
         {
             // Arrange
             var responseInfo = new ResponseInfo
@@ -620,7 +626,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                         }
                     }
                 },
-                ExceptionMessage = "exception message"
+                ExceptionMessage = exceptionMessage
             };
 
             _logSanitizationOptionsMock.Setup(o => o.Value).Returns(new LogSanitizationOptions
@@ -638,7 +644,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             // Assert
             result.Should()
                 .Be(
-                    "Http Response Information: \r\nTrace Identifier: 80000006-0000-fc00-b63f-84710c7967bb \r\nPath: /api/unit-test \r\nStatus Code: 500 \r\nHeaders: \r\nHost: {localhost:44387}\r\nAuthorization: [Sanitized] \r\nResponse: \r\nexception message");
+                    $"Http Response Information: \r\nTrace Identifier: 80000006-0000-fc00-b63f-84710c7967bb \r\nPath: /api/unit-test \r\nStatus Code: 500 \r\nHeaders: \r\nHost: {{localhost:44387}}\r\nAuthorization: [Sanitized] \r\nResponse: \r\n{exceptionMessage}");
         }
     }
 }

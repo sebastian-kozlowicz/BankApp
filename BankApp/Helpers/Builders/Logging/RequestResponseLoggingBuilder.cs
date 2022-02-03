@@ -96,7 +96,7 @@ namespace BankApp.Helpers.Builders.Logging
 
             string result;
 
-            if (responseInfo.IsServerErrorStatusCode)
+            if (responseInfo.ExceptionThrown)
             {
                 result = responseInfo.ExceptionMessage;
             }

@@ -10,6 +10,7 @@ namespace BankApp.Models.RequestResponseLogging
         public IHeaderDictionary Headers { get; set; }
         public object Result { get; set; }
         public string ExceptionMessage { get; set; }
+        public bool ExceptionThrown => ExceptionMessage != null;
         public bool IsServerErrorStatusCode => StatusCode >= 500;
     }
 }

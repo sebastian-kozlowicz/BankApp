@@ -1,4 +1,5 @@
-﻿using BankApp.Interfaces.Helpers.Builders.Logging;
+﻿using BankApp.Helpers.Builders.ExceptionResponse;
+using BankApp.Interfaces.Helpers.Builders.Logging;
 using BankApp.Models.RequestResponseLogging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
@@ -46,14 +47,15 @@ namespace BankApp.ActionFilters
                 Result = result?.Value
             };
 
-            if (responseInfo.Result == null)
+            if (context.Exception != null)
             {
-                responseInfo.StatusCode = 500;
+                responseInfo.StatusCode =
+                    (int)StatusCodeFromExceptionBuilder.GetHttpStatusCodeFromException(context.Exception);
             }
             else
             {
                 if (result?.StatusCode != null)
-                    responseInfo.StatusCode = (int) result.StatusCode;
+                    responseInfo.StatusCode = (int)result.StatusCode;
             }
 
             responseInfo.ExceptionMessage = context.Exception?.ToString();

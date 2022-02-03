@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
-using BankApp.Exceptions;
+using BankApp.Helpers.Builders.ExceptionResponse;
 using Microsoft.AspNetCore.Http;
 
 namespace BankApp.Middlewares
@@ -21,17 +20,13 @@ namespace BankApp.Middlewares
             {
                 await _next(context);
             }
-            catch (Exception e) when (ValidationExceptions(e))
+            catch (Exception e) when (StatusCodeFromExceptionBuilder.BadRequestExceptions(e))
             {
-                context.Response.StatusCode = (int) HttpStatusCode.BadRequest;
+                context.Response.StatusCode = (int)StatusCodeFromExceptionBuilder.GetHttpStatusCodeFromException(e);
                 context.Response.ContentType = "text/plain";
                 await context.Response.WriteAsync(e.Message);
             }
         }
-
-        private static bool ValidationExceptions(Exception e)
-        {
-            return e is InvalidLoginException || e is RefreshTokenException;
-        }
+       
     }
 }
