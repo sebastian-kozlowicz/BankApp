@@ -103,6 +103,7 @@ namespace BankApp
             services.AddScoped<IBankAccountNumberBuilder, BankAccountNumberBuilder>();
             services.AddScoped<IPaymentCardNumberFactory, PaymentCardNumberFactory>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITransferService<InternalTransferService>, InternalTransferService>();
             services.AddScoped<ITransferService<ExternalTransferService>, ExternalTransferService>();
             services.AddScoped<ILogSanitizedBuilder, LogSanitizedBuilder>();

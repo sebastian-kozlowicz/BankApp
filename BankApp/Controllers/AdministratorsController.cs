@@ -2,14 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BankApp.Data;
 using BankApp.Dtos.Administrator;
 using BankApp.Dtos.Auth;
-using BankApp.Enumerators;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {
@@ -17,23 +14,19 @@ namespace BankApp.Controllers
     [ApiController]
     public class AdministratorsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IUserService _userService;
 
-        public AdministratorsController(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
-            IMapper mapper)
+        public AdministratorsController(IUserService userService, IMapper mapper)
         {
-            _userManager = userManager;
-            _context = context;
+            _userService = userService;
             _mapper = mapper;
         }
 
         [HttpGet("{userId}", Name = "GetAdministrator")]
-        public ActionResult<AdministratorDto> GetAdministrator(int userId)
+        public async Task<ActionResult<AdministratorDto>> GetAdministrator(int userId)
         {
-            var administrator = _context.Administrators.Include(a => a.ApplicationUser)
-                .SingleOrDefault(a => a.Id == userId);
+            var administrator = await _userService.GetAdministratorAsync(userId);
 
             if (administrator == null)
                 return NotFound();
@@ -42,14 +35,14 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<AdministratorDto>> GetAdministrators()
+        public async Task<ActionResult<IList<AdministratorDto>>> GetAdministrators()
         {
-            var administrators = _context.Administrators.Include(a => a.ApplicationUser).ToList();
+            var administrators = await _userService.GetAdministratorsAsync();
 
             if (!administrators.Any())
                 return NotFound();
 
-            return Ok(_mapper.Map<List<Administrator>, List<AdministratorDto>>(administrators));
+            return Ok(_mapper.Map<IList<Administrator>, IList<AdministratorDto>>(administrators));
         }
 
         [HttpPost]
@@ -58,19 +51,11 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = _mapper.Map<ApplicationUser>(model);
-            user.Administrator = new Administrator {Id = user.Id};
+            var administrator = await _userService.CreateAdministratorAsync(model);
 
-            var result = await _userManager.CreateAsync(user);
+            var administratorDto = _mapper.Map<AdministratorDto>(administrator);
 
-            if (result.Succeeded)
-                await _userManager.AddToRoleAsync(user, UserRole.Administrator.ToString());
-            else
-                return BadRequest(result.Errors);
-
-            var administrator = _mapper.Map<AdministratorDto>(user.Administrator);
-
-            return CreatedAtRoute("GetAdministrator", new {userId = administrator.Id}, administrator);
+            return CreatedAtRoute("GetAdministrator", new { userId = administratorDto.Id }, administratorDto);
         }
     }
 }

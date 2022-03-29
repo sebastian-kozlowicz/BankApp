@@ -6,6 +6,7 @@ using BankApp.Data;
 using BankApp.Dtos.Administrator;
 using BankApp.Dtos.Auth;
 using BankApp.Enumerators;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +15,7 @@ using Newtonsoft.Json;
 
 namespace BankApp.Helpers.Services
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -27,18 +28,18 @@ namespace BankApp.Helpers.Services
             _userManager = userManager;
         }
 
-        public async Task<Administrator> GetAdministrator(int userId)
+        public async Task<Administrator> GetAdministratorAsync(int userId)
         {
             return await _context.Administrators.Include(a => a.ApplicationUser)
                 .SingleOrDefaultAsync(a => a.Id == userId);
         }
 
-        public async Task<IEnumerable<Administrator>> GetAdministrators()
+        public async Task<IList<Administrator>> GetAdministratorsAsync()
         {
             return await _context.Administrators.Include(a => a.ApplicationUser).ToListAsync();
         }
 
-        public async Task<ActionResult<AdministratorDto>> CreateAdministrator(RegisterByAnotherUserDto model)
+        public async Task<ActionResult<Administrator>> CreateAdministratorAsync(RegisterByAnotherUserDto model)
         {
             var user = _mapper.Map<ApplicationUser>(model);
             user.Administrator = new Administrator { Id = user.Id };
@@ -50,7 +51,7 @@ namespace BankApp.Helpers.Services
             else
                 throw new Exception(JsonConvert.SerializeObject(result.Errors));
 
-            return _mapper.Map<AdministratorDto>(user.Administrator);
+            return user.Administrator;
         }
     }
 }
