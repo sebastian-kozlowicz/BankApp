@@ -2,14 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BankApp.Data;
 using BankApp.Dtos.Auth;
 using BankApp.Dtos.Customer;
-using BankApp.Enumerators;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {
@@ -17,22 +14,19 @@ namespace BankApp.Controllers
     [Route("api/[controller]")]
     public class CustomersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ICustomerService _customerService;
         private readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public CustomersController(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
-            IMapper mapper)
+        public CustomersController(ICustomerService customerService, IMapper mapper)
         {
-            _userManager = userManager;
-            _context = context;
+            _customerService = customerService;
             _mapper = mapper;
         }
 
         [HttpGet("{userId}", Name = "GetCustomer")]
-        public ActionResult<CustomerDto> GetCustomerAsync(int userId)
+        public async Task<ActionResult<CustomerDto>> GetCustomerAsync(int userId)
         {
-            var customer = _context.Customers.Include(c => c.ApplicationUser).SingleOrDefault(c => c.Id == userId);
+            var customer = await _customerService.GetCustomerAsync(userId);
 
             if (customer == null)
                 return NotFound();
@@ -41,14 +35,14 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CustomerDto>> GetCustomersAsync()
+        public async Task<ActionResult<IList<CustomerDto>>> GetCustomersAsync()
         {
-            var customers = _context.Customers.Include(c => c.ApplicationUser).ToList();
+            var customers = await _customerService.GetCustomersAsync();
 
             if (!customers.Any())
                 return NotFound();
 
-            return Ok(_mapper.Map<List<Customer>, List<CustomerDto>>(customers));
+            return Ok(_mapper.Map<IList<Customer>, IList<CustomerDto>>(customers));
         }
 
         [HttpPost]
@@ -57,19 +51,11 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = _mapper.Map<ApplicationUser>(model);
-            user.Customer = new Customer {Id = user.Id};
+            var customer = await _customerService.CreateCustomerAsync(model);
 
-            var result = await _userManager.CreateAsync(user);
+            var customerDto = _mapper.Map<CustomerDto>(customer);
 
-            if (result.Succeeded)
-                await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());
-            else
-                return BadRequest(result.Errors);
-
-            var customer = _mapper.Map<CustomerDto>(user.Customer);
-
-            return CreatedAtRoute("GetCustomer", new {userId = customer.Id}, customer);
+            return CreatedAtRoute("GetCustomer", new { userId = customerDto.Id }, customer);
         }
     }
 }

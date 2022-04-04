@@ -14,8 +14,8 @@ namespace BankApp.Controllers
     [ApiController]
     public class AdministratorsController : ControllerBase
     {
-        private readonly IMapper _mapper;
         private readonly IAdministratorService _administratorService;
+        private readonly IMapper _mapper;
 
         public AdministratorsController(IAdministratorService administratorService, IMapper mapper)
         {
@@ -46,7 +46,8 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<AdministratorDto>> CreateAdministratorAsync([FromBody] RegisterByAnotherUserDto model)
+        public async Task<ActionResult<AdministratorDto>> CreateAdministratorAsync(
+            [FromBody] RegisterByAnotherUserDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
