@@ -30,7 +30,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet("{userId}", Name = "GetCustomer")]
-        public ActionResult<CustomerDto> GetCustomer(int userId)
+        public ActionResult<CustomerDto> GetCustomerAsync(int userId)
         {
             var customer = _context.Customers.Include(c => c.ApplicationUser).SingleOrDefault(c => c.Id == userId);
 
@@ -41,7 +41,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<CustomerDto>> GetCustomers()
+        public ActionResult<IEnumerable<CustomerDto>> GetCustomersAsync()
         {
             var customers = _context.Customers.Include(c => c.ApplicationUser).ToList();
 
@@ -52,7 +52,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<CustomerDto>> CreateCustomer([FromBody] RegisterByAnotherUserDto model)
+        public async Task<ActionResult<CustomerDto>> CreateCustomerAsync([FromBody] RegisterByAnotherUserDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);

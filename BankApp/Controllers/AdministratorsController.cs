@@ -24,7 +24,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet("{userId}", Name = "GetAdministrator")]
-        public async Task<ActionResult<AdministratorDto>> GetAdministrator(int userId)
+        public async Task<ActionResult<AdministratorDto>> GetAdministratorAsync(int userId)
         {
             var administrator = await _administratorService.GetAdministratorAsync(userId);
 
@@ -35,7 +35,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<AdministratorDto>>> GetAdministrators()
+        public async Task<ActionResult<IList<AdministratorDto>>> GetAdministratorsAsync()
         {
             var administrators = await _administratorService.GetAdministratorsAsync();
 
@@ -46,7 +46,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<AdministratorDto>> CreateAdministrator([FromBody] RegisterByAnotherUserDto model)
+        public async Task<ActionResult<AdministratorDto>> CreateAdministratorAsync([FromBody] RegisterByAnotherUserDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
