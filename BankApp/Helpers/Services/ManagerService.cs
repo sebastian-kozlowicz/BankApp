@@ -5,6 +5,7 @@ using AutoMapper;
 using BankApp.Data;
 using BankApp.Dtos.Auth;
 using BankApp.Enumerators;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ using Newtonsoft.Json;
 
 namespace BankApp.Helpers.Services
 {
-    public class ManagerService
+    public class ManagerService : IManagerService
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;

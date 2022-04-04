@@ -2,14 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BankApp.Data;
 using BankApp.Dtos.Auth;
 using BankApp.Dtos.Manager;
-using BankApp.Enumerators;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {
@@ -17,22 +14,19 @@ namespace BankApp.Controllers
     [Route("api/[controller]")]
     public class ManagersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IManagerService _managerService;
         private readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ManagersController(UserManager<ApplicationUser> userManager, ApplicationDbContext context,
-            IMapper mapper)
+        public ManagersController(IManagerService managerService, IMapper mapper)
         {
-            _userManager = userManager;
-            _context = context;
+            _managerService = managerService;
             _mapper = mapper;
         }
 
         [HttpGet("{userId}", Name = "GetManager")]
         public async Task<ActionResult<ManagerDto>> GetManagerAsync(int userId)
         {
-            var manager = _context.Managers.Include(m => m.ApplicationUser).SingleOrDefault(m => m.Id == userId);
+            var manager = await _managerService.GetManagerAsync(userId);
 
             if (manager == null)
                 return NotFound();
@@ -41,14 +35,14 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ManagerDto>>> GetManagersAsync()
+        public async Task<ActionResult<IList<ManagerDto>>> GetManagersAsync()
         {
-            var managers = _context.Managers.Include(m => m.ApplicationUser).ToList();
+            var managers = await _managerService.GetManagersAsync();
 
             if (!managers.Any())
                 return NotFound();
 
-            return Ok(_mapper.Map<List<Manager>, List<ManagerDto>>(managers));
+            return Ok(_mapper.Map<IList<Manager>, IList<ManagerDto>>(managers));
         }
 
         [HttpPost]
@@ -57,18 +51,11 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = _mapper.Map<ApplicationUser>(model);
-            user.Manager = new Manager {Id = user.Id};
+            var manager = await _managerService.CreateManagerAsync(model);
 
-            var result = await _userManager.CreateAsync(user);
+            var managerDto = _mapper.Map<ManagerDto>(manager);
 
-            if (result.Succeeded)
-                await _userManager.AddToRoleAsync(user, UserRole.Manager.ToString());
-            else
-                return BadRequest(result.Errors);
-
-            var manager = _mapper.Map<ManagerDto>(user.Manager);
-            return CreatedAtRoute("GetManager", new {userId = manager.Id}, manager);
+            return CreatedAtRoute("GetManager", new { userId = managerDto.Id }, manager);
         }
     }
 }
