@@ -30,7 +30,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet("{userId}", Name = "GetManager")]
-        public ActionResult<ManagerDto> GetManager(int userId)
+        public async Task<ActionResult<ManagerDto>> GetManagerAsync(int userId)
         {
             var manager = _context.Managers.Include(m => m.ApplicationUser).SingleOrDefault(m => m.Id == userId);
 
@@ -41,7 +41,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<ManagerDto>> GetManagers()
+        public async Task<ActionResult<IEnumerable<ManagerDto>>> GetManagersAsync()
         {
             var managers = _context.Managers.Include(m => m.ApplicationUser).ToList();
 
@@ -52,7 +52,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ManagerDto>> CreateManager([FromBody] RegisterByAnotherUserDto model)
+        public async Task<ActionResult<ManagerDto>> CreateManagerAsync([FromBody] RegisterByAnotherUserDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
