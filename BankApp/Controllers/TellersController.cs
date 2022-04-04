@@ -2,14 +2,11 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using BankApp.Data;
 using BankApp.Dtos.Auth;
 using BankApp.Dtos.Teller;
-using BankApp.Enumerators;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {
@@ -17,21 +14,19 @@ namespace BankApp.Controllers
     [Route("api/[controller]")]
     public class TellersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ITellerService _tellerService;
 
-        public TellersController(UserManager<ApplicationUser> userManager, ApplicationDbContext context, IMapper mapper)
+        public TellersController(ITellerService tellerService, IMapper mapper)
         {
-            _userManager = userManager;
-            _context = context;
+            _tellerService = tellerService;
             _mapper = mapper;
         }
 
         [HttpGet("{userId}", Name = "GetTeller")]
         public async Task<ActionResult<TellerDto>> GeTellerAsync(int userId)
         {
-            var teller = _context.Tellers.Include(e => e.ApplicationUser).SingleOrDefault(e => e.Id == userId);
+            var teller = await _tellerService.GeTellerAsync(userId);
 
             if (teller == null)
                 return NotFound();
@@ -42,12 +37,12 @@ namespace BankApp.Controllers
         [HttpGet]
         public async Task<ActionResult<IList<TellerDto>>> GeTellersAsync()
         {
-            var tellers = _context.Tellers.Include(e => e.ApplicationUser).ToList();
+            var tellers = await _tellerService.GeTellersAsync();
 
             if (!tellers.Any())
                 return NotFound();
 
-            return Ok(_mapper.Map<List<Teller>, List<TellerDto>>(tellers));
+            return Ok(_mapper.Map<IList<Teller>, IList<TellerDto>>(tellers));
         }
 
         [HttpPost]
@@ -56,19 +51,11 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var user = _mapper.Map<ApplicationUser>(model);
-            user.Teller = new Teller { Id = user.Id };
+            var teller = await _tellerService.CreateManagerAsync(model);
 
-            var result = await _userManager.CreateAsync(user);
+            var tellerDto = _mapper.Map<TellerDto>(teller);
 
-            if (result.Succeeded)
-                await _userManager.AddToRoleAsync(user, UserRole.Teller.ToString());
-            else
-                return BadRequest(result.Errors);
-
-            var teller = _mapper.Map<TellerDto>(user.Teller);
-
-            return CreatedAtRoute("GetTeller", new { userId = teller.Id }, teller);
+            return CreatedAtRoute("GetTeller", new { userId = tellerDto.Id }, teller);
         }
     }
 }
