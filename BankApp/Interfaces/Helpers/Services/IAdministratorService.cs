@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace BankApp.Interfaces.Helpers.Services
 {
-    public interface IUserService
+    public interface IAdministratorService
     {
         Task<Administrator> GetAdministratorAsync(int userId);
         Task<IList<Administrator>> GetAdministratorsAsync();

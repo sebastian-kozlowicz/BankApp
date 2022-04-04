@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Data;
-using BankApp.Dtos.Administrator;
 using BankApp.Dtos.Auth;
 using BankApp.Enumerators;
 using BankApp.Interfaces.Helpers.Services;
@@ -15,13 +14,14 @@ using Newtonsoft.Json;
 
 namespace BankApp.Helpers.Services
 {
-    public class UserService : IUserService
+    public class AdministratorService : IAdministratorService
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserService(ApplicationDbContext context, IMapper mapper, UserManager<ApplicationUser> userManager)
+        public AdministratorService(ApplicationDbContext context, IMapper mapper,
+            UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _mapper = mapper;

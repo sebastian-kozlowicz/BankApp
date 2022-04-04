@@ -15,18 +15,18 @@ namespace BankApp.Controllers
     public class AdministratorsController : ControllerBase
     {
         private readonly IMapper _mapper;
-        private readonly IUserService _userService;
+        private readonly IAdministratorService _administratorService;
 
-        public AdministratorsController(IUserService userService, IMapper mapper)
+        public AdministratorsController(IAdministratorService administratorService, IMapper mapper)
         {
-            _userService = userService;
+            _administratorService = administratorService;
             _mapper = mapper;
         }
 
         [HttpGet("{userId}", Name = "GetAdministrator")]
         public async Task<ActionResult<AdministratorDto>> GetAdministrator(int userId)
         {
-            var administrator = await _userService.GetAdministratorAsync(userId);
+            var administrator = await _administratorService.GetAdministratorAsync(userId);
 
             if (administrator == null)
                 return NotFound();
@@ -37,7 +37,7 @@ namespace BankApp.Controllers
         [HttpGet]
         public async Task<ActionResult<IList<AdministratorDto>>> GetAdministrators()
         {
-            var administrators = await _userService.GetAdministratorsAsync();
+            var administrators = await _administratorService.GetAdministratorsAsync();
 
             if (!administrators.Any())
                 return NotFound();
@@ -51,7 +51,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var administrator = await _userService.CreateAdministratorAsync(model);
+            var administrator = await _administratorService.CreateAdministratorAsync(model);
 
             var administratorDto = _mapper.Map<AdministratorDto>(administrator);
 
