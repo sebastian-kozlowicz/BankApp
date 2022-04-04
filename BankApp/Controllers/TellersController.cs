@@ -29,7 +29,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet("{userId}", Name = "GetTeller")]
-        public ActionResult<TellerDto> GeTeller(int userId)
+        public async Task<ActionResult<TellerDto>> GeTellerAsync(int userId)
         {
             var teller = _context.Tellers.Include(e => e.ApplicationUser).SingleOrDefault(e => e.Id == userId);
 
@@ -40,7 +40,7 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<TellerDto>> GeTellers()
+        public async Task<ActionResult<IList<TellerDto>>> GeTellersAsync()
         {
             var tellers = _context.Tellers.Include(e => e.ApplicationUser).ToList();
 
@@ -51,13 +51,13 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<TellerDto>> CreateTeller([FromBody] RegisterByAnotherUserDto model)
+        public async Task<ActionResult<TellerDto>> CreateTellerAsync([FromBody] RegisterByAnotherUserDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
             var user = _mapper.Map<ApplicationUser>(model);
-            user.Teller = new Teller {Id = user.Id};
+            user.Teller = new Teller { Id = user.Id };
 
             var result = await _userManager.CreateAsync(user);
 
@@ -68,7 +68,7 @@ namespace BankApp.Controllers
 
             var teller = _mapper.Map<TellerDto>(user.Teller);
 
-            return CreatedAtRoute("GetTeller", new {userId = teller.Id}, teller);
+            return CreatedAtRoute("GetTeller", new { userId = teller.Id }, teller);
         }
     }
 }
