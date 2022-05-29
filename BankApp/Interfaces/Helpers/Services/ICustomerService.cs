@@ -9,7 +9,7 @@ namespace BankApp.Interfaces.Helpers.Services
     public interface ICustomerService
     {
         Task<Customer> GetCustomerAsync(int userId);
-        Task<IList<Customer>> GetCustomersAsync();
+        Task<IEnumerable<Customer>> GetCustomersAsync();
         Task<ActionResult<Customer>> CreateCustomerAsync(RegisterByAnotherUserDto model);
     }
 }

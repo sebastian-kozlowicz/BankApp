@@ -35,14 +35,14 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<CustomerDto>>> GetCustomersAsync()
+        public async Task<ActionResult<IEnumerable<CustomerDto>>> GetCustomersAsync()
         {
             var customers = await _customerService.GetCustomersAsync();
 
             if (!customers.Any())
                 return NotFound();
 
-            return Ok(_mapper.Map<IList<Customer>, IList<CustomerDto>>(customers));
+            return Ok(_mapper.Map<IEnumerable<Customer>, IEnumerable<CustomerDto>>(customers));
         }
 
         [HttpPost]
