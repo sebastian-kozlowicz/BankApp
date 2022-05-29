@@ -35,14 +35,14 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<ManagerDto>>> GetManagersAsync()
+        public async Task<ActionResult<IEnumerable<ManagerDto>>> GetManagersAsync()
         {
             var managers = await _managerService.GetManagersAsync();
 
             if (!managers.Any())
                 return NotFound();
 
-            return Ok(_mapper.Map<IList<Manager>, IList<ManagerDto>>(managers));
+            return Ok(_mapper.Map<IEnumerable<Manager>, IEnumerable<ManagerDto>>(managers));
         }
 
         [HttpPost]

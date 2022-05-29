@@ -9,7 +9,7 @@ namespace BankApp.Interfaces.Helpers.Services
     public interface IManagerService
     {
         Task<Manager> GetManagerAsync(int userId);
-        Task<IList<Manager>> GetManagersAsync();
+        Task<IEnumerable<Manager>> GetManagersAsync();
         Task<ActionResult<Manager>> CreateManagerAsync(RegisterByAnotherUserDto model);
     }
 }
