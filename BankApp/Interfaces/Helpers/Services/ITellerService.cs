@@ -9,7 +9,7 @@ namespace BankApp.Interfaces.Helpers.Services
     public interface ITellerService
     {
         Task<Teller> GeTellerAsync(int userId);
-        Task<IList<Teller>> GeTellersAsync();
+        Task<IEnumerable<Teller>> GeTellersAsync();
         Task<ActionResult<Teller>> CreateManagerAsync(RegisterByAnotherUserDto model);
     }
 }

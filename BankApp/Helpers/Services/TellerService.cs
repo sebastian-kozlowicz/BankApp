@@ -33,7 +33,7 @@ namespace BankApp.Helpers.Services
             return await _context.Tellers.Include(e => e.ApplicationUser).SingleOrDefaultAsync(e => e.Id == userId);
         }
 
-        public async Task<IList<Teller>> GeTellersAsync()
+        public async Task<IEnumerable<Teller>> GeTellersAsync()
         {
             return await _context.Tellers.Include(e => e.ApplicationUser).ToListAsync();
         }

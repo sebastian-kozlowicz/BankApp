@@ -35,14 +35,14 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IList<TellerDto>>> GeTellersAsync()
+        public async Task<ActionResult<IEnumerable<TellerDto>>> GeTellersAsync()
         {
             var tellers = await _tellerService.GeTellersAsync();
 
             if (!tellers.Any())
                 return NotFound();
 
-            return Ok(_mapper.Map<IList<Teller>, IList<TellerDto>>(tellers));
+            return Ok(_mapper.Map<IEnumerable<Teller>, IEnumerable<TellerDto>>(tellers));
         }
 
         [HttpPost]
