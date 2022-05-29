@@ -9,7 +9,7 @@ namespace BankApp.Interfaces.Helpers.Services
     public interface IAdministratorService
     {
         Task<Administrator> GetAdministratorAsync(int userId);
-        Task<IList<Administrator>> GetAdministratorsAsync();
+        Task<IEnumerable<Administrator>> GetAdministratorsAsync();
         Task<ActionResult<Administrator>> CreateAdministratorAsync(RegisterByAnotherUserDto model);
     }
 }

@@ -34,7 +34,7 @@ namespace BankApp.Helpers.Services
                 .SingleOrDefaultAsync(a => a.Id == userId);
         }
 
-        public async Task<IList<Administrator>> GetAdministratorsAsync()
+        public async Task<IEnumerable<Administrator>> GetAdministratorsAsync()
         {
             return await _context.Administrators.Include(a => a.ApplicationUser).ToListAsync();
         }
