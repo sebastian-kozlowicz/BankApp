@@ -9,6 +9,7 @@ using BankApp.Dtos.ApplicationUser;
 using BankApp.Dtos.Auth;
 using BankApp.Dtos.BankAccount.WithCustomerCreation;
 using BankApp.Enumerators;
+using BankApp.Exceptions;
 using BankApp.Helpers.Services;
 using BankApp.Interfaces.Helpers.Builders.Number;
 using BankApp.Mapping;
@@ -538,6 +539,49 @@ namespace BankApp.UnitTests.Helpers.Services
                 .Be(expectedCustomer.ApplicationUser.UserAddress.ApartmentNumber);
             bankAccountFromDb.Customer.ApplicationUser.UserAddress.PostalCode.Should()
                 .Be(expectedCustomer.ApplicationUser.UserAddress.PostalCode);
+        }
+
+        [TestMethod]
+        public void CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowException_When_CurrentUserNotExist()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
+            {
+                Register = new RegisterByAnotherUserDto
+                {
+                    User = new ApplicationUserCreationByAnotherUserDto
+                    {
+                        Name = "John",
+                        Surname = "Smith",
+                        Email = "john@smith.com",
+                        PhoneNumber = "123456789"
+                    },
+                    Address = new AddressCreationDto
+                    {
+                        Country = "United States",
+                        City = "New York",
+                        Street = "Glenwood Ave",
+                        HouseNumber = "10",
+                        ApartmentNumber = "11",
+                        PostalCode = "10028"
+                    }
+                },
+                BankAccount = new Dtos.BankAccount.WithCustomerCreation.BankAccountCreationDto
+                {
+                    AccountType = AccountType.Checking,
+                    Currency = Currency.Eur
+                }
+            };
+
+            const int currentUserId = 999;
+
+            // Act
+            Func<Task> func = async () =>
+                await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation, currentUserId);
+
+            // Assert
+            func.Should().Throw<InvalidDataInDatabaseException>()
+                .WithMessage($"User with id {currentUserId} found in claims doesn't exist in database.");
         }
     }
 }
