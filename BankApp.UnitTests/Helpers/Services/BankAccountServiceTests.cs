@@ -421,7 +421,7 @@ namespace BankApp.UnitTests.Helpers.Services
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
             };
 
-            var currentUser = new ApplicationUser { Id = 2 };
+            const int currentUserId = 2;
 
             var expectedCustomer = new Customer
             {
@@ -463,7 +463,7 @@ namespace BankApp.UnitTests.Helpers.Services
                 Balance = 0,
                 DebitLimit = 0,
                 CustomerId = 5,
-                CreatedById = currentUser.Id
+                CreatedById = currentUserId
             };
 
             _userManagerMock.Setup(m => m.IsInRoleAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
@@ -480,7 +480,7 @@ namespace BankApp.UnitTests.Helpers.Services
                 .Returns(bankAccountNumber);
 
             // Act
-            var result = await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation, currentUser.Id);
+            var result = await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation, currentUserId);
 
             // Assert
             _userManagerMock.Verify(m => m.AddToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Customer.ToString()),
@@ -496,7 +496,7 @@ namespace BankApp.UnitTests.Helpers.Services
             result.Customer.ApplicationUser.Surname.Should().Be(expectedCustomer.ApplicationUser.Surname);
             result.Customer.ApplicationUser.Email.Should().Be(expectedCustomer.ApplicationUser.Email);
             result.Customer.ApplicationUser.PhoneNumber.Should().Be(expectedCustomer.ApplicationUser.PhoneNumber);
-            result.Customer.ApplicationUser.CreatedById.Should().Be(currentUser.Id);
+            result.Customer.ApplicationUser.CreatedById.Should().Be(currentUserId);
             result.Customer.ApplicationUser.UserAddress.Id.Should().Be(expectedCustomer.ApplicationUser.UserAddress.Id);
             result.Customer.ApplicationUser.UserAddress.Country.Should()
                 .Be(expectedCustomer.ApplicationUser.UserAddress.Country);
@@ -523,7 +523,7 @@ namespace BankApp.UnitTests.Helpers.Services
             bankAccountFromDb.Customer.ApplicationUser.Email.Should().Be(expectedCustomer.ApplicationUser.Email);
             bankAccountFromDb.Customer.ApplicationUser.PhoneNumber.Should()
                 .Be(expectedCustomer.ApplicationUser.PhoneNumber);
-            bankAccountFromDb.Customer.ApplicationUser.CreatedById.Should().Be(currentUser.Id);
+            bankAccountFromDb.Customer.ApplicationUser.CreatedById.Should().Be(currentUserId);
             bankAccountFromDb.Customer.ApplicationUser.UserAddress.Id.Should()
                 .Be(expectedCustomer.ApplicationUser.UserAddress.Id);
             bankAccountFromDb.Customer.ApplicationUser.UserAddress.Country.Should()
