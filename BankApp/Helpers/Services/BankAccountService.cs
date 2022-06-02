@@ -115,7 +115,7 @@ namespace BankApp.Helpers.Services
         {
             var currentUser = _context.Users.SingleOrDefault(u => u.Id == currentUserId);
             if (currentUser == null)
-                throw new InvalidDataInDatabaseException(
+                throw new InvalidInputDataException(
                     $"User with id {currentUserId} found in claims doesn't exist in database.");
 
             int? workerBranchId = null;
@@ -125,7 +125,7 @@ namespace BankApp.Helpers.Services
                 await _context.Tellers.Where(t => t.Id == currentUser.Id).LoadAsync();
 
                 if (currentUser.Teller.WorkAtId == null)
-                    throw new InvalidDataInDatabaseException(
+                    throw new InvalidInputDataException(
                         $"Worker with id {currentUserId} is currently not assigned to any branch.");
 
                 workerBranchId = currentUser.Teller.WorkAtId;
@@ -135,7 +135,7 @@ namespace BankApp.Helpers.Services
                 await _context.Managers.Where(m => m.Id == currentUser.Id).LoadAsync();
 
                 if (currentUser.Manager.WorkAtId == null)
-                    throw new InvalidDataInDatabaseException(
+                    throw new InvalidInputDataException(
                         $"Worker with id {currentUserId} is currently not assigned to any branch.");
 
                 workerBranchId = currentUser.Manager.WorkAtId;

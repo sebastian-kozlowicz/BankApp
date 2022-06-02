@@ -543,7 +543,7 @@ namespace BankApp.UnitTests.Helpers.Services
 
         [TestMethod]
         public void
-            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowInvalidDataInDatabaseException_When_CurrentUserNotExist()
+            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowInvalidInputDataException_When_CurrentUserNotExist()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
@@ -581,13 +581,13 @@ namespace BankApp.UnitTests.Helpers.Services
                 await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation, currentUserId);
 
             // Assert
-            func.Should().Throw<InvalidDataInDatabaseException>()
+            func.Should().Throw<InvalidInputDataException>()
                 .WithMessage($"User with id {currentUserId} found in claims doesn't exist in database.");
         }
 
         [TestMethod]
         public void
-            CreateBankAccountWithCustomerByWorkerAsync_Should_ReturnBadRequest_When_TellerIsNotAssignedToBranch()
+            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowInvalidInputDataException_When_TellerIsNotAssignedToBranch()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
@@ -628,7 +628,7 @@ namespace BankApp.UnitTests.Helpers.Services
                 await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation, currentUserId);
 
             // Assert
-            func.Should().Throw<InvalidDataInDatabaseException>()
+            func.Should().Throw<InvalidInputDataException>()
                 .WithMessage($"Worker with id {currentUserId} is currently not assigned to any branch.");
         }
     }
