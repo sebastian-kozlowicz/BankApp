@@ -631,5 +631,52 @@ namespace BankApp.UnitTests.Helpers.Services
             func.Should().Throw<InvalidInputDataException>()
                 .WithMessage($"Worker with id {currentUserId} is currently not assigned to any branch.");
         }
+
+        [TestMethod]
+        public void
+            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowInvalidInputDataException_When_ManagerIsNotAssignedToBranch()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
+            {
+                Register = new RegisterByAnotherUserDto
+                {
+                    User = new ApplicationUserCreationByAnotherUserDto
+                    {
+                        Name = "John",
+                        Surname = "Smith",
+                        Email = "john@smith.com",
+                        PhoneNumber = "123456789"
+                    },
+                    Address = new AddressCreationDto
+                    {
+                        Country = "United States",
+                        City = "New York",
+                        Street = "Glenwood Ave",
+                        HouseNumber = "10",
+                        ApartmentNumber = "11",
+                        PostalCode = "10028"
+                    }
+                },
+                BankAccount = new Dtos.BankAccount.WithCustomerCreation.BankAccountCreationDto
+                {
+                    AccountType = AccountType.Checking,
+                    Currency = Currency.Eur
+                }
+            };
+
+            const int currentUserId = 4;
+
+            _userManagerMock.Setup(m => m.IsInRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Manager.ToString()))
+                .ReturnsAsync(() => true);
+
+            // Act
+            Func<Task> func = async () =>
+                await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation, currentUserId);
+
+            // Assert
+            func.Should().Throw<InvalidInputDataException>()
+                .WithMessage($"Worker with id {currentUserId} is currently not assigned to any branch.");
+        }
     }
 }
