@@ -14,7 +14,7 @@ namespace BankApp.Configuration
         public TimeSpan ValidFor { get; set; }
         public string Jti => Guid.NewGuid().ToString();
         public string SecretKey { get; set; }
-        public SymmetricSecurityKey SymmetricSecurityKey => new SymmetricSecurityKey(Encoding.ASCII.GetBytes(SecretKey));
-        public SigningCredentials SigningCredentials => new SigningCredentials(SymmetricSecurityKey, SecurityAlgorithms.HmacSha256);
+        public SymmetricSecurityKey SymmetricSecurityKey => new(Encoding.ASCII.GetBytes(SecretKey));
+        public SigningCredentials SigningCredentials => new(SymmetricSecurityKey, SecurityAlgorithms.HmacSha256);
     }
 }
