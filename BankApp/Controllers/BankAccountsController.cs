@@ -29,7 +29,7 @@ namespace BankApp.Controllers
 
         [HttpGet]
         [Route("{bankAccountId}", Name = "GetBankAccount")]
-        public async Task<ActionResult<BankAccountDto>> GetBankAccount(int bankAccountId)
+        public async Task<ActionResult<BankAccountDto>> GetBankAccountAsync(int bankAccountId)
         {
             var bankAccount = await _bankAccountService.GetBankAccountAsync(bankAccountId);
 
@@ -41,7 +41,7 @@ namespace BankApp.Controllers
 
         [HttpGet]
         [Route("GetAllForUser/{applicationUserId}")]
-        public async Task<ActionResult<IEnumerable<BankAccountDto>>> GetBankAccountsForUser(int applicationUserId)
+        public async Task<ActionResult<IEnumerable<BankAccountDto>>> GetBankAccountsForUserAsync(int applicationUserId)
         {
             var bankAccounts = await _bankAccountService.GetBankAccountsForUserAsync(applicationUserId);
 
@@ -52,7 +52,7 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BankAccountDto>> CreateBankAccount([FromBody] BankAccountCreationDto model)
+        public async Task<ActionResult<BankAccountDto>> CreateBankAccountAsync([FromBody] BankAccountCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -65,7 +65,7 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("CreateWithCustomerByCustomer")]
-        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByCustomer(
+        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByCustomerAsync(
             [FromBody] BankAccountWithCustomerCreationByCustomerDto model)
         {
             if (!ModelState.IsValid)

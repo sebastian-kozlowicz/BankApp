@@ -86,7 +86,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public async Task  GetBankAccountAsync_Should_ReturnNotFound_When_BankAccountNotFound()
+        public async Task GetBankAccountAsync_Should_ReturnNotFound_When_BankAccountNotFound()
         {
             //Arrange
             _bankAccountService.Setup(s => s.GetBankAccountAsync(It.IsAny<int>())).ReturnsAsync((BankAccount)null);
