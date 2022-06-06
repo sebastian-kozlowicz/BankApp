@@ -69,30 +69,37 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public async Task GetBankAccount_Should_ReturnBankAccountDto_When_BankAccountIsFound()
+        public async Task GetBankAccountAsync_Should_ReturnBankAccountDto_When_BankAccountIsFound()
         {
             // Arrange
             _bankAccountService.Setup(s => s.GetBankAccountAsync(It.IsAny<int>())).ReturnsAsync(_bankAccount);
 
             // Act
-            var result = await _sut.GetBankAccount(1);
+            var result = await _sut.GetBankAccountAsync(1);
 
             // Assert
-            var okObjectResult = result.Result as OkObjectResult;
-            okObjectResult.Should().NotBeNull();
+            var okResult = result.Result as OkObjectResult;
+            okResult.Should().NotBeNull();
 
-            okObjectResult.Value.Should().BeEquivalentTo(_bankAccountDto);
-            okObjectResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
+            okResult.Value.Should().BeEquivalentTo(_bankAccountDto);
+            okResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
         }
 
-        //[TestMethod]
-        //public void GetBankAccount_Should_ReturnNotFound_When_BankAccountNotFound()
-        //{
-        //    var notFoundResult = _sut.GetBankAccount(999);
+        [TestMethod]
+        public async Task  GetBankAccountAsync_Should_ReturnNotFound_When_BankAccountNotFound()
+        {
+            //Arrange
+            _bankAccountService.Setup(s => s.GetBankAccountAsync(It.IsAny<int>())).ReturnsAsync((BankAccount)null);
 
-        //    Assert.IsNotNull(notFoundResult);
-        //    Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
-        //}
+            // Act
+            var result = await _sut.GetBankAccountAsync(999);
+
+            // Assert
+            var notFoundResult = result.Result as NotFoundResult;
+            notFoundResult.Should().NotBeNull();
+
+            notFoundResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        }
 
         //[TestMethod]
         //public void GetBankAccountsForUser_Should_ReturnBankAccountDtoList_When_BankAccountsAreFound()
