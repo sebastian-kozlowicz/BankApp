@@ -28,7 +28,7 @@ namespace BankApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("login")]
-        public async Task<ActionResult<AuthResultDto>> Login([FromBody] LoginDto model)
+        public async Task<ActionResult<AuthResultDto>> LoginAsync([FromBody] LoginDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -47,7 +47,7 @@ namespace BankApp.Controllers
         [HttpPost]
         [AllowAnonymous]
         [Route("refresh")]
-        public async Task<ActionResult<AuthResultDto>> Refresh([FromBody] RefreshTokenRequestDto model)
+        public async Task<ActionResult<AuthResultDto>> RefreshTokenAsync([FromBody] RefreshTokenRequestDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
