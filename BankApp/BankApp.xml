@@ -4,14 +4,14 @@
         <name>BankApp</name>
     </assembly>
     <members>
-        <member name="M:BankApp.Controllers.AuthController.Login(BankApp.Dtos.Auth.LoginDto)">
+        <member name="M:BankApp.Controllers.AuthController.LoginAsync(BankApp.Dtos.Auth.LoginDto)">
             <summary>
                 Logs user in
             </summary>
             <param name="model">Login credentials</param>
             <returns>JWT with refresh token</returns>
         </member>
-        <member name="M:BankApp.Controllers.AuthController.Refresh(BankApp.Dtos.Auth.RefreshTokenRequestDto)">
+        <member name="M:BankApp.Controllers.AuthController.RefreshTokenAsync(BankApp.Dtos.Auth.RefreshTokenRequestDto)">
             <summary>
                 Refreshes expired JWT
             </summary>

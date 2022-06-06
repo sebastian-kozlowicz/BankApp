@@ -80,7 +80,7 @@ namespace BankApp.Controllers
         [HttpPost]
         [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("CreateWithCustomerByWorker")]
-        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByWorker(
+        public async Task<ActionResult<BankAccountDto>> CreateBankAccountWithCustomerByWorkerAsync(
             [FromBody] BankAccountWithCustomerCreationByWorkerDto model)
         {
             if (!ModelState.IsValid)
