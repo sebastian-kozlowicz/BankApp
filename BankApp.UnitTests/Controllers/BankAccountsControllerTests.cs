@@ -120,14 +120,21 @@ namespace BankApp.UnitTests.Controllers
             okResult.StatusCode.Should().Be((int)HttpStatusCode.OK);
         }
 
-        //[TestMethod]
-        //public void GetBankAccountsForUser_Should_ReturnNotFound_When_BankAccountsNotFound()
-        //{
-        //    var notFoundResult = _sut.GetBankAccountsForUser(999);
+        [TestMethod]
+        public async Task GetBankAccountsForUserAsync_Should_ReturnNotFound_When_BankAccountsNotFound()
+        {
+            //Arrange
+            _bankAccountService.Setup(s => s.GetBankAccountsForUserAsync(It.IsAny<int>()))
+                .ReturnsAsync(new List<BankAccount>());
 
-        //    Assert.IsNotNull(notFoundResult);
-        //    Assert.IsInstanceOfType(notFoundResult.Result, typeof(NotFoundResult));
-        //}
+            // Act
+            var result = await _sut.GetBankAccountsForUserAsync(999);
+
+            var notFoundResult = result.Result as NotFoundResult;
+            notFoundResult.Should().NotBeNull();
+
+            notFoundResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
+        }
 
         //[TestMethod]
         //public void CreateBankAccount_Should_CreateBankAccount_And_ReturnBankAccountDto_When_ModelStateIsValid()
