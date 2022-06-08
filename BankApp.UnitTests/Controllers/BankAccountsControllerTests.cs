@@ -59,21 +59,21 @@ namespace BankApp.UnitTests.Controllers
         };
 
         private readonly IMapper _mapper = new MapperConfiguration(c => c.AddProfile<MappingProfile>()).CreateMapper();
-        private Mock<IBankAccountService> _bankAccountService;
+        private Mock<IBankAccountService> _bankAccountServiceMock;
         private BankAccountsController _sut;
 
         [TestInitialize]
         public void TestInitialize()
         {
-            _bankAccountService = new Mock<IBankAccountService>();
-            _sut = new BankAccountsController(_mapper, _bankAccountService.Object);
+            _bankAccountServiceMock = new Mock<IBankAccountService>();
+            _sut = new BankAccountsController(_mapper, _bankAccountServiceMock.Object);
         }
 
         [TestMethod]
         public async Task GetBankAccountAsync_Should_ReturnBankAccountDto_When_BankAccountIsFound()
         {
             // Arrange
-            _bankAccountService.Setup(s => s.GetBankAccountAsync(It.IsAny<int>())).ReturnsAsync(_bankAccount);
+            _bankAccountServiceMock.Setup(s => s.GetBankAccountAsync(It.IsAny<int>())).ReturnsAsync(_bankAccount);
 
             // Act
             var result = await _sut.GetBankAccountAsync(1);
@@ -90,7 +90,7 @@ namespace BankApp.UnitTests.Controllers
         public async Task GetBankAccountAsync_Should_ReturnNotFound_When_BankAccountNotFound()
         {
             //Arrange
-            _bankAccountService.Setup(s => s.GetBankAccountAsync(It.IsAny<int>())).ReturnsAsync((BankAccount)null);
+            _bankAccountServiceMock.Setup(s => s.GetBankAccountAsync(It.IsAny<int>())).ReturnsAsync((BankAccount)null);
 
             // Act
             var result = await _sut.GetBankAccountAsync(999);
@@ -106,7 +106,7 @@ namespace BankApp.UnitTests.Controllers
         public async Task GetBankAccountsForUserAsync_Should_ReturnBankAccountDtoList_When_BankAccountsAreFound()
         {
             //Arrange
-            _bankAccountService.Setup(s => s.GetBankAccountsForUserAsync(It.IsAny<int>()))
+            _bankAccountServiceMock.Setup(s => s.GetBankAccountsForUserAsync(It.IsAny<int>()))
                 .ReturnsAsync(new List<BankAccount> { _bankAccount });
 
             // Act
@@ -124,7 +124,7 @@ namespace BankApp.UnitTests.Controllers
         public async Task GetBankAccountsForUserAsync_Should_ReturnNotFound_When_BankAccountsNotFound()
         {
             //Arrange
-            _bankAccountService.Setup(s => s.GetBankAccountsForUserAsync(It.IsAny<int>()))
+            _bankAccountServiceMock.Setup(s => s.GetBankAccountsForUserAsync(It.IsAny<int>()))
                 .ReturnsAsync(new List<BankAccount>());
 
             // Act
@@ -136,96 +136,80 @@ namespace BankApp.UnitTests.Controllers
             notFoundResult.StatusCode.Should().Be((int)HttpStatusCode.NotFound);
         }
 
-        //[TestMethod]
-        //public void CreateBankAccount_Should_CreateBankAccount_And_ReturnBankAccountDto_When_ModelStateIsValid()
-        //{
-        //    // Arrange
-        //    var bankAccountCreation = new BankAccountCreationDto
-        //    {
-        //        AccountType = AccountType.Checking,
-        //        Currency = Currency.Eur,
-        //        CustomerId = 1
-        //    };
+        [TestMethod]
+        public async Task CreateBankAccountAsync_Should_CreateBankAccount_And_ReturnBankAccountDto_When_ModelStateIsValid()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountCreationDto
+            {
+                AccountType = AccountType.Checking,
+                Currency = Currency.Eur,
+                CustomerId = 1
+            };
 
-        //    var bankAccountNumber = new BankAccountNumber
-        //    {
-        //        CountryCode = "PL",
-        //        CheckDigits = "61",
-        //        NationalBankCode = "1080",
-        //        BranchCode = "000",
-        //        NationalCheckDigit = 1,
-        //        AccountNumber = 0,
-        //        AccountNumberText = "0000000000000000",
-        //        Iban = "PL61108000010000000000000000",
-        //        IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
-        //    };
+            var bankAccountNumber = new BankAccountNumber
+            {
+                CountryCode = "PL",
+                CheckDigits = "61",
+                NationalBankCode = "1080",
+                BranchCode = "000",
+                NationalCheckDigit = 1,
+                AccountNumber = 0,
+                AccountNumberText = "0000000000000000",
+                Iban = "PL61108000010000000000000000",
+                IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
+            };
 
-        //    var expectedBankAccount = new BankAccountDto
-        //    {
-        //        AccountType = (AccountType)bankAccountCreation.AccountType,
-        //        Currency = (Currency)bankAccountCreation.Currency,
-        //        CountryCode = bankAccountNumber.CountryCode,
-        //        CheckDigits = bankAccountNumber.CheckDigits,
-        //        NationalBankCode = bankAccountNumber.NationalBankCode,
-        //        BranchCode = bankAccountNumber.BranchCode,
-        //        NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
-        //        AccountNumber = bankAccountNumber.AccountNumber,
-        //        AccountNumberText = bankAccountNumber.AccountNumberText,
-        //        Iban = bankAccountNumber.Iban,
-        //        IbanSeparated = bankAccountNumber.IbanSeparated,
-        //        Balance = 0,
-        //        DebitLimit = 0,
-        //        CustomerId = (int)bankAccountCreation.CustomerId,
-        //        CreatedById = (int)bankAccountCreation.CustomerId
-        //    };
+            var bankAccount = new BankAccount
+            {
+                AccountType = (AccountType)bankAccountCreation.AccountType,
+                Currency = (Currency)bankAccountCreation.Currency,
+                CountryCode = bankAccountNumber.CountryCode,
+                CheckDigits = bankAccountNumber.CheckDigits,
+                NationalBankCode = bankAccountNumber.NationalBankCode,
+                BranchCode = bankAccountNumber.BranchCode,
+                NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
+                AccountNumber = bankAccountNumber.AccountNumber,
+                AccountNumberText = bankAccountNumber.AccountNumberText,
+                Iban = bankAccountNumber.Iban,
+                IbanSeparated = bankAccountNumber.IbanSeparated,
+                Balance = 0,
+                DebitLimit = 0,
+                CustomerId = (int)bankAccountCreation.CustomerId,
+                CreatedById = (int)bankAccountCreation.CustomerId
+            };
 
-        //    _bankAccountNumberBuilderMock.Setup(anf => anf.GenerateBankAccountNumber(null)).Returns(bankAccountNumber);
+            var bankAccountDto = new BankAccountDto
+            {
+                AccountType = (AccountType)bankAccountCreation.AccountType,
+                Currency = (Currency)bankAccountCreation.Currency,
+                CountryCode = bankAccountNumber.CountryCode,
+                CheckDigits = bankAccountNumber.CheckDigits,
+                NationalBankCode = bankAccountNumber.NationalBankCode,
+                BranchCode = bankAccountNumber.BranchCode,
+                NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
+                AccountNumber = bankAccountNumber.AccountNumber,
+                AccountNumberText = bankAccountNumber.AccountNumberText,
+                Iban = bankAccountNumber.Iban,
+                IbanSeparated = bankAccountNumber.IbanSeparated,
+                Balance = 0,
+                DebitLimit = 0,
+                CustomerId = (int)bankAccountCreation.CustomerId,
+                CreatedById = (int)bankAccountCreation.CustomerId
+            };
 
-        //    // Act
-        //    var createdAtRouteResult = _sut.CreateBankAccount(bankAccountCreation).Result as CreatedAtRouteResult;
+            _bankAccountServiceMock.Setup(s => s.CreateBankAccountAsync(It.IsAny<BankAccountCreationDto>())).ReturnsAsync(bankAccount);
 
-        //    // Assert
-        //    Assert.IsNotNull(createdAtRouteResult);
-        //    Assert.IsInstanceOfType(createdAtRouteResult.Value, typeof(BankAccountDto));
+            // Act
+            var result = await _sut.CreateBankAccountAsync(bankAccountCreation);
 
-        //    var bankAccountDto = createdAtRouteResult.Value as BankAccountDto;
-        //    Assert.IsNotNull(bankAccountDto);
-        //    Assert.AreEqual(expectedBankAccount.AccountType, bankAccountDto.AccountType);
-        //    Assert.AreEqual(expectedBankAccount.Currency, bankAccountDto.Currency);
-        //    Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountDto.CountryCode);
-        //    Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountDto.CheckDigits);
-        //    Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
-        //    Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountDto.BranchCode);
-        //    Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
-        //    Assert.AreEqual(expectedBankAccount.AccountNumber, bankAccountDto.AccountNumber);
-        //    Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
-        //    Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
-        //    Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
-        //    Assert.AreEqual(expectedBankAccount.Balance, bankAccountDto.Balance);
-        //    Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountDto.DebitLimit);
-        //    Assert.AreNotEqual(DateTime.MinValue, bankAccountDto.OpenedDate);
-        //    Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountDto.CustomerId);
-        //    Assert.AreEqual(expectedBankAccount.CreatedById, bankAccountDto.CreatedById);
+            // Assert
+            var createdAtRouteResult = result.Result as CreatedAtRouteResult;
+            createdAtRouteResult.Should().NotBeNull();
 
-        //    var bankAccountFromDb = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountDto.Id);
-        //    Assert.IsNotNull(bankAccountFromDb);
-        //    Assert.AreEqual(expectedBankAccount.AccountType, bankAccountFromDb.AccountType);
-        //    Assert.AreEqual(expectedBankAccount.Currency, bankAccountFromDb.Currency);
-        //    Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountFromDb.CountryCode);
-        //    Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountFromDb.CheckDigits);
-        //    Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountFromDb.NationalBankCode);
-        //    Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountFromDb.BranchCode);
-        //    Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountFromDb.NationalCheckDigit);
-        //    Assert.AreEqual(expectedBankAccount.AccountNumber, bankAccountFromDb.AccountNumber);
-        //    Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountFromDb.AccountNumberText);
-        //    Assert.AreEqual(expectedBankAccount.Iban, bankAccountFromDb.Iban);
-        //    Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
-        //    Assert.AreEqual(expectedBankAccount.Balance, bankAccountFromDb.Balance);
-        //    Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountFromDb.DebitLimit);
-        //    Assert.AreNotEqual(DateTime.MinValue, bankAccountFromDb.OpenedDate);
-        //    Assert.AreEqual(expectedBankAccount.CustomerId, bankAccountFromDb.CustomerId);
-        //    Assert.AreEqual(expectedBankAccount.CreatedById, bankAccountFromDb.CreatedById);
-        //}
+            createdAtRouteResult.Value.Should().BeEquivalentTo(bankAccountDto);
+            createdAtRouteResult.StatusCode.Should().Be((int)HttpStatusCode.Created);
+        }
 
         //[TestMethod]
         //public void CreateBankAccount_Should_ReturnBadRequest_When_ModelStateIsInvalid()
