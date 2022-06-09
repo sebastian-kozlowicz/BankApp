@@ -137,7 +137,8 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public async Task CreateBankAccountAsync_Should_CreateBankAccount_And_ReturnBankAccountDto_When_ModelStateIsValid()
+        public async Task
+            CreateBankAccountAsync_Should_CreateBankAccount_And_ReturnBankAccountDto_When_ModelStateIsValid()
         {
             // Arrange
             var bankAccountCreation = new BankAccountCreationDto
@@ -198,7 +199,8 @@ namespace BankApp.UnitTests.Controllers
                 CreatedById = (int)bankAccountCreation.CustomerId
             };
 
-            _bankAccountServiceMock.Setup(s => s.CreateBankAccountAsync(It.IsAny<BankAccountCreationDto>())).ReturnsAsync(bankAccount);
+            _bankAccountServiceMock.Setup(s => s.CreateBankAccountAsync(It.IsAny<BankAccountCreationDto>()))
+                .ReturnsAsync(bankAccount);
 
             // Act
             var result = await _sut.CreateBankAccountAsync(bankAccountCreation);
@@ -211,40 +213,44 @@ namespace BankApp.UnitTests.Controllers
             createdAtRouteResult.StatusCode.Should().Be((int)HttpStatusCode.Created);
         }
 
-        //[TestMethod]
-        //public void CreateBankAccount_Should_ReturnBadRequest_When_ModelStateIsInvalid()
-        //{
-        //    // Arrange
-        //    var bankAccountCreation = new BankAccountCreationDto();
-        //    _sut.ModelState.AddModelError(nameof(bankAccountCreation.AccountType), $"The {nameof(bankAccountCreation.AccountType)} field is required.");
-        //    _sut.ModelState.AddModelError(nameof(bankAccountCreation.Currency), $"The {nameof(bankAccountCreation.Currency)} field is required.");
-        //    _sut.ModelState.AddModelError(nameof(bankAccountCreation.CustomerId), $"The {nameof(bankAccountCreation.CustomerId)} field is required.");
+        [TestMethod]
+        public async Task CreateBankAccount_Should_ReturnBadRequest_When_ModelStateIsInvalid()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountCreationDto();
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.AccountType),
+                $"The {nameof(bankAccountCreation.AccountType)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.Currency),
+                $"The {nameof(bankAccountCreation.Currency)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.CustomerId),
+                $"The {nameof(bankAccountCreation.CustomerId)} field is required.");
 
-        //    // Act
-        //    var badRequestResult = _sut.CreateBankAccount(bankAccountCreation).Result as BadRequestObjectResult;
+            var expectedResult = new SerializableError
+            {
+                {
+                    nameof(bankAccountCreation.AccountType),
+                    new[] { $"The {nameof(bankAccountCreation.AccountType)} field is required." }
+                },
+                {
+                    nameof(bankAccountCreation.Currency),
+                    new[] { $"The {nameof(bankAccountCreation.Currency)} field is required." }
+                },
+                {
+                    nameof(bankAccountCreation.CustomerId),
+                    new[] { $"The {nameof(bankAccountCreation.CustomerId)} field is required." }
+                }
+            };
 
-        //    // Assert
-        //    Assert.IsNotNull(badRequestResult);
-        //    Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+            // Act
+            var result = await _sut.CreateBankAccountAsync(bankAccountCreation);
 
-        //    var error = badRequestResult.Value as SerializableError;
-        //    Assert.IsNotNull(error);
-        //    Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.AccountType)));
-        //    Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.Currency)));
-        //    Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.CustomerId)));
+            // Assert
+            var badRequestResult = result.Result as BadRequestObjectResult;
+            badRequestResult.Should().NotBeNull();
 
-        //    var currencyErrorValues = error[nameof(bankAccountCreation.AccountType)] as string[];
-        //    Assert.IsNotNull(currencyErrorValues);
-        //    Assert.IsTrue(currencyErrorValues.Single() == $"The {nameof(bankAccountCreation.AccountType)} field is required.");
-
-        //    var customerIdErrorValues = error[nameof(bankAccountCreation.Currency)] as string[];
-        //    Assert.IsNotNull(customerIdErrorValues);
-        //    Assert.IsTrue(customerIdErrorValues.Single() == $"The {nameof(bankAccountCreation.Currency)} field is required.");
-
-        //    var accountTypeErrorValues = error[nameof(bankAccountCreation.CustomerId)] as string[];
-        //    Assert.IsNotNull(accountTypeErrorValues);
-        //    Assert.IsTrue(accountTypeErrorValues.Single() == $"The {nameof(bankAccountCreation.CustomerId)} field is required.");
-        //}
+            var serializableError = badRequestResult.Value as SerializableError;
+            serializableError.Should().BeEquivalentTo(expectedResult);
+        }
 
         //[TestMethod]
         //public async Task CreateBankAccountWithCustomerByCustomer_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
