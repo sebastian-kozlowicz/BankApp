@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using BankApp.Configuration;
 using BankApp.Controllers;
 using BankApp.Dtos.Address;
 using BankApp.Dtos.ApplicationUser;
@@ -14,6 +16,7 @@ using BankApp.Interfaces.Helpers.Services;
 using BankApp.Mapping;
 using BankApp.Models;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
@@ -220,7 +223,7 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
-        public async Task CreateBankAccount_Should_ReturnBadRequest_When_ModelStateIsInvalid()
+        public async Task CreateBankAccountAsync_Should_ReturnBadRequest_When_ModelStateIsInvalid()
         {
             // Arrange
             var bankAccountCreation = new BankAccountCreationDto();
@@ -260,7 +263,7 @@ namespace BankApp.UnitTests.Controllers
 
         [TestMethod]
         public async Task
-            CreateBankAccountWithCustomerByCustomer_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
+            CreateBankAccountWithCustomerByCustomerAsync_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto
@@ -376,196 +379,170 @@ namespace BankApp.UnitTests.Controllers
             createdAtRouteResult.StatusCode.Should().Be((int)HttpStatusCode.Created);
         }
 
-        //[TestMethod]
-        //public async Task CreateBankAccountWithCustomerByCustomer_Should_ReturnBadRequest_When_ModelStateIsInvalid()
-        //{
-        //    // Arrange
-        //    var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto();
-        //    _sut.ModelState.AddModelError(nameof(bankAccountCreation.Register), $"The {nameof(bankAccountCreation.Register)} field is required.");
-        //    _sut.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount), $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
+        [TestMethod]
+        public async Task
+            CreateBankAccountWithCustomerByCustomerAsync_Should_ReturnBadRequest_When_ModelStateIsInvalid()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto();
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.Register),
+                $"The {nameof(bankAccountCreation.Register)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount),
+                $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
 
-        //    // Act
-        //    var result = await _sut.CreateBankAccountWithCustomerByCustomer(bankAccountCreation);
+            var expectedResult = new SerializableError
+            {
+                {
+                    nameof(bankAccountCreation.Register),
+                    new[] { $"The {nameof(bankAccountCreation.Register)} field is required." }
+                },
+                {
+                    nameof(bankAccountCreation.BankAccount),
+                    new[] { $"The {nameof(bankAccountCreation.BankAccount)} field is required." }
+                }
+            };
 
-        //    // Assert
-        //    Assert.IsNotNull(result);
-        //    Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            // Act
+            var result = await _sut.CreateBankAccountWithCustomerByCustomerAsync(bankAccountCreation);
 
-        //    var badRequestResult = result.Result as BadRequestObjectResult;
-        //    Assert.IsNotNull(badRequestResult);
-        //    Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+            // Assert
+            var badRequestResult = result.Result as BadRequestObjectResult;
+            badRequestResult.Should().NotBeNull();
 
-        //    var error = badRequestResult.Value as SerializableError;
-        //    Assert.IsNotNull(error);
-        //    Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.Register)));
-        //    Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.BankAccount)));
+            var serializableError = badRequestResult.Value as SerializableError;
+            serializableError.Should().BeEquivalentTo(expectedResult);
+        }
 
-        //    var registerErrorValues = error[nameof(bankAccountCreation.Register)] as string[];
-        //    Assert.IsNotNull(registerErrorValues);
-        //    Assert.IsTrue(registerErrorValues.Single() == $"The {nameof(bankAccountCreation.Register)} field is required.");
+        [TestMethod]
+        public async Task
+            CreateBankAccountWithCustomerByWorker_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
+            {
+                Register = new RegisterByAnotherUserDto
+                {
+                    User = new ApplicationUserCreationByAnotherUserDto
+                    {
+                        Name = "John",
+                        Surname = "Smith",
+                        Email = "john@smith.com",
+                        PhoneNumber = "123456789"
+                    },
+                    Address = new AddressCreationDto
+                    {
+                        Country = "United States",
+                        City = "New York",
+                        Street = "Glenwood Ave",
+                        HouseNumber = "10",
+                        ApartmentNumber = "11",
+                        PostalCode = "10028"
+                    }
+                },
+                BankAccount = new Dtos.BankAccount.WithCustomerCreation.BankAccountCreationDto
+                {
+                    AccountType = AccountType.Checking,
+                    Currency = Currency.Eur
+                }
+            };
 
-        //    var bankAccountErrorValues = error[nameof(bankAccountCreation.BankAccount)] as string[];
-        //    Assert.IsNotNull(bankAccountErrorValues);
-        //    Assert.IsTrue(bankAccountErrorValues.Single() == $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
-        //}
+            var bankAccountNumber = new BankAccountNumber
+            {
+                CountryCode = "PL",
+                CheckDigits = "61",
+                NationalBankCode = "1080",
+                BranchCode = "000",
+                NationalCheckDigit = 1,
+                AccountNumber = 0,
+                AccountNumberText = "0000000000000000",
+                Iban = "PL61108000010000000000000000",
+                IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
+            };
 
-        //[TestMethod]
-        //public async Task CreateBankAccountWithCustomerByWorker_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
-        //{
-        //    // Arrange
-        //    var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
-        //    {
-        //        Register = new RegisterByAnotherUserDto
-        //        {
-        //            User = new ApplicationUserCreationByAnotherUserDto
-        //            {
-        //                Name = "John",
-        //                Surname = "Smith",
-        //                Email = "john@smith.com",
-        //                PhoneNumber = "123456789"
-        //            },
-        //            Address = new AddressCreationDto
-        //            {
-        //                Country = "United States",
-        //                City = "New York",
-        //                Street = "Glenwood Ave",
-        //                HouseNumber = "10",
-        //                ApartmentNumber = "11",
-        //                PostalCode = "10028"
-        //            }
-        //        },
-        //        BankAccount = new Dtos.BankAccount.WithCustomerCreation.BankAccountCreationDto
-        //        {
-        //            AccountType = AccountType.Checking,
-        //            Currency = Currency.Eur
-        //        }
-        //    };
+            var bankAccount = new BankAccount
+            {
+                AccountType = (AccountType)bankAccountCreation.BankAccount.AccountType,
+                Currency = (Currency)bankAccountCreation.BankAccount.Currency,
+                CountryCode = bankAccountNumber.CountryCode,
+                CheckDigits = bankAccountNumber.CheckDigits,
+                NationalBankCode = bankAccountNumber.NationalBankCode,
+                BranchCode = bankAccountNumber.BranchCode,
+                NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
+                AccountNumber = bankAccountNumber.AccountNumber,
+                AccountNumberText = bankAccountNumber.AccountNumberText,
+                Iban = bankAccountNumber.Iban,
+                IbanSeparated = bankAccountNumber.IbanSeparated,
+                Balance = 0,
+                DebitLimit = 0,
+                Customer = new Customer
+                {
+                    ApplicationUser = new ApplicationUser
+                    {
+                        Name = bankAccountCreation.Register.User.Name,
+                        Surname = bankAccountCreation.Register.User.Surname,
+                        Email = bankAccountCreation.Register.User.Email,
+                        PhoneNumber = bankAccountCreation.Register.User.PhoneNumber
+                    }
+                }
+            };
 
-        //    var bankAccountNumber = new BankAccountNumber
-        //    {
-        //        CountryCode = "PL",
-        //        CheckDigits = "61",
-        //        NationalBankCode = "1080",
-        //        BranchCode = "000",
-        //        NationalCheckDigit = 1,
-        //        AccountNumber = 0,
-        //        AccountNumberText = "0000000000000000",
-        //        Iban = "PL61108000010000000000000000",
-        //        IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
-        //    };
+            var expectedBankAccountDto = new BankAccountDto
+            {
+                AccountType = (AccountType)bankAccountCreation.BankAccount.AccountType,
+                Currency = (Currency)bankAccountCreation.BankAccount.Currency,
+                CountryCode = bankAccountNumber.CountryCode,
+                CheckDigits = bankAccountNumber.CheckDigits,
+                NationalBankCode = bankAccountNumber.NationalBankCode,
+                BranchCode = bankAccountNumber.BranchCode,
+                NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
+                AccountNumber = bankAccountNumber.AccountNumber,
+                AccountNumberText = bankAccountNumber.AccountNumberText,
+                Iban = bankAccountNumber.Iban,
+                IbanSeparated = bankAccountNumber.IbanSeparated,
+                Balance = 0,
+                DebitLimit = 0,
+                Customer = new CustomerDto
+                {
+                    ApplicationUser = new ApplicationUserDto
+                    {
+                        Name = bankAccountCreation.Register.User.Name,
+                        Surname = bankAccountCreation.Register.User.Surname,
+                        Email = bankAccountCreation.Register.User.Email,
+                        PhoneNumber = bankAccountCreation.Register.User.PhoneNumber
+                    }
+                }
+            };
 
-        //    var expectedBankAccount = new BankAccountDto
-        //    {
-        //        AccountType = (AccountType)bankAccountCreation.BankAccount.AccountType,
-        //        Currency = (Currency)bankAccountCreation.BankAccount.Currency,
-        //        CountryCode = bankAccountNumber.CountryCode,
-        //        CheckDigits = bankAccountNumber.CheckDigits,
-        //        NationalBankCode = bankAccountNumber.NationalBankCode,
-        //        BranchCode = bankAccountNumber.BranchCode,
-        //        NationalCheckDigit = bankAccountNumber.NationalCheckDigit,
-        //        AccountNumber = bankAccountNumber.AccountNumber,
-        //        AccountNumberText = bankAccountNumber.AccountNumberText,
-        //        Iban = bankAccountNumber.Iban,
-        //        IbanSeparated = bankAccountNumber.IbanSeparated,
-        //        Balance = 0,
-        //        DebitLimit = 0,
-        //        Customer = new CustomerDto
-        //        {
-        //            ApplicationUser = new ApplicationUserDto
-        //            {
-        //                Name = bankAccountCreation.Register.User.Name,
-        //                Surname = bankAccountCreation.Register.User.Surname,
-        //                Email = bankAccountCreation.Register.User.Email,
-        //                PhoneNumber = bankAccountCreation.Register.User.PhoneNumber
-        //            }
-        //        }
-        //    };
+            _bankAccountServiceMock
+                .Setup(s => s.CreateBankAccountWithCustomerByWorkerAsync(
+                    It.IsAny<BankAccountWithCustomerCreationByWorkerDto>(), It.IsAny<int>()))
+                .ReturnsAsync(bankAccount);
 
-        //    var currentUser = new ApplicationUser { Id = 2 };
-        //    var claims = new List<Claim> { new Claim(CustomClaimTypes.UserId, currentUser.Id.ToString()) };
-        //    var identity = new ClaimsIdentity(claims);
-        //    var claimsPrincipal = new ClaimsPrincipal(identity);
-        //    var context = new ControllerContext
-        //    {
-        //        HttpContext = new DefaultHttpContext
-        //        {
-        //            User = claimsPrincipal
-        //        }
-        //    };
+            var currentUser = new ApplicationUser { Id = 1 };
+            var claims = new List<Claim> { new(CustomClaimTypes.UserId, currentUser.Id.ToString()) };
+            var identity = new ClaimsIdentity(claims);
+            var claimsPrincipal = new ClaimsPrincipal(identity);
+            var context = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = claimsPrincipal
+                }
+            };
 
-        //    _sut.ControllerContext = context;
+            _sut.ControllerContext = context;
 
-        //    _userManagerMock.Setup(m => m.IsInRoleAsync(It.IsAny<ApplicationUser>(), It.IsAny<string>()))
-        //        .ReturnsAsync(() => true);
+            // Act
+            var result = await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation);
 
-        //    _userManagerMock.Setup(m => m.CreateAsync(It.IsAny<ApplicationUser>()))
-        //        .ReturnsAsync(IdentityResult.Success).Callback<ApplicationUser>(user =>
-        //        {
-        //            _context.Users.Add(user);
-        //            _context.SaveChanges();
-        //        });
+            // Assert
+            var createdAtRouteResult = result.Result as CreatedAtRouteResult;
+            createdAtRouteResult.Should().NotBeNull();
 
-        //    _bankAccountNumberBuilderMock.Setup(anf => anf.GenerateBankAccountNumber(It.IsAny<int>())).Returns(bankAccountNumber);
-
-        //    // Act
-        //    var result = await _sut.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
-
-        //    // Assert
-        //    _userManagerMock.Verify(m => m.AddToRoleAsync(It.IsAny<ApplicationUser>(), UserRole.Customer.ToString()), Times.Once);
-
-        //    Assert.IsNotNull(result);
-        //    Assert.IsInstanceOfType(result.Result, typeof(CreatedAtRouteResult));
-
-        //    var createdAtRouteResult = result.Result as CreatedAtRouteResult;
-        //    Assert.IsNotNull(createdAtRouteResult);
-        //    Assert.IsInstanceOfType(createdAtRouteResult.Value, typeof(BankAccountDto));
-
-        //    var bankAccountDto = createdAtRouteResult.Value as BankAccountDto;
-        //    Assert.IsNotNull(bankAccountDto);
-        //    Assert.AreEqual(expectedBankAccount.AccountType, bankAccountDto.AccountType);
-        //    Assert.AreEqual(expectedBankAccount.Currency, bankAccountDto.Currency);
-        //    Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountDto.CountryCode);
-        //    Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountDto.CheckDigits);
-        //    Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountDto.NationalBankCode);
-        //    Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountDto.BranchCode);
-        //    Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountDto.NationalCheckDigit);
-        //    Assert.AreEqual(expectedBankAccount.AccountNumber, bankAccountDto.AccountNumber);
-        //    Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountDto.AccountNumberText);
-        //    Assert.AreEqual(expectedBankAccount.Iban, bankAccountDto.Iban);
-        //    Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountDto.IbanSeparated);
-        //    Assert.AreEqual(expectedBankAccount.Balance, bankAccountDto.Balance);
-        //    Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountDto.DebitLimit);
-        //    Assert.AreNotEqual(DateTime.MinValue, bankAccountDto.OpenedDate);
-        //    Assert.AreEqual(currentUser.Id, bankAccountDto.CreatedById);
-        //    Assert.AreEqual(bankAccountDto.Customer.Id, bankAccountDto.Customer.ApplicationUser.Id);
-        //    Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountDto.Customer.ApplicationUser.Name);
-        //    Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Surname, bankAccountDto.Customer.ApplicationUser.Surname);
-        //    Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Email, bankAccountDto.Customer.ApplicationUser.Email);
-        //    Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.PhoneNumber, bankAccountDto.Customer.ApplicationUser.PhoneNumber);
-
-        //    var bankAccountFromDb = _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankAccountDto.Id);
-        //    Assert.IsNotNull(bankAccountFromDb);
-        //    Assert.AreEqual(expectedBankAccount.AccountType, bankAccountFromDb.AccountType);
-        //    Assert.AreEqual(expectedBankAccount.Currency, bankAccountFromDb.Currency);
-        //    Assert.AreEqual(expectedBankAccount.CountryCode, bankAccountFromDb.CountryCode);
-        //    Assert.AreEqual(expectedBankAccount.CheckDigits, bankAccountFromDb.CheckDigits);
-        //    Assert.AreEqual(expectedBankAccount.NationalBankCode, bankAccountFromDb.NationalBankCode);
-        //    Assert.AreEqual(expectedBankAccount.BranchCode, bankAccountFromDb.BranchCode);
-        //    Assert.AreEqual(expectedBankAccount.NationalCheckDigit, bankAccountFromDb.NationalCheckDigit);
-        //    Assert.AreEqual(expectedBankAccount.AccountNumber, bankAccountFromDb.AccountNumber);
-        //    Assert.AreEqual(expectedBankAccount.AccountNumberText, bankAccountFromDb.AccountNumberText);
-        //    Assert.AreEqual(expectedBankAccount.Iban, bankAccountFromDb.Iban);
-        //    Assert.AreEqual(expectedBankAccount.IbanSeparated, bankAccountFromDb.IbanSeparated);
-        //    Assert.AreEqual(expectedBankAccount.Balance, bankAccountFromDb.Balance);
-        //    Assert.AreEqual(expectedBankAccount.DebitLimit, bankAccountFromDb.DebitLimit);
-        //    Assert.AreNotEqual(DateTime.MinValue, bankAccountFromDb.OpenedDate);
-        //    Assert.AreEqual(currentUser.Id, bankAccountFromDb.CreatedById);
-        //    Assert.AreEqual(bankAccountFromDb.Customer.Id, bankAccountFromDb.Customer.ApplicationUser.Id);
-        //    Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Name, bankAccountFromDb.Customer.ApplicationUser.Name);
-        //    Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Surname, bankAccountFromDb.Customer.ApplicationUser.Surname);
-        //    Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.Email, bankAccountFromDb.Customer.ApplicationUser.Email);
-        //    Assert.AreEqual(expectedBankAccount.Customer.ApplicationUser.PhoneNumber, bankAccountFromDb.Customer.ApplicationUser.PhoneNumber);
-        //}
+            createdAtRouteResult.Value.Should().BeEquivalentTo(expectedBankAccountDto,
+                options => options.Excluding(ba => ba.Customer.ApplicationUser.ConcurrencyStamp));
+            createdAtRouteResult.StatusCode.Should().Be((int)HttpStatusCode.Created);
+        }
 
         //[TestMethod]
         //public async Task CreateBankAccountWithCustomerByWorker_Should_ReturnBadRequest_When_ModelStateIsInvalid()
