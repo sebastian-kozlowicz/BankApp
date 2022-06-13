@@ -415,7 +415,7 @@ namespace BankApp.UnitTests.Controllers
 
         [TestMethod]
         public async Task
-            CreateBankAccountWithCustomerByWorker_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
+            CreateBankAccountWithCustomerByWorkerAsync_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
@@ -544,38 +544,38 @@ namespace BankApp.UnitTests.Controllers
             createdAtRouteResult.StatusCode.Should().Be((int)HttpStatusCode.Created);
         }
 
-        //[TestMethod]
-        //public async Task CreateBankAccountWithCustomerByWorker_Should_ReturnBadRequest_When_ModelStateIsInvalid()
-        //{
-        //    // Arrange
-        //    var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto();
-        //    _sut.ModelState.AddModelError(nameof(bankAccountCreation.Register), $"The {nameof(bankAccountCreation.Register)} field is required.");
-        //    _sut.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount), $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
+        [TestMethod]
+        public async Task CreateBankAccountWithCustomerByWorkerAsync_Should_ReturnBadRequest_When_ModelStateIsInvalid()
+        {
+            // Arrange
+            var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto();
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.Register),
+                $"The {nameof(bankAccountCreation.Register)} field is required.");
+            _sut.ModelState.AddModelError(nameof(bankAccountCreation.BankAccount),
+                $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
 
-        //    // Act
-        //    var result = await _sut.CreateBankAccountWithCustomerByWorker(bankAccountCreation);
+            var expectedResult = new SerializableError
+            {
+                {
+                    nameof(bankAccountCreation.Register),
+                    new[] { $"The {nameof(bankAccountCreation.Register)} field is required." }
+                },
+                {
+                    nameof(bankAccountCreation.BankAccount),
+                    new[] { $"The {nameof(bankAccountCreation.BankAccount)} field is required." }
+                }
+            };
 
-        //    // Assert
-        //    Assert.IsNotNull(result);
-        //    Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            // Act
+            var result = await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation);
 
-        //    var badRequestResult = result.Result as BadRequestObjectResult;
-        //    Assert.IsNotNull(badRequestResult);
-        //    Assert.IsInstanceOfType(badRequestResult.Value, typeof(SerializableError));
+            // Assert
+            var badRequestResult = result.Result as BadRequestObjectResult;
+            badRequestResult.Should().NotBeNull();
 
-        //    var error = badRequestResult.Value as SerializableError;
-        //    Assert.IsNotNull(error);
-        //    Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.Register)));
-        //    Assert.IsTrue(error.ContainsKey(nameof(bankAccountCreation.BankAccount)));
-
-        //    var registerErrorValues = error[nameof(bankAccountCreation.Register)] as string[];
-        //    Assert.IsNotNull(registerErrorValues);
-        //    Assert.IsTrue(registerErrorValues.Single() == $"The {nameof(bankAccountCreation.Register)} field is required.");
-
-        //    var bankAccountErrorValues = error[nameof(bankAccountCreation.BankAccount)] as string[];
-        //    Assert.IsNotNull(bankAccountErrorValues);
-        //    Assert.IsTrue(bankAccountErrorValues.Single() == $"The {nameof(bankAccountCreation.BankAccount)} field is required.");
-        //}
+            var serializableError = badRequestResult.Value as SerializableError;
+            serializableError.Should().BeEquivalentTo(expectedResult);
+        }
 
         //[TestMethod]
         //public async Task CreateBankAccountWithCustomerByWorker_Should_ReturnBadRequest_When_UserFromClaimsNotExist()
