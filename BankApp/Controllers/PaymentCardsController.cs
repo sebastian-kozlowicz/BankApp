@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
-using BankApp.Configuration;
-using BankApp.Data;
 using BankApp.Dtos.Card;
-using BankApp.Enumerators;
-using BankApp.Interfaces.Helpers.Factories;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,52 +13,35 @@ namespace BankApp.Controllers
     [Route("api/[controller]")]
     public class PaymentCardsController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
-        private readonly IPaymentCardNumberFactory _paymentCardNumberFactory;
+        private readonly IPaymentCardService _paymentCardService;
 
-        public PaymentCardsController(ApplicationDbContext context, IMapper mapper,
-            IPaymentCardNumberFactory paymentCardNumberFactory)
+        public PaymentCardsController(IPaymentCardService paymentCardService, IMapper mapper)
         {
-            _context = context;
+            _paymentCardService = paymentCardService;
             _mapper = mapper;
-            _paymentCardNumberFactory = paymentCardNumberFactory;
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<PaymentCardDto>> GetCards()
+        public async Task<ActionResult<IEnumerable<PaymentCardDto>>> GetCardsAsync()
         {
-            var cards = _context.PaymentCards.ToList();
-            return Ok(_mapper.Map<List<PaymentCard>, List<PaymentCardDto>>(cards));
+            var cards = await _paymentCardService.GetCardsAsync();
+
+            if (!cards.Any())
+                return NotFound();
+
+            return Ok(_mapper.Map<IEnumerable<PaymentCard>, IEnumerable<PaymentCardDto>>(cards));
         }
 
         [HttpPost]
-        public ActionResult<PaymentCardDto> CreateCard([FromBody] CardCreationDto model)
+        public async Task<ActionResult<PaymentCardDto>> CreateCardAsync([FromBody] CardCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var bankAccount = _context.BankAccounts.SingleOrDefault(b => b.Id == model.BankAccountId);
-            if (bankAccount == null)
-            {
-                ModelState.AddModelError(nameof(model.BankAccountId),
-                    $"Bank account with id {model.BankAccountId} doesn't exist.");
-                return BadRequest(ModelState);
-            }
+            var card = await _paymentCardService.CreateCardAsync(model);
 
-            var visaPaymentCardNumberBuilder =
-                _paymentCardNumberFactory.GetPaymentCardNumberBuilder(IssuingNetwork.Visa);
-            var visaPaymentCardNumber =
-                visaPaymentCardNumberBuilder.GeneratePaymentCardNumber(IssuingNetworkSettings.Visa.Length.Sixteen,
-                    (int) model.BankAccountId);
-
-            var paymentCard = _mapper.Map<PaymentCard>(visaPaymentCardNumber);
-            paymentCard.BankAccountId = (int) model.BankAccountId;
-
-            _context.PaymentCards.Add(paymentCard);
-            _context.SaveChanges();
-
-            return Ok(_mapper.Map<PaymentCardDto>(paymentCard));
+            return Ok(_mapper.Map<PaymentCard, PaymentCardDto>(card));
         }
     }
 }
