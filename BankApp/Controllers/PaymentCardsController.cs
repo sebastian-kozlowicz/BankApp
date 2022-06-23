@@ -23,25 +23,37 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<PaymentCardDto>>> GetCardsAsync()
+        [Route("{cardId}", Name = "GetPaymentCard")]
+        public async Task<ActionResult<PaymentCardDto>> GetPaymentCardAsync(int cardId)
         {
-            var cards = await _paymentCardService.GetCardsAsync();
+            var paymentCard = await _paymentCardService.GetPaymentCardAsync(cardId);
 
-            if (!cards.Any())
+            if (paymentCard == null)
                 return NotFound();
 
-            return Ok(_mapper.Map<IEnumerable<PaymentCard>, IEnumerable<PaymentCardDto>>(cards));
+            return Ok(_mapper.Map<PaymentCard, PaymentCardDto>(paymentCard));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PaymentCardDto>>> GetPaymentCardsAsync()
+        {
+            var paymentCards = await _paymentCardService.GetPaymentCardsAsync();
+
+            if (!paymentCards.Any())
+                return NotFound();
+
+            return Ok(_mapper.Map<IEnumerable<PaymentCard>, IEnumerable<PaymentCardDto>>(paymentCards));
         }
 
         [HttpPost]
-        public async Task<ActionResult<PaymentCardDto>> CreateCardAsync([FromBody] CardCreationDto model)
+        public async Task<ActionResult<PaymentCardDto>> CreatePaymentCardAsync([FromBody] CardCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var card = await _paymentCardService.CreateCardAsync(model);
+            var paymentCardAsync = await _paymentCardService.CreatePaymentCardAsync(model);
 
-            return Ok(_mapper.Map<PaymentCard, PaymentCardDto>(card));
+            return Ok(_mapper.Map<PaymentCard, PaymentCardDto>(paymentCardAsync));
         }
     }
 }
