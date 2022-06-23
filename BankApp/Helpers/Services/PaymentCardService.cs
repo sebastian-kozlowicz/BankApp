@@ -27,9 +27,9 @@ namespace BankApp.Helpers.Services
             _paymentCardNumberFactory = paymentCardNumberFactory;
         }
 
-        public async Task<PaymentCard> GetPaymentCardAsync(int cardId)
+        public async Task<PaymentCard> GetPaymentCardAsync(int paymentCardId)
         {
-            return await _context.PaymentCards.SingleOrDefaultAsync(c => c.Id == cardId);
+            return await _context.PaymentCards.SingleOrDefaultAsync(c => c.Id == paymentCardId);
         }
 
         public async Task<IEnumerable<PaymentCard>> GetPaymentCardsAsync()

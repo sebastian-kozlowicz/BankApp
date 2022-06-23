@@ -23,10 +23,10 @@ namespace BankApp.Controllers
         }
 
         [HttpGet]
-        [Route("{cardId}", Name = "GetPaymentCard")]
-        public async Task<ActionResult<PaymentCardDto>> GetPaymentCardAsync(int cardId)
+        [Route("{paymentCardId}", Name = "GetPaymentCard")]
+        public async Task<ActionResult<PaymentCardDto>> GetPaymentCardAsync(int paymentCardId)
         {
-            var paymentCard = await _paymentCardService.GetPaymentCardAsync(cardId);
+            var paymentCard = await _paymentCardService.GetPaymentCardAsync(paymentCardId);
 
             if (paymentCard == null)
                 return NotFound();
@@ -51,9 +51,10 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var paymentCardAsync = await _paymentCardService.CreatePaymentCardAsync(model);
+            var paymentCard = await _paymentCardService.CreatePaymentCardAsync(model);
 
-            return Ok(_mapper.Map<PaymentCard, PaymentCardDto>(paymentCardAsync));
+            var paymentCardDto = _mapper.Map<PaymentCard, PaymentCardDto>(paymentCard);
+            return CreatedAtRoute("GetPaymentCard", new { paymentCardId = paymentCardDto.Id }, paymentCardDto);
         }
     }
 }
