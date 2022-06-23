@@ -8,6 +8,6 @@ namespace BankApp.Interfaces.Helpers.Services
     public interface IPaymentCardService
     {
         Task<IEnumerable<PaymentCard>> GetCardsAsync();
-        Task<PaymentCard> CreateCard(CardCreationDto model);
+        Task<PaymentCard> CreateCardAsync(CardCreationDto model);
     }
 }

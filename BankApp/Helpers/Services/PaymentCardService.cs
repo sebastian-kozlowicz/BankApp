@@ -32,7 +32,7 @@ namespace BankApp.Helpers.Services
             return await _context.PaymentCards.ToListAsync();
         }
 
-        public async Task<PaymentCard> CreateCard(CardCreationDto model)
+        public async Task<PaymentCard> CreateCardAsync(CardCreationDto model)
         {
             var bankAccount = await _context.BankAccounts.SingleOrDefaultAsync(b => b.Id == model.BankAccountId);
             if (bankAccount == null)
