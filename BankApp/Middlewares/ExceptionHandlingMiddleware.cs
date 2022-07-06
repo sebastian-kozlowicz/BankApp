@@ -20,13 +20,13 @@ namespace BankApp.Middlewares
             {
                 await _next(context);
             }
-            catch (Exception e) when (StatusCodeFromExceptionBuilder.BadRequestExceptions(e))
+            catch (Exception e) when (StatusCodeFromExceptionBuilder.BadRequestExceptions(e) ||
+                                      StatusCodeFromExceptionBuilder.NotFoundExceptions(e))
             {
                 context.Response.StatusCode = (int)StatusCodeFromExceptionBuilder.GetHttpStatusCodeFromException(e);
                 context.Response.ContentType = "text/plain";
                 await context.Response.WriteAsync(e.Message);
             }
         }
-       
     }
 }

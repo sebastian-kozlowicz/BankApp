@@ -41,7 +41,7 @@ namespace BankApp.Helpers.Services
         {
             var bankAccount = await _context.BankAccounts.SingleOrDefaultAsync(b => b.Id == model.BankAccountId);
             if (bankAccount == null)
-                throw new InvalidInputDataException($"Bank account with id {model.BankAccountId} doesn't exist.");
+                throw new ValidationException($"Bank account with id {model.BankAccountId} doesn't exist.");
 
             var visaPaymentCardNumberBuilder =
                 _paymentCardNumberFactory.GetPaymentCardNumberBuilder(IssuingNetwork.Visa);

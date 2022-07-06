@@ -2,7 +2,9 @@
 using System.Linq;
 using BankApp.Data;
 using BankApp.Dtos.BankTransfer;
+using BankApp.Helpers.Handlers;
 using BankApp.Helpers.Services;
+using BankApp.Interfaces.Helpers.Handlers;
 using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -14,16 +16,16 @@ namespace BankApp.Controllers
     public class BankTransfersController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        private readonly ITransferService<ExternalTransferService> _externalTransferService;
-        private readonly ITransferService<InternalTransferService> _internalTransferService;
+        private readonly ITransferHandler<ExternalTransferHandler> _externalTransferHandler;
+        private readonly ITransferHandler<InternalTransferHandler> _internalTransferHandler;
 
         public BankTransfersController(ApplicationDbContext context,
-            ITransferService<InternalTransferService> internalTransferService,
-            ITransferService<ExternalTransferService> externalTransferService)
+            ITransferHandler<InternalTransferHandler> internalTransferHandler,
+            ITransferHandler<ExternalTransferHandler> externalTransferHandler)
         {
             _context = context;
-            _internalTransferService = internalTransferService;
-            _externalTransferService = externalTransferService;
+            _internalTransferHandler = internalTransferHandler;
+            _externalTransferHandler = externalTransferHandler;
         }
 
         [HttpPost]
@@ -49,13 +51,13 @@ namespace BankApp.Controllers
                 _context.BankAccounts.FirstOrDefault(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
 
             if (targetBankAccount == null)
-                _externalTransferService.Create(requesterBankAccount,
+                _externalTransferHandler.CreateBankTransferAsync(requesterBankAccount,
                     new BankAccount {Iban = bankTransferCreationDto.ReceiverIban},
                     (decimal) bankTransferCreationDto.Value);
             else
                 try
                 {
-                    _internalTransferService.Create(requesterBankAccount, targetBankAccount,
+                    _internalTransferHandler.CreateBankTransferAsync(requesterBankAccount, targetBankAccount,
                         (decimal) bankTransferCreationDto.Value);
                 }
                 catch (ArgumentException exception)

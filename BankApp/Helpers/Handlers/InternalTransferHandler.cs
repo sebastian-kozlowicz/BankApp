@@ -1,24 +1,26 @@
 ﻿using System;
+using System.Threading.Tasks;
 using BankApp.Data;
 using BankApp.Enumerators;
-using BankApp.Interfaces.Helpers.Services;
+using BankApp.Exceptions;
+using BankApp.Interfaces.Helpers.Handlers;
 using BankApp.Models;
 
-namespace BankApp.Helpers.Services
+namespace BankApp.Helpers.Handlers
 {
-    public class InternalTransferService : ITransferService<InternalTransferService>
+    public class InternalTransferHandler : ITransferHandler<InternalTransferHandler>
     {
         private readonly ApplicationDbContext _context;
 
-        public InternalTransferService(ApplicationDbContext context)
+        public InternalTransferHandler(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        public void Create(BankAccount bankAccount, BankAccount targetBankAccount, decimal value)
+        public async Task CreateBankTransferAsync(BankAccount bankAccount, BankAccount targetBankAccount, decimal value)
         {
             if (bankAccount.Currency != targetBankAccount.Currency)
-                throw new ArgumentException("Currency is different in target bank account.",
+                throw new ValidationException("Currency is different in target bank account",
                     nameof(targetBankAccount.Currency));
 
             bankAccount.Balance -= value;
@@ -32,8 +34,8 @@ namespace BankApp.Helpers.Services
                 BankAccountId = bankAccount.Id
             };
 
-            _context.BankTransfers.Add(bankTransfer);
-            _context.SaveChanges();
+            await _context.BankTransfers.AddAsync(bankTransfer);
+            await _context.SaveChangesAsync();
         }
     }
 }

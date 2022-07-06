@@ -11,9 +11,13 @@ namespace BankApp.Helpers.Builders.ExceptionResponse
             if (BadRequestExceptions(e))
                 return HttpStatusCode.BadRequest;
 
+            if (NotFoundExceptions(e))
+                return HttpStatusCode.NotFound;
+
             return HttpStatusCode.InternalServerError;
         }
 
         public static bool BadRequestExceptions(Exception e) => e is InvalidLoginException or RefreshTokenException;
+        public static bool NotFoundExceptions(Exception e) => e is NotFoundException;
     }
 }
