@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Helpers.Services
 {
-    public class BankTransferService
+    public class BankTransferService : IBankTransferService
     {
         private readonly ApplicationDbContext _context;
         private readonly ITransferHandler<ExternalTransferHandler> _externalTransferHandler;
