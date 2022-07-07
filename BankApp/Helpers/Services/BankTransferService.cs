@@ -41,11 +41,11 @@ namespace BankApp.Helpers.Services
                 await _context.BankAccounts.FirstOrDefaultAsync(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
 
             if (targetBankAccount == null)
-                _externalTransferHandler.CreateBankTransferAsync(requesterBankAccount,
+                await _externalTransferHandler.CreateBankTransferAsync(requesterBankAccount,
                     new BankAccount { Iban = bankTransferCreationDto.ReceiverIban },
                     (decimal)bankTransferCreationDto.Value);
             else
-                _internalTransferHandler.CreateBankTransferAsync(requesterBankAccount, targetBankAccount,
+                await _internalTransferHandler.CreateBankTransferAsync(requesterBankAccount, targetBankAccount,
                     (decimal)bankTransferCreationDto.Value);
 
             return true;

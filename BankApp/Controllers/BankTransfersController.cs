@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using BankApp.Data;
 using BankApp.Dtos.BankTransfer;
 using BankApp.Helpers.Handlers;
@@ -15,57 +16,20 @@ namespace BankApp.Controllers
     [ApiController]
     public class BankTransfersController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
-        private readonly ITransferHandler<ExternalTransferHandler> _externalTransferHandler;
-        private readonly ITransferHandler<InternalTransferHandler> _internalTransferHandler;
+        private readonly IBankTransferService _bankTransferService;
 
-        public BankTransfersController(ApplicationDbContext context,
-            ITransferHandler<InternalTransferHandler> internalTransferHandler,
-            ITransferHandler<ExternalTransferHandler> externalTransferHandler)
+        public BankTransfersController(IBankTransferService bankTransferService)
         {
-            _context = context;
-            _internalTransferHandler = internalTransferHandler;
-            _externalTransferHandler = externalTransferHandler;
+            _bankTransferService = bankTransferService;
         }
 
         [HttpPost]
-        public ActionResult CreateBankTransfer([FromBody] BankTransferCreationDto bankTransferCreationDto)
+        public async Task<ActionResult> CreateBankTransferAsync([FromBody] BankTransferCreationDto bankTransferCreationDto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var requesterBankAccount =
-                _context.BankAccounts.SingleOrDefault(ba => ba.Id == bankTransferCreationDto.RequesterBankAccountId);
-
-            if (requesterBankAccount == null)
-                return NotFound();
-
-            if (requesterBankAccount.Balance - bankTransferCreationDto.Value < requesterBankAccount.DebitLimit * -1)
-            {
-                ModelState.AddModelError(nameof(requesterBankAccount.DebitLimit),
-                    "Not sufficient founds. Debit limit is exceeded.");
-                return BadRequest(ModelState);
-            }
-
-            var targetBankAccount =
-                _context.BankAccounts.FirstOrDefault(ba => ba.Iban == bankTransferCreationDto.ReceiverIban);
-
-            if (targetBankAccount == null)
-                _externalTransferHandler.CreateBankTransferAsync(requesterBankAccount,
-                    new BankAccount {Iban = bankTransferCreationDto.ReceiverIban},
-                    (decimal) bankTransferCreationDto.Value);
-            else
-                try
-                {
-                    _internalTransferHandler.CreateBankTransferAsync(requesterBankAccount, targetBankAccount,
-                        (decimal) bankTransferCreationDto.Value);
-                }
-                catch (ArgumentException exception)
-                {
-                    ModelState.AddModelError(exception.ParamName, exception.Message);
-                    return BadRequest(ModelState);
-                }
-
+            await _bankTransferService.CreateBankTransferAsync(bankTransferCreationDto);
             return Ok();
         }
     }
