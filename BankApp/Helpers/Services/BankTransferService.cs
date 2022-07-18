@@ -32,7 +32,7 @@ namespace BankApp.Helpers.Services
                     ba.Id == bankTransferCreationDto.RequesterBankAccountId);
 
             if (requesterBankAccount == null)
-                throw new NotFoundException();
+                throw new ValidationException("Requester bank account not found");
 
             if (requesterBankAccount.Balance - bankTransferCreationDto.Value < requesterBankAccount.DebitLimit * -1)
                 throw new ValidationException("Not sufficient founds. Debit limit is exceeded");
