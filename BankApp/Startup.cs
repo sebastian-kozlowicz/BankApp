@@ -112,6 +112,7 @@ namespace BankApp
             services.AddScoped<IBankAccountService, BankAccountService>();
             services.AddScoped<IPaymentCardService, PaymentCardService>();
             services.AddScoped<IBankTransferService, BankTransferService>();
+            services.AddScoped<IBranchService, BranchService>();
             services.AddScoped<ITransferHandler<InternalTransferHandler>, InternalTransferHandler>();
             services.AddScoped<ITransferHandler<ExternalTransferHandler>, ExternalTransferHandler>();
             services.AddScoped<ILogSanitizedBuilder, LogSanitizedBuilder>();
