@@ -1,15 +1,14 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AutoMapper;
 using BankApp.Configuration;
-using BankApp.Data;
 using BankApp.Dtos.Branch;
 using BankApp.Dtos.Branch.WithAddress;
+using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
 using BankApp.Policies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BankApp.Controllers
 {
@@ -17,19 +16,19 @@ namespace BankApp.Controllers
     [Route("api/[controller]")]
     public class BranchesController : ControllerBase
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IBranchService _branchService;
         private readonly IMapper _mapper;
 
-        public BranchesController(ApplicationDbContext context, IMapper mapper)
+        public BranchesController(IBranchService branchService, IMapper mapper)
         {
-            _context = context;
+            _branchService = branchService;
             _mapper = mapper;
         }
 
         [HttpGet("{branchId}", Name = "GetBranch")]
-        public ActionResult<BranchDto> GetBranch(int branchId)
+        public async Task<ActionResult<BranchDto>> GetBranchAsync(int branchId)
         {
-            var branch = _context.Branches.Include(b => b.BranchAddress).SingleOrDefault(c => c.Id == branchId);
+            var branch = await _branchService.GetBranchAsync(branchId);
 
             if (branch == null)
                 return NotFound();
@@ -39,214 +38,71 @@ namespace BankApp.Controllers
 
         [HttpPost]
         [Route("CreateWithAddress")]
-        public ActionResult<BranchDto> CreateBranchWithAddress([FromBody] BranchWithAddressCreationDto model)
+        public async Task<ActionResult<BranchDto>> CreateBranchWithAddressAsync(
+            [FromBody] BranchWithAddressCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            if (_context.Branches.FirstOrDefault(b => b.BranchCode == model.Branch.BranchCode) != null)
-            {
-                ModelState.AddModelError(nameof(model.Branch.BranchCode), "Branch code is already in use.");
-                return BadRequest(ModelState);
-            }
-
-            var branch = _mapper.Map<Branch>(model);
-
-            _context.Branches.Add(branch);
-            _context.SaveChanges();
+            var branch = await _branchService.CreateBranchWithAddressAsyncAsync(model);
 
             var branchDto = _mapper.Map<Branch, BranchDto>(branch);
 
-            return CreatedAtRoute("GetBranch", new {branchId = branchDto.Id}, branchDto);
+            return CreatedAtRoute("GetBranch", new { branchId = branchDto.Id }, branchDto);
         }
 
         [HttpPost]
         [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("AssignTellerToBranch")]
-        public ActionResult AssignTellerToBranch([FromBody] WorkerAtBranchDto model)
+        public async Task<ActionResult> AssignTellerToBranchASync([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var teller = _context.Tellers.SingleOrDefault(t => t.Id == model.WorkerId);
-            if (teller == null)
-            {
-                ModelState.AddModelError(nameof(model.WorkerId), $"Teller with id {model.WorkerId} doesn't exist.");
-                return BadRequest(ModelState);
-            }
+            var currentUserId = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
 
-            var branch = _context.Branches.SingleOrDefault(b => b.Id == model.BranchId);
-            if (branch == null)
-            {
-                ModelState.AddModelError(nameof(model.BranchId), $"Branch with id {model.BranchId} doesn't exist.");
-                return BadRequest(ModelState);
-            }
-
-            if (teller.WorkAtId != null)
-            {
-                ModelState.AddModelError(nameof(model.BranchId),
-                    $"Teller with id {model.WorkerId} is currently assigned to branch with id {teller.WorkAtId}.");
-                return BadRequest(ModelState);
-            }
-
-            teller.WorkAtId = branch.Id;
-            var tellerAtBranch = new TellerAtBranchHistory
-            {
-                AssignDate = DateTime.UtcNow,
-                BranchId = branch.Id,
-                TellerId = teller.Id,
-                AssignedById = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value)
-            };
-
-            _context.TellerAtBranchHistory.Add(tellerAtBranch);
-            _context.SaveChanges();
-
+            await _branchService.AssignTellerToBranchAsync(model, currentUserId);
             return Ok();
         }
 
         [HttpPost]
         [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("AssignManagerToBranch")]
-        public ActionResult AssignManagerToBranch([FromBody] WorkerAtBranchDto model)
+        public async Task<ActionResult> AssignManagerToBranchAsync([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var manager = _context.Managers.SingleOrDefault(e => e.Id == model.WorkerId);
-            if (manager == null)
-            {
-                ModelState.AddModelError(nameof(model.WorkerId), $"Manager with id {model.WorkerId} doesn't exist.");
-                return BadRequest(ModelState);
-            }
+            var currentUserId = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
 
-            var branch = _context.Branches.SingleOrDefault(b => b.Id == model.BranchId);
-            if (branch == null)
-            {
-                ModelState.AddModelError(nameof(model.BranchId), $"Branch with id {model.BranchId} doesn't exist.");
-                return BadRequest(ModelState);
-            }
-
-            if (manager.WorkAtId != null)
-            {
-                ModelState.AddModelError(nameof(model.BranchId),
-                    $"Manager with id {model.WorkerId} is currently assigned to branch with id {manager.WorkAtId}.");
-                return BadRequest(ModelState);
-            }
-
-            manager.WorkAtId = branch.Id;
-            var managerAtBranch = new ManagerAtBranchHistory
-            {
-                AssignDate = DateTime.UtcNow,
-                BranchId = branch.Id,
-                ManagerId = manager.Id,
-                AssignedById = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value)
-            };
-
-            _context.ManagerAtBranchHistory.Add(managerAtBranch);
-            _context.SaveChanges();
-
+            await _branchService.AssignManagerToBranchAsync(model, currentUserId);
             return Ok();
         }
 
         [HttpPost]
         [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("ExpelTellerFromBranch")]
-        public ActionResult ExpelTellerFromBranch([FromBody] WorkerAtBranchDto model)
+        public async Task<ActionResult> ExpelTellerFromBranchAsync([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var teller = _context.Tellers.SingleOrDefault(t => t.Id == model.WorkerId);
-            if (teller == null)
-            {
-                ModelState.AddModelError(nameof(model.WorkerId), $"Teller with id {model.WorkerId} doesn't exist.");
-                return BadRequest(ModelState);
-            }
+            var currentUserId = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
 
-            var branch = _context.Branches.SingleOrDefault(b => b.Id == model.BranchId);
-            if (branch == null)
-            {
-                ModelState.AddModelError(nameof(model.BranchId), $"Branch with id {model.BranchId} doesn't exist.");
-                return BadRequest(ModelState);
-            }
-
-            if (teller.WorkAtId == null)
-            {
-                ModelState.AddModelError(nameof(model.BranchId),
-                    $"Teller with id {model.WorkerId} is currently not assigned to any branch.");
-                return BadRequest(ModelState);
-            }
-
-            if (teller.WorkAtId != branch.Id)
-            {
-                ModelState.AddModelError(nameof(model.BranchId),
-                    $"Teller with id {model.WorkerId} is currently not assigned to branch with id {teller.WorkAtId}.");
-                return BadRequest(ModelState);
-            }
-
-            teller.WorkAtId = null;
-            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(t => t.TellerId == model.WorkerId).ToList()
-                .LastOrDefault();
-            if (tellerAtBranchFromDb != null)
-            {
-                tellerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-                tellerAtBranchFromDb.ExpelledById =
-                    int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
-            }
-
-            _context.SaveChanges();
-
+            await _branchService.ExpelTellerFromBranchAsync(model, currentUserId);
             return Ok();
         }
 
         [HttpPost]
         [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("ExpelManagerFromBranch")]
-        public ActionResult ExpelManagerFromBranch([FromBody] WorkerAtBranchDto model)
+        public async Task<ActionResult> ExpelManagerFromBranchAsync([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+            var currentUserId = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
 
-            var manager = _context.Managers.SingleOrDefault(e => e.Id == model.WorkerId);
-            if (manager == null)
-            {
-                ModelState.AddModelError(nameof(model.WorkerId), $"Manager with id {model.WorkerId} doesn't exist.");
-                return BadRequest(ModelState);
-            }
-
-            var branch = _context.Branches.SingleOrDefault(b => b.Id == model.BranchId);
-            if (branch == null)
-            {
-                ModelState.AddModelError(nameof(model.BranchId), $"Branch with id {model.BranchId} doesn't exist.");
-                return BadRequest(ModelState);
-            }
-
-            if (manager.WorkAtId == null)
-            {
-                ModelState.AddModelError(nameof(model.BranchId),
-                    $"Manager with id {model.WorkerId} is currently not assigned to any branch.");
-                return BadRequest(ModelState);
-            }
-
-            if (manager.WorkAtId != model.BranchId)
-            {
-                ModelState.AddModelError(nameof(model.BranchId),
-                    $"Manager with id {model.WorkerId} is currently not assigned to branch with id {manager.WorkAtId}.");
-                return BadRequest(ModelState);
-            }
-
-            manager.WorkAtId = null;
-            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(e => e.ManagerId == model.WorkerId)
-                .ToList().LastOrDefault();
-            if (managerAtBranchFromDb != null)
-            {
-                managerAtBranchFromDb.ExpelDate = DateTime.UtcNow;
-                managerAtBranchFromDb.ExpelledById =
-                    int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
-            }
-
-            _context.SaveChanges();
-
+            await _branchService.ExpelManagerFromBranchAsync(model, currentUserId);
             return Ok();
         }
     }

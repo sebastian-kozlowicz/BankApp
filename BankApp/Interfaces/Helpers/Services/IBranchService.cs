@@ -3,7 +3,7 @@ using BankApp.Dtos.Branch;
 using BankApp.Dtos.Branch.WithAddress;
 using BankApp.Models;
 
-namespace BankApp.Helpers.Services
+namespace BankApp.Interfaces.Helpers.Services
 {
     public interface IBranchService
     {
