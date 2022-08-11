@@ -28,7 +28,7 @@ namespace BankApp.Helpers.Services
             return await _context.Branches.Include(b => b.BranchAddress).SingleOrDefaultAsync(c => c.Id == branchId);
         }
 
-        public async Task<Branch> CreateBranchWithAddressAsyncAsync(BranchWithAddressCreationDto model)
+        public async Task<Branch> CreateBranchWithAddressAsync(BranchWithAddressCreationDto model)
         {
             if (await _context.Branches.FirstOrDefaultAsync(b => b.BranchCode == model.Branch.BranchCode) != null)
                 throw new ValidationException("Branch code is already in use.");

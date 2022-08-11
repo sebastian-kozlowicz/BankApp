@@ -44,7 +44,7 @@ namespace BankApp.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var branch = await _branchService.CreateBranchWithAddressAsyncAsync(model);
+            var branch = await _branchService.CreateBranchWithAddressAsync(model);
 
             var branchDto = _mapper.Map<Branch, BranchDto>(branch);
 

@@ -543,7 +543,7 @@ namespace BankApp.UnitTests.Helpers.Services
 
         [TestMethod]
         public void
-            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowInvalidInputDataException_When_CurrentUserNotExist()
+            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowValidationException_When_CurrentUserNotExist()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
@@ -587,7 +587,7 @@ namespace BankApp.UnitTests.Helpers.Services
 
         [TestMethod]
         public void
-            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowInvalidInputDataException_When_TellerIsNotAssignedToBranch()
+            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowValidationException_When_TellerIsNotAssignedToBranch()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto
@@ -634,7 +634,7 @@ namespace BankApp.UnitTests.Helpers.Services
 
         [TestMethod]
         public void
-            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowInvalidInputDataException_When_ManagerIsNotAssignedToBranch()
+            CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowValidationException_When_ManagerIsNotAssignedToBranch()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto

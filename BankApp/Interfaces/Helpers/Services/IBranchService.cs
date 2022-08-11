@@ -8,7 +8,7 @@ namespace BankApp.Interfaces.Helpers.Services
     public interface IBranchService
     {
         Task<Branch> GetBranchAsync(int branchId);
-        Task<Branch> CreateBranchWithAddressAsyncAsync(BranchWithAddressCreationDto model);
+        Task<Branch> CreateBranchWithAddressAsync(BranchWithAddressCreationDto model);
         Task<bool> AssignTellerToBranchAsync(WorkerAtBranchDto model, int currentUserId);
         Task<bool> AssignManagerToBranchAsync(WorkerAtBranchDto model, int currentUserId);
         Task<bool> ExpelTellerFromBranchAsync(WorkerAtBranchDto model, int currentUserId);
