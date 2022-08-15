@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
+using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Dtos.Address;
 using BankApp.Dtos.Branch;
@@ -12,6 +14,8 @@ using BankApp.Helpers.Services;
 using BankApp.Mapping;
 using BankApp.Models;
 using FluentAssertions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -122,8 +126,7 @@ namespace BankApp.UnitTests.Helpers.Services
         }
 
         [TestMethod]
-        public async Task
-            CreateBranchWithAddressAsync_Should_CreateBranchWithAddress_And_ReturnBranchDto_When_ModelStateIsValid()
+        public async Task CreateBranchWithAddressAsync_Should_CreateBranchWithAddress_And_ReturnBranch()
         {
             // Arrange
             var branchCreation = new BranchWithAddressCreationDto
@@ -213,6 +216,39 @@ namespace BankApp.UnitTests.Helpers.Services
 
             // Assert
             func.Should().Throw<ValidationException>().WithMessage("Branch code is already in use.");
+        }
+
+        [TestMethod]
+        public async Task AssignTellerToBranchAsync_Should_SetWorkAtIdPropertyToSuppliedBranchId_And_CreateTellerAtBranchHistory_And_ReturnTrue()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 2,
+                BranchId = 1
+            };
+
+            const int currentUserId = 1;
+
+            // Act
+            var result = await _sut.AssignTellerToBranchAsync(workerAtBranch, currentUserId);
+
+            // Assert
+            result.Should().BeTrue();
+
+            var tellerFromDb = _context.Tellers.SingleOrDefault(t => t.Id == workerAtBranch.WorkerId);
+            tellerFromDb.Should().NotBeNull();
+            tellerFromDb.WorkAtId.Should().Be(workerAtBranch.BranchId);
+
+            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(t => t.TellerId == workerAtBranch.WorkerId).ToList().LastOrDefault();
+            tellerAtBranchFromDb.Should().NotBeNull();
+            tellerAtBranchFromDb.AssignDate.Should().NotBe(DateTime.MinValue);
+            tellerAtBranchFromDb.ExpelDate.Should().BeNull();
+            tellerAtBranchFromDb.ExpelledById.Should().BeNull();
+            tellerAtBranchFromDb.ExpelledBy.Should().BeNull();
+            tellerAtBranchFromDb.AssignedById.Should().Be(currentUserId);
+            tellerAtBranchFromDb.BranchId.Should().Be(workerAtBranch.BranchId);
+            tellerAtBranchFromDb.TellerId.Should().Be(workerAtBranch.WorkerId);
         }
     }
 }
