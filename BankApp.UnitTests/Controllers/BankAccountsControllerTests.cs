@@ -139,6 +139,7 @@ namespace BankApp.UnitTests.Controllers
             // Act
             var result = await _sut.GetBankAccountsForUserAsync(999);
 
+            // Assert
             var notFoundResult = result.Result as NotFoundResult;
             notFoundResult.Should().NotBeNull();
 
@@ -263,7 +264,7 @@ namespace BankApp.UnitTests.Controllers
 
         [TestMethod]
         public async Task
-            CreateBankAccountWithCustomerByCustomerAsync_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
+            CreateBankAccountWithCustomerByCustomerAsync_Should_ReturnBankAccountDto_When_ModelStateIsValid()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByCustomerDto
@@ -415,7 +416,7 @@ namespace BankApp.UnitTests.Controllers
 
         [TestMethod]
         public async Task
-            CreateBankAccountWithCustomerByWorkerAsync_Should_CreateBankAccountWithCustomer_And_ReturnBankAccountDto_When_ModelStateIsValid()
+            CreateBankAccountWithCustomerByWorkerAsync_Should_ReturnBankAccountDto_When_ModelStateIsValid()
         {
             // Arrange
             var bankAccountCreation = new BankAccountWithCustomerCreationByWorkerDto

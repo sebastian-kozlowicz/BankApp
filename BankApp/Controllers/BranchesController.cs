@@ -54,7 +54,7 @@ namespace BankApp.Controllers
         [HttpPost]
         [Authorize(Policy = PolicyName.UserIdIncludedInJwtToken)]
         [Route("AssignTellerToBranch")]
-        public async Task<ActionResult> AssignTellerToBranchASync([FromBody] WorkerAtBranchDto model)
+        public async Task<ActionResult> AssignTellerToBranchAsync([FromBody] WorkerAtBranchDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
