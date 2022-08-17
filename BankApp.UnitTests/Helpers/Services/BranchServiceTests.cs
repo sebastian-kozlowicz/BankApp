@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
-using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Dtos.Address;
 using BankApp.Dtos.Branch;
@@ -14,8 +12,6 @@ using BankApp.Helpers.Services;
 using BankApp.Mapping;
 using BankApp.Models;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -191,7 +187,7 @@ namespace BankApp.UnitTests.Helpers.Services
         }
 
         [TestMethod]
-        public void  CreateBranchWithAddressAsync_Should_ThrowValidationException_When_BranchCodeIsAlreadyInUse()
+        public void CreateBranchWithAddressAsync_Should_ThrowValidationException_When_BranchCodeIsAlreadyInUse()
         {
             // Arrange
             var branchCreation = new BranchWithAddressCreationDto
@@ -219,7 +215,8 @@ namespace BankApp.UnitTests.Helpers.Services
         }
 
         [TestMethod]
-        public async Task AssignTellerToBranchAsync_Should_SetWorkAtIdPropertyToSuppliedBranchId_And_CreateTellerAtBranchHistory_And_ReturnTrue()
+        public async Task
+            AssignTellerToBranchAsync_Should_SetWorkAtIdPropertyToSuppliedBranchId_And_CreateTellerAtBranchHistory_And_ReturnTrue()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -240,7 +237,8 @@ namespace BankApp.UnitTests.Helpers.Services
             tellerFromDb.Should().NotBeNull();
             tellerFromDb.WorkAtId.Should().Be(workerAtBranch.BranchId);
 
-            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(t => t.TellerId == workerAtBranch.WorkerId).ToList().LastOrDefault();
+            var tellerAtBranchFromDb = _context.TellerAtBranchHistory.Where(t => t.TellerId == workerAtBranch.WorkerId)
+                .ToList().LastOrDefault();
             tellerAtBranchFromDb.Should().NotBeNull();
             tellerAtBranchFromDb.AssignDate.Should().NotBe(DateTime.MinValue);
             tellerAtBranchFromDb.ExpelDate.Should().BeNull();
@@ -249,6 +247,161 @@ namespace BankApp.UnitTests.Helpers.Services
             tellerAtBranchFromDb.AssignedById.Should().Be(currentUserId);
             tellerAtBranchFromDb.BranchId.Should().Be(workerAtBranch.BranchId);
             tellerAtBranchFromDb.TellerId.Should().Be(workerAtBranch.WorkerId);
+        }
+
+        [TestMethod]
+        public void AssignTellerToBranchAsync_Should_ThrowValidationException_When_TellerNotExist()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 999,
+                BranchId = 1
+            };
+
+            const int currentUserId = 1;
+
+            // Act
+            Func<Task> func = async () => await _sut.AssignTellerToBranchAsync(workerAtBranch, currentUserId);
+
+            // Assert
+            func.Should().Throw<ValidationException>()
+                .WithMessage($"Teller with id {workerAtBranch.WorkerId} doesn't exist.");
+        }
+
+        [TestMethod]
+        public void AssignTellerToBranchAsync_Should_ThrowValidationException_When_BranchNotExist()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 2,
+                BranchId = 999
+            };
+
+            const int currentUserId = 1;
+
+            // Act
+            Func<Task> func = async () => await _sut.AssignTellerToBranchAsync(workerAtBranch, currentUserId);
+
+            // Assert
+            func.Should().Throw<ValidationException>()
+                .WithMessage($"Branch with id {workerAtBranch.BranchId} doesn't exist.");
+        }
+
+        [TestMethod]
+        public void AssignTellerToBranchAsync_Should_ThrowValidationException_When_TellerIsAlreadyAssignedToBranch()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 3,
+                BranchId = 1
+            };
+
+            const int currentUserId = 1;
+
+            // Act
+            Func<Task> func = async () => await _sut.AssignTellerToBranchAsync(workerAtBranch, currentUserId);
+
+            // Assert
+            func.Should().Throw<ValidationException>().WithMessage(
+                $"Teller with id {workerAtBranch.WorkerId} is currently assigned to branch with id {_secondBranch.Id}.");
+        }   
+        
+        [TestMethod]
+        public async Task
+            AssignManagerToBranchAsync_Should_SetWorkAtIdPropertyToSuppliedBranchId_And_CreateManagerAtBranchHistory_And_ReturnTrue()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 4,
+                BranchId = 1
+            };
+
+            const int currentUserId = 1;
+
+            // Act
+            var result = await _sut.AssignManagerToBranchAsync(workerAtBranch, currentUserId);
+
+            // Assert
+            result.Should().BeTrue();
+
+            var managerFromDb = _context.Managers.SingleOrDefault(t => t.Id == workerAtBranch.WorkerId);
+            managerFromDb.Should().NotBeNull();
+            managerFromDb.WorkAtId.Should().Be(workerAtBranch.BranchId);
+
+            var managerAtBranchFromDb = _context.ManagerAtBranchHistory.Where(t => t.ManagerId == workerAtBranch.WorkerId)
+                .ToList().LastOrDefault();
+            managerAtBranchFromDb.Should().NotBeNull();
+            managerAtBranchFromDb.AssignDate.Should().NotBe(DateTime.MinValue);
+            managerAtBranchFromDb.ExpelDate.Should().BeNull();
+            managerAtBranchFromDb.ExpelledById.Should().BeNull();
+            managerAtBranchFromDb.ExpelledBy.Should().BeNull();
+            managerAtBranchFromDb.AssignedById.Should().Be(currentUserId);
+            managerAtBranchFromDb.BranchId.Should().Be(workerAtBranch.BranchId);
+            managerAtBranchFromDb.ManagerId.Should().Be(workerAtBranch.WorkerId);
+        }
+
+        [TestMethod]
+        public void AssignManagerToBranchAsync_Should_ThrowValidationException_When_ManagerNotExist()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 999,
+                BranchId = 1
+            };
+
+            const int currentUserId = 1;
+
+            // Act
+            Func<Task> func = async () => await _sut.AssignManagerToBranchAsync(workerAtBranch, currentUserId);
+
+            // Assert
+            func.Should().Throw<ValidationException>()
+                .WithMessage($"Manager with id {workerAtBranch.WorkerId} doesn't exist.");
+        }
+
+        [TestMethod]
+        public void AssignManagerToBranchAsync_Should_ThrowValidationException_When_BranchNotExist()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 4,
+                BranchId = 999
+            };
+
+            const int currentUserId = 1;
+
+            // Act
+            Func<Task> func = async () => await _sut.AssignManagerToBranchAsync(workerAtBranch, currentUserId);
+
+            // Assert
+            func.Should().Throw<ValidationException>()
+                .WithMessage($"Branch with id {workerAtBranch.BranchId} doesn't exist.");
+        }
+
+        [TestMethod]
+        public void AssignManagerToBranchAsync_Should_ThrowValidationException_When_ManagerIsAlreadyAssignedToBranch()
+        {
+            // Arrange
+            var workerAtBranch = new WorkerAtBranchDto
+            {
+                WorkerId = 5,
+                BranchId = 1
+            };
+
+            const int currentUserId = 1;
+
+            // Act
+            Func<Task> func = async () => await _sut.AssignManagerToBranchAsync(workerAtBranch, currentUserId);
+
+            // Assert
+            func.Should().Throw<ValidationException>().WithMessage(
+                $"Manager with id {workerAtBranch.WorkerId} is currently assigned to branch with id {_secondBranch.Id}.");
         }
     }
 }
