@@ -138,7 +138,7 @@ namespace BankApp.Helpers.Services
             if (manager == null)
                 throw new ValidationException($"Manager with id {model.WorkerId} doesn't exist.");
 
-            var branch = _context.Branches.SingleOrDefaultAsync(b => b.Id == model.BranchId);
+            var branch = await _context.Branches.SingleOrDefaultAsync(b => b.Id == model.BranchId);
             if (branch == null)
                 throw new ValidationException($"Branch with id {model.BranchId} doesn't exist.");
 
