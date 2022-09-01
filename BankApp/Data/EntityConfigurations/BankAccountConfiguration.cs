@@ -15,6 +15,10 @@ namespace BankApp.Data.EntityConfigurations
             builder
                 .Property(b => b.DebitLimit)
                 .HasColumnType("decimal(18,2)");
+
+            builder
+                .HasIndex(b => b.Iban)
+                .IsUnique();
         }
     }
 }
