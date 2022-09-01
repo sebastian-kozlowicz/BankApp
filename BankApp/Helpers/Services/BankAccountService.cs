@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Dtos.BankAccount.WithCustomerCreation;
 using BankApp.Enumerators;
@@ -11,8 +12,11 @@ using BankApp.Interfaces.Helpers.Builders.Number;
 using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using Polly;
+using Polly.Retry;
 using BankAccountCreationDto = BankApp.Dtos.BankAccount.BankAccountCreationDto;
 
 namespace BankApp.Helpers.Services
@@ -22,6 +26,7 @@ namespace BankApp.Helpers.Services
         private readonly IBankAccountNumberBuilder _bankAccountNumberBuilder;
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly AsyncRetryPolicy _retryPolicy;
         private readonly UserManager<ApplicationUser> _userManager;
 
         public BankAccountService(ApplicationDbContext context, IMapper mapper,
@@ -31,6 +36,9 @@ namespace BankApp.Helpers.Services
             _mapper = mapper;
             _userManager = userManager;
             _bankAccountNumberBuilder = bankAccountNumberBuilder;
+            _retryPolicy = Policy.HandleInner<SqlException>(ex =>
+                    ex.Number is SqlErrorCode.UniqueConstraintError or SqlErrorCode.UniqueConstraintError)
+                .WaitAndRetryAsync(3, times => TimeSpan.FromMilliseconds(times * 100));
         }
 
         public async Task<BankAccount> GetBankAccountAsync(int bankAccountId)
@@ -45,69 +53,75 @@ namespace BankApp.Helpers.Services
 
         public async Task<BankAccount> CreateBankAccountAsync(BankAccountCreationDto model)
         {
-            var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber();
-
-            var bankAccount = new BankAccount
+            return await _retryPolicy.ExecuteAsync(async () =>
             {
-                AccountType = (AccountType)model.AccountType,
-                Currency = (Currency)model.Currency,
-                CountryCode = generatedAccountNumber.CountryCode,
-                CheckDigits = generatedAccountNumber.CheckDigits,
-                NationalBankCode = generatedAccountNumber.NationalBankCode,
-                BranchCode = generatedAccountNumber.BranchCode,
-                NationalCheckDigit = generatedAccountNumber.NationalCheckDigit,
-                AccountNumber = generatedAccountNumber.AccountNumber,
-                AccountNumberText = generatedAccountNumber.AccountNumberText,
-                Iban = generatedAccountNumber.Iban,
-                IbanSeparated = generatedAccountNumber.IbanSeparated,
-                OpenedDate = DateTime.UtcNow,
-                CustomerId = (int)model.CustomerId,
-                CreatedById = (int)model.CustomerId
-            };
+                var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber();
 
-            await _context.BankAccounts.AddAsync(bankAccount);
-            await _context.SaveChangesAsync();
+                var bankAccount = new BankAccount
+                {
+                    AccountType = (AccountType)model.AccountType,
+                    Currency = (Currency)model.Currency,
+                    CountryCode = generatedAccountNumber.CountryCode,
+                    CheckDigits = generatedAccountNumber.CheckDigits,
+                    NationalBankCode = generatedAccountNumber.NationalBankCode,
+                    BranchCode = generatedAccountNumber.BranchCode,
+                    NationalCheckDigit = generatedAccountNumber.NationalCheckDigit,
+                    AccountNumber = generatedAccountNumber.AccountNumber,
+                    AccountNumberText = generatedAccountNumber.AccountNumberText,
+                    Iban = generatedAccountNumber.Iban,
+                    IbanSeparated = generatedAccountNumber.IbanSeparated,
+                    OpenedDate = DateTime.UtcNow,
+                    CustomerId = (int)model.CustomerId,
+                    CreatedById = (int)model.CustomerId
+                };
 
-            return bankAccount;
+                await _context.BankAccounts.AddAsync(bankAccount);
+                await _context.SaveChangesAsync();
+
+                return bankAccount;
+            });
         }
 
         public async Task<BankAccount> CreateBankAccountWithCustomerByCustomerAsync(
             BankAccountWithCustomerCreationByCustomerDto model)
         {
-            var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber();
-
-            var user = _mapper.Map<ApplicationUser>(model.Register);
-            user.Customer = new Customer { Id = user.Id };
-
-            var bankAccount = new BankAccount
+            return await _retryPolicy.ExecuteAsync(async () =>
             {
-                AccountType = (AccountType)model.BankAccount.AccountType,
-                Currency = (Currency)model.BankAccount.Currency,
-                CountryCode = generatedAccountNumber.CountryCode,
-                CheckDigits = generatedAccountNumber.CheckDigits,
-                NationalBankCode = generatedAccountNumber.NationalBankCode,
-                BranchCode = generatedAccountNumber.BranchCode,
-                NationalCheckDigit = generatedAccountNumber.NationalCheckDigit,
-                AccountNumber = generatedAccountNumber.AccountNumber,
-                AccountNumberText = generatedAccountNumber.AccountNumberText,
-                Iban = generatedAccountNumber.Iban,
-                IbanSeparated = generatedAccountNumber.IbanSeparated,
-                OpenedDate = DateTime.UtcNow,
-                CustomerId = user.Id,
-                CreatedById = user.Id
-            };
+                var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber();
 
-            user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
-            user.CreatedBankAccounts = new List<BankAccount> { bankAccount };
+                var user = _mapper.Map<ApplicationUser>(model.Register);
+                user.Customer = new Customer { Id = user.Id };
 
-            var result = await _userManager.CreateAsync(user, model.Register.User.Password);
+                var bankAccount = new BankAccount
+                {
+                    AccountType = (AccountType)model.BankAccount.AccountType,
+                    Currency = (Currency)model.BankAccount.Currency,
+                    CountryCode = generatedAccountNumber.CountryCode,
+                    CheckDigits = generatedAccountNumber.CheckDigits,
+                    NationalBankCode = generatedAccountNumber.NationalBankCode,
+                    BranchCode = generatedAccountNumber.BranchCode,
+                    NationalCheckDigit = generatedAccountNumber.NationalCheckDigit,
+                    AccountNumber = generatedAccountNumber.AccountNumber,
+                    AccountNumberText = generatedAccountNumber.AccountNumberText,
+                    Iban = generatedAccountNumber.Iban,
+                    IbanSeparated = generatedAccountNumber.IbanSeparated,
+                    OpenedDate = DateTime.UtcNow,
+                    CustomerId = user.Id,
+                    CreatedById = user.Id
+                };
 
-            if (result.Succeeded)
-                await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());
-            else
-                throw new Exception(JsonConvert.SerializeObject(result.Errors));
+                user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
+                user.CreatedBankAccounts = new List<BankAccount> { bankAccount };
 
-            return bankAccount;
+                var result = await _userManager.CreateAsync(user, model.Register.User.Password);
+
+                if (result.Succeeded)
+                    await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());
+                else
+                    throw new Exception(JsonConvert.SerializeObject(result.Errors));
+
+                return bankAccount;
+            });
         }
 
         public async Task<BankAccount> CreateBankAccountWithCustomerByWorkerAsync(
@@ -141,40 +155,43 @@ namespace BankApp.Helpers.Services
                 workerBranchId = currentUser.Manager.WorkAtId;
             }
 
-            var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber(workerBranchId);
-
-            var user = _mapper.Map<ApplicationUser>(model.Register);
-            user.Customer = new Customer { Id = user.Id };
-            user.CreatedById = currentUserId;
-
-            var bankAccount = new BankAccount
+            return await _retryPolicy.ExecuteAsync(async () =>
             {
-                AccountType = (AccountType)model.BankAccount.AccountType,
-                Currency = (Currency)model.BankAccount.Currency,
-                CountryCode = generatedAccountNumber.CountryCode,
-                CheckDigits = generatedAccountNumber.CheckDigits,
-                NationalBankCode = generatedAccountNumber.NationalBankCode,
-                BranchCode = generatedAccountNumber.BranchCode,
-                NationalCheckDigit = generatedAccountNumber.NationalCheckDigit,
-                AccountNumber = generatedAccountNumber.AccountNumber,
-                AccountNumberText = generatedAccountNumber.AccountNumberText,
-                Iban = generatedAccountNumber.Iban,
-                IbanSeparated = generatedAccountNumber.IbanSeparated,
-                OpenedDate = DateTime.UtcNow,
-                CustomerId = user.Id,
-                CreatedById = currentUserId
-            };
+                var generatedAccountNumber = _bankAccountNumberBuilder.GenerateBankAccountNumber(workerBranchId);
 
-            user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
+                var user = _mapper.Map<ApplicationUser>(model.Register);
+                user.Customer = new Customer { Id = user.Id };
+                user.CreatedById = currentUserId;
 
-            var result = await _userManager.CreateAsync(user);
+                var bankAccount = new BankAccount
+                {
+                    AccountType = (AccountType)model.BankAccount.AccountType,
+                    Currency = (Currency)model.BankAccount.Currency,
+                    CountryCode = generatedAccountNumber.CountryCode,
+                    CheckDigits = generatedAccountNumber.CheckDigits,
+                    NationalBankCode = generatedAccountNumber.NationalBankCode,
+                    BranchCode = generatedAccountNumber.BranchCode,
+                    NationalCheckDigit = generatedAccountNumber.NationalCheckDigit,
+                    AccountNumber = generatedAccountNumber.AccountNumber,
+                    AccountNumberText = generatedAccountNumber.AccountNumberText,
+                    Iban = generatedAccountNumber.Iban,
+                    IbanSeparated = generatedAccountNumber.IbanSeparated,
+                    OpenedDate = DateTime.UtcNow,
+                    CustomerId = user.Id,
+                    CreatedById = currentUserId
+                };
 
-            if (result.Succeeded)
-                await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());
-            else
-                throw new Exception(JsonConvert.SerializeObject(result.Errors));
+                user.Customer.BankAccounts = new List<BankAccount> { bankAccount };
 
-            return bankAccount;
+                var result = await _userManager.CreateAsync(user);
+
+                if (result.Succeeded)
+                    await _userManager.AddToRoleAsync(user, UserRole.Customer.ToString());
+                else
+                    throw new Exception(JsonConvert.SerializeObject(result.Errors));
+
+                return bankAccount;
+            });
         }
     }
 }
