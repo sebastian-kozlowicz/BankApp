@@ -8,6 +8,17 @@ using BankApp.Models;
 
 namespace BankApp.Helpers.Builders.Number
 {
+    /// <summary>
+    /// Polish IBAN builder
+    /// Polish IBAN structure: PLkk bbbs sssx cccc cccc cccc cccc
+    /// where:
+    /// kk = Check digits
+    /// bbb = National bank code
+    /// s = Branch code
+    /// x = National check digit
+    /// c = Account number
+    /// Detailed explanation of IBAN structure, generation and validation is available on Wikipedia https://en.wikipedia.org/wiki/International_Bank_Account_Number
+    /// </summary>
     public class BankAccountNumberBuilder : IBankAccountNumberBuilder
     {
         private static readonly Dictionary<string, int> CountryCharactersAssignedToNumbers = new()
@@ -75,7 +86,7 @@ namespace BankApp.Helpers.Builders.Number
 
         public int GenerateNationalCheckDigit(string nationalBankCode, string branchCode)
         {
-            var weights = new[] {3, 9, 7, 1, 3, 9, 7};
+            var weights = new[] { 3, 9, 7, 1, 3, 9, 7 };
             var nationalBankCodeDigitsArray = nationalBankCode.Select(digit => int.Parse(digit.ToString())).ToArray();
             var branchCodeDigitsArray = branchCode.Select(digit => int.Parse(digit.ToString())).ToArray();
             var concatenatedDigitsArray = nationalBankCodeDigitsArray.Concat(branchCodeDigitsArray).ToArray();
@@ -166,12 +177,12 @@ namespace BankApp.Helpers.Builders.Number
 
         private long GenerateAccountNumber()
         {
-            var maxAccountNumber = _context.BankAccounts.Max(b => (long?) b.AccountNumber);
+            var maxAccountNumber = _context.BankAccounts.Max(b => (long?)b.AccountNumber);
 
             if (maxAccountNumber == null)
                 return 0;
 
-            return (long) (maxAccountNumber + 1);
+            return (long)(maxAccountNumber + 1);
         }
 
         private string GetAccountNumberText(long accountNumber)
