@@ -37,7 +37,7 @@ namespace BankApp.Helpers.Services
             _userManager = userManager;
             _bankAccountNumberBuilder = bankAccountNumberBuilder;
             _retryPolicy = Policy.HandleInner<SqlException>(ex =>
-                    ex.Number is SqlErrorCode.UniqueConstraintError or SqlErrorCode.UniqueConstraintError)
+                    ex.Number is SqlErrorCode.UniqueConstraintError or SqlErrorCode.DuplicatedKeyRowError)
                 .WaitAndRetryAsync(3, times => TimeSpan.FromMilliseconds(times * 100));
         }
 

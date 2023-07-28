@@ -156,6 +156,7 @@ namespace BankApp
             }).AddJwtBearer(options =>
             {
                 options.ClaimsIssuer = jwtIssuerOptions.Issuer;
+                options.Audience = jwtIssuerOptions.Audience;
                 options.TokenValidationParameters = tokenValidationParameters;
                 options.SaveToken = false;
             });
@@ -166,9 +167,9 @@ namespace BankApp
                     policy => policy.Requirements.Add(new UserIdRequirement()));
             });
 
-            services.AddControllers(c =>
+            services.AddControllers(options =>
             {
-                c.Filters.AddService(typeof(RequestResponseLoggingFilter));
+                options.Filters.AddService(typeof(RequestResponseLoggingFilter));
             });
 
             // In production, the Angular files will be served from this directory

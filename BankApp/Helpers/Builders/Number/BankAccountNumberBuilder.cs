@@ -101,24 +101,24 @@ namespace BankApp.Helpers.Builders.Number
                                          $"{secondCountryCharacterAsNumber}"
                                          + "00";
 
-            var splittedAccountNumberArray = Regex.Split(formattedAccountNumber, "(?<=\\G.{8})");
+            var splitAccountNumberArray = Regex.Split(formattedAccountNumber, "(?<=\\G.{8})");
 
-            var modResult = splittedAccountNumberArray.Aggregate(string.Empty,
+            var modResult = splitAccountNumberArray.Aggregate(string.Empty,
                 (sum, number) => (long.Parse(sum + number) % 97).ToString());
 
-            var checkNumber = (98 - int.Parse(modResult)).ToString();
+            var checkDigits = (98 - int.Parse(modResult)).ToString();
 
-            if (checkNumber.Length > 1)
-                return checkNumber;
+            if (checkDigits.Length > 1)
+                return checkDigits;
 
-            return "0" + checkNumber;
+            return "0" + checkDigits;
         }
 
-        public string GetIban(BankData bankData, string checkNumber, string branchCode, int nationalCheckDigit,
+        public string GetIban(BankData bankData, string checkDigits, string branchCode, int nationalCheckDigit,
             string accountNumberText)
         {
             return $"{bankData.CountryCode}" +
-                   $"{checkNumber}" +
+                   $"{checkDigits}" +
                    $"{bankData.NationalBankCode}" +
                    $"{branchCode}" +
                    $"{nationalCheckDigit}" +
