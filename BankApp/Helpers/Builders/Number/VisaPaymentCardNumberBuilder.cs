@@ -9,6 +9,22 @@ using BankApp.Models;
 
 namespace BankApp.Helpers.Builders.Number
 {
+    /// <summary>
+    ///     Visa Payment card number builder
+    ///     Payment card number structure:
+    ///     - a six or eight-digit Issuer Identification Number (IIN) also called Bank Identification Number (BIN), the first
+    ///     digit of which is the Major Industry Identifier (MII),
+    ///     this number is assigned to bank for each issuing network (e.g. Visa, Mastercard)
+    ///     - a variable length (up to 12 digits) individual account identifier
+    ///     - a single check digit calculated using the Luhn algorithm
+    ///     Each issuing network has its own payment card number length and starting digits
+    ///     Mastercard issuing network rules:
+    ///     - Length 16, starting digits within range 51–55, from 2017 also 2221–2720
+    ///     Visa issuing network rules:
+    ///     - Length 13, 16, 19, starting digit 4
+    ///     Detailed explanation of payment card number structure, generation and validation is available on Wikipedia
+    ///     https://en.wikipedia.org/wiki/Payment_card_number
+    /// </summary>
     public class VisaPaymentCardNumberBuilder : PaymentCardNumberBuilder, IPaymentCardNumberBuilder
     {
         public VisaPaymentCardNumberBuilder(ApplicationDbContext context)

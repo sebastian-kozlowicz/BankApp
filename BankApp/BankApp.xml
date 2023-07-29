@@ -18,6 +18,113 @@
             <param name="model">Expired JWT with refresh token</param>
             <returns>JWT with refresh token</returns>
         </member>
+        <member name="T:BankApp.Helpers.Builders.Number.BankAccountNumberBuilder">
+            <summary>
+                Polish IBAN builder
+                Polish IBAN structure: PLkk bbbb sssx cccc cccc cccc cccc
+                where:
+                k = Check digits
+                b = National bank code - 4 digit number assigned to bank
+                s = Branch code
+                x = National check digit
+                c = Account number
+                Detailed explanation of IBAN structure, generation and validation is available on Wikipedia
+                https://en.wikipedia.org/wiki/International_Bank_Account_Number
+                Important note - National bank code of polish IBAN is 4 digit number, there is false information saying it is 3
+                digits on Wikipedia
+                Polish website explaining polish IBAN structure with example of bank identification by National bank code 4 digit
+                number https://www.bankier.pl/smart/numer-konta-bankowego-gdzie-jest-ile-ma-cyfr-przyklad
+            </summary>
+        </member>
+        <member name="M:BankApp.Helpers.Builders.Number.BankAccountNumberBuilder.GenerateNationalCheckDigit(System.String,System.String)">
+            <summary>
+                Weighted sum: Treats the account number as a series of individual numbers, multiplies each number by a weight value
+                according to its position in the string, sums the products, divides the sum by a modulus 10 and subtracts 10 from
+                the reminder
+            </summary>
+            <param name="nationalBankCode"></param>
+            <param name="branchCode"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BankApp.Helpers.Builders.Number.BankAccountNumberBuilder.GenerateCheckDigits(BankApp.Models.BankData,System.String,System.Int32,System.String)">
+            <summary>
+                Checks that the total IBAN length is correct as per the country. If not, the IBAN is invalid.
+                Replaces the two check digits by 00 (e.g., GB00 for the UK).
+                Moves the four initial characters to the end of the string.
+                Replaces the letters in the string with digits, expanding the string as necessary, such that A or a = 10, B or b =
+                11, and Z or z = 35. Each alphabetic character is therefore replaced by 2 digits
+                Converts the string to an long (i.e.ignore leading zeroes).
+                Calculates mod-97 of the new number, which results in the remainder.
+                Subtracts the remainder from 98 and use the result for the two check digits. If the result is a single-digit number,
+                pads it with a leading 0 to make a two-digit number.
+            </summary>
+            <param name="bankData"></param>
+            <param name="branchCode"></param>
+            <param name="nationalCheckDigit"></param>
+            <param name="accountNumberText"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BankApp.Helpers.Builders.Number.MastercardPaymentCardNumberBuilder">
+            <summary>
+                Mastercard Payment card number builder
+                Payment card number structure:
+                - a six or eight-digit Issuer Identification Number (IIN) also called Bank Identification Number (BIN), the first
+                digit of which is the Major Industry Identifier (MII),
+                this number is assigned to bank for each issuing network (e.g. Visa, Mastercard)
+                - a variable length (up to 12 digits) individual account identifier
+                - a single check digit calculated using the Luhn algorithm
+                Each issuing network has its own payment card number length and starting digits
+                Mastercard issuing network rules:
+                - Length 16, starting digits within range 51–55, from 2017 also 2221–2720
+                Visa issuing network rules:
+                - Length 13, 16, 19, starting digit 4
+                Detailed explanation of payment card number structure, generation and validation is available on Wikipedia
+                https://en.wikipedia.org/wiki/Payment_card_number
+            </summary>
+        </member>
+        <member name="T:BankApp.Helpers.Builders.Number.PaymentCardNumberBuilder">
+            <summary>
+                Payment card number builder base class
+                Payment card number structure:
+                - a six or eight-digit Issuer Identification Number (IIN) also called Bank Identification Number (BIN), the first
+                digit of which is the Major Industry Identifier (MII),
+                this number is assigned to bank for each issuing network (e.g. Visa, Mastercard)
+                - a variable length (up to 12 digits) individual account identifier
+                - a single check digit calculated using the Luhn algorithm
+                Each issuing network has its own payment card number length and starting digits
+                Mastercard issuing network rules:
+                - Length 16, starting digits within range 51–55, from 2017 also 2221–2720
+                Visa issuing network rules:
+                - Length 13, 16, 19, starting digit 4
+                Detailed explanation of payment card number structure, generation and validation is available on Wikipedia
+                https://en.wikipedia.org/wiki/Payment_card_number
+            </summary>
+        </member>
+        <member name="M:BankApp.Helpers.Builders.Number.PaymentCardNumberBuilder.GenerateCheckDigit(System.String)">
+            <summary>
+                Generates payment card's check digit using Luhn algorithm https://en.wikipedia.org/wiki/Luhn_algorithm
+            </summary>
+            <param name="number">payment card number without check digit</param>
+            <returns></returns>
+        </member>
+        <member name="T:BankApp.Helpers.Builders.Number.VisaPaymentCardNumberBuilder">
+            <summary>
+                Visa Payment card number builder
+                Payment card number structure:
+                - a six or eight-digit Issuer Identification Number (IIN) also called Bank Identification Number (BIN), the first
+                digit of which is the Major Industry Identifier (MII),
+                this number is assigned to bank for each issuing network (e.g. Visa, Mastercard)
+                - a variable length (up to 12 digits) individual account identifier
+                - a single check digit calculated using the Luhn algorithm
+                Each issuing network has its own payment card number length and starting digits
+                Mastercard issuing network rules:
+                - Length 16, starting digits within range 51–55, from 2017 also 2221–2720
+                Visa issuing network rules:
+                - Length 13, 16, 19, starting digit 4
+                Detailed explanation of payment card number structure, generation and validation is available on Wikipedia
+                https://en.wikipedia.org/wiki/Payment_card_number
+            </summary>
+        </member>
         <member name="M:BankApp.Helpers.Handlers.ExternalTransferHandler.CreateBankTransferAsync(BankApp.Models.BankAccount,BankApp.Models.BankAccount,System.Decimal)">
             <summary>
                 Method that fakes real transfer order in external system like Elixir
