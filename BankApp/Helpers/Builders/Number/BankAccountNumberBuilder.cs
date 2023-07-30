@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using BankApp.Configuration;
 using BankApp.Data;
+using BankApp.Exceptions;
 using BankApp.Interfaces.Helpers.Builders.Number;
 using BankApp.Models;
 
@@ -99,7 +101,15 @@ namespace BankApp.Helpers.Builders.Number
         /// <returns></returns>
         public int GenerateNationalCheckDigit(string nationalBankCode, string branchCode)
         {
-            //todo: add length validation
+            ThrowIfStringIsNotNumber(nationalBankCode, nameof(nationalBankCode));
+            ThrowIfStringIsNotNumber(branchCode, nameof(branchCode));
+
+            const int correctParametersValueLength = NumberLengthSettings.BankAccount.NationalBankCode +
+                                                    NumberLengthSettings.BankAccount.BranchCode;
+
+            if (correctParametersValueLength != nationalBankCode.Length + branchCode.Length)
+                throw new ArgumentException(
+                    $"National bank code and branch code should be length of {correctParametersValueLength} numbers.");
 
             var weights = new[] { 3, 9, 7, 1, 3, 9, 7 };
             var nationalBankCodeDigitsArray = nationalBankCode.Select(digit => int.Parse(digit.ToString())).ToArray();
@@ -119,7 +129,8 @@ namespace BankApp.Helpers.Builders.Number
         ///     11, and Z or z = 35. Each alphabetic character is therefore replaced by 2 digits
         ///     Converts the string to an long (i.e.ignore leading zeroes).
         ///     Calculates mod-97 of the new number, which results in the remainder.
-        ///     Subtracts the remainder from 98 and use the result for the two check digits. If the result is a single-digit number,
+        ///     Subtracts the remainder from 98 and use the result for the two check digits. If the result is a single-digit
+        ///     number,
         ///     pads it with a leading 0 to make a two-digit number.
         /// </summary>
         /// <param name="bankData"></param>
@@ -130,7 +141,8 @@ namespace BankApp.Helpers.Builders.Number
         public string GenerateCheckDigits(BankData bankData, string branchCode, int nationalCheckDigit,
             string accountNumberText)
         {
-            //todo: add length validation
+            ThrowIfStringIsNotNumber(branchCode, nameof(branchCode));
+            ThrowIfStringIsNotNumber(accountNumberText, nameof(accountNumberText));
 
             var firstCountryCodeCharacterAsNumber =
                 CountryCodeCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
@@ -144,6 +156,9 @@ namespace BankApp.Helpers.Builders.Number
                                          $"{firstCountryCodeCharacterAsNumber}" +
                                          $"{secondCountryCharacterAsNumber}"
                                          + "00";
+
+            if (formattedAccountNumber.Length != NumberLengthSettings.BankAccount.Iban)
+                throw new ValidationException("IBAN length is invalid.");
 
             var splitAccountNumberArray = Regex.Split(formattedAccountNumber, "(?<=\\G.{8})");
 
@@ -213,6 +228,12 @@ namespace BankApp.Helpers.Builders.Number
             return (long)(maxAccountNumber + 1);
         }
 
-        private string GetAccountNumberText(long accountNumber) => accountNumber.ToString("D16");
+        private static string GetAccountNumberText(long accountNumber) => accountNumber.ToString("D16");
+
+        private static void ThrowIfStringIsNotNumber(string input, string parameterName)
+        {
+            if (!Regex.IsMatch(input, @"^\d+$"))
+                throw new ArgumentException("Parameter value is not a number.", nameof(parameterName));
+        }
     }
 }
