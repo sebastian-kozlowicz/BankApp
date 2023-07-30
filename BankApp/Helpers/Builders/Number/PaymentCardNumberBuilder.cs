@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using BankApp.Configuration;
 using BankApp.Data;
 
 namespace BankApp.Helpers.Builders.Number
@@ -21,7 +22,6 @@ namespace BankApp.Helpers.Builders.Number
     /// </summary>
     public abstract class PaymentCardNumberBuilder
     {
-        private const int BankIdentificationNumberAndCheckDigitLength = 7;
         protected readonly ApplicationDbContext Context;
 
         protected PaymentCardNumberBuilder(ApplicationDbContext context)
@@ -41,7 +41,7 @@ namespace BankApp.Helpers.Builders.Number
         }
 
         protected string GetAccountIdentificationNumberText(int length, long accountNumber) =>
-            accountNumber.ToString($"D{length - BankIdentificationNumberAndCheckDigitLength}");
+            accountNumber.ToString($"D{length - NumberLengthSettings.PaymentCard.BankIdentificationNumberAndCheckDigit}");
 
         /// <summary>
         ///     Generates payment card's check digit using Luhn algorithm https://en.wikipedia.org/wiki/Luhn_algorithm
