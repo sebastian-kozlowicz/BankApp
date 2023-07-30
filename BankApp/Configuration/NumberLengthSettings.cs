@@ -13,6 +13,7 @@
             public const int Iban = 28;
             public const int NationalBankCode = 4;
             public const int BranchCode = 3;
+            public const int AccountNumber = 16;
 
         }
     }

@@ -104,12 +104,13 @@ namespace BankApp.Helpers.Builders.Number
             ThrowIfStringIsNotNumber(nationalBankCode, nameof(nationalBankCode));
             ThrowIfStringIsNotNumber(branchCode, nameof(branchCode));
 
-            const int correctParametersValueLength = NumberLengthSettings.BankAccount.NationalBankCode +
-                                                    NumberLengthSettings.BankAccount.BranchCode;
-
-            if (correctParametersValueLength != nationalBankCode.Length + branchCode.Length)
+            if(nationalBankCode.Length != NumberLengthSettings.BankAccount.NationalBankCode)
                 throw new ArgumentException(
-                    $"National bank code and branch code should be length of {correctParametersValueLength} numbers.");
+                    $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");
+            
+            if(branchCode.Length != NumberLengthSettings.BankAccount.BranchCode)
+                throw new ArgumentException(
+                    $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
 
             var weights = new[] { 3, 9, 7, 1, 3, 9, 7 };
             var nationalBankCodeDigitsArray = nationalBankCode.Select(digit => int.Parse(digit.ToString())).ToArray();
@@ -143,6 +144,14 @@ namespace BankApp.Helpers.Builders.Number
         {
             ThrowIfStringIsNotNumber(branchCode, nameof(branchCode));
             ThrowIfStringIsNotNumber(accountNumberText, nameof(accountNumberText));
+
+            if (branchCode.Length != NumberLengthSettings.BankAccount.BranchCode)
+                throw new ArgumentException(
+                    $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");  
+            
+            if (branchCode.Length != NumberLengthSettings.BankAccount.BranchCode)
+                throw new ArgumentException(
+                    $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
 
             var firstCountryCodeCharacterAsNumber =
                 CountryCodeCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
