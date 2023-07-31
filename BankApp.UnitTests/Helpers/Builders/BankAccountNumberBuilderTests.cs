@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using BankApp.Configuration;
 using BankApp.Data;
 using BankApp.Helpers.Builders.Number;
@@ -43,6 +42,7 @@ namespace BankApp.UnitTests.Helpers.Builders
         [TestMethod]
         public void GenerateAccountNumber_Should_ReturnIban()
         {
+            // Arrange
             var expectedBankAccountNumber = new BankAccountNumber
             {
                 CountryCode = "PL",
@@ -56,22 +56,17 @@ namespace BankApp.UnitTests.Helpers.Builders
                 IbanSeparated = "PL 61 1080 0001 0000 0000 0000 0000"
             };
 
+            // Act
             var result = _sut.GenerateBankAccountNumber(1);
 
-            Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
-            Assert.AreEqual(expectedBankAccountNumber.CheckDigits, result.CheckDigits);
-            Assert.AreEqual(expectedBankAccountNumber.NationalBankCode, result.NationalBankCode);
-            Assert.AreEqual(expectedBankAccountNumber.BranchCode, result.BranchCode);
-            Assert.AreEqual(expectedBankAccountNumber.NationalCheckDigit, result.NationalCheckDigit);
-            Assert.AreEqual(expectedBankAccountNumber.AccountNumber, result.AccountNumber);
-            Assert.AreEqual(expectedBankAccountNumber.AccountNumberText, result.AccountNumberText);
-            Assert.AreEqual(expectedBankAccountNumber.Iban, result.Iban);
-            Assert.AreEqual(expectedBankAccountNumber.IbanSeparated, result.IbanSeparated);
+            // Assert
+            result.Should().BeEquivalentTo(expectedBankAccountNumber);
         }
 
         [TestMethod]
         public void GenerateAccountNumber_Should_ReturnIbanWithHeadquartersBranchCode_When_NoBranchIdIsPassedToMethod()
         {
+            // Arrange
             var expectedBankAccountNumber = new BankAccountNumber
             {
                 CountryCode = "PL",
@@ -85,22 +80,17 @@ namespace BankApp.UnitTests.Helpers.Builders
                 IbanSeparated = "PL 27 1080 0014 0000 0000 0000 0000"
             };
 
+            // Act
             var result = _sut.GenerateBankAccountNumber();
 
-            Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
-            Assert.AreEqual(expectedBankAccountNumber.CheckDigits, result.CheckDigits);
-            Assert.AreEqual(expectedBankAccountNumber.NationalBankCode, result.NationalBankCode);
-            Assert.AreEqual(expectedBankAccountNumber.BranchCode, result.BranchCode);
-            Assert.AreEqual(expectedBankAccountNumber.NationalCheckDigit, result.NationalCheckDigit);
-            Assert.AreEqual(expectedBankAccountNumber.AccountNumber, result.AccountNumber);
-            Assert.AreEqual(expectedBankAccountNumber.AccountNumberText, result.AccountNumberText);
-            Assert.AreEqual(expectedBankAccountNumber.Iban, result.Iban);
-            Assert.AreEqual(expectedBankAccountNumber.IbanSeparated, result.IbanSeparated);
+            // Assert
+            result.Should().BeEquivalentTo(expectedBankAccountNumber);
         }
 
         [TestMethod]
         public void GenerateAccountNumber_Should_ReturnIbanWithIteratedAccountNumber_When_SomeAccountNumberExistsInDb()
         {
+            // Arrange
             _context.BankAccounts.Add(new BankAccount { AccountNumber = 0 });
             _context.SaveChanges();
 
@@ -117,52 +107,55 @@ namespace BankApp.UnitTests.Helpers.Builders
                 IbanSeparated = "PL 34 1080 0001 0000 0000 0000 0001"
             };
 
+            // Act
             var result = _sut.GenerateBankAccountNumber(1);
 
-            Assert.AreEqual(expectedBankAccountNumber.CountryCode, result.CountryCode);
-            Assert.AreEqual(expectedBankAccountNumber.CheckDigits, result.CheckDigits);
-            Assert.AreEqual(expectedBankAccountNumber.NationalBankCode, result.NationalBankCode);
-            Assert.AreEqual(expectedBankAccountNumber.BranchCode, result.BranchCode);
-            Assert.AreEqual(expectedBankAccountNumber.NationalCheckDigit, result.NationalCheckDigit);
-            Assert.AreEqual(expectedBankAccountNumber.AccountNumber, result.AccountNumber);
-            Assert.AreEqual(expectedBankAccountNumber.AccountNumberText, result.AccountNumberText);
-            Assert.AreEqual(expectedBankAccountNumber.Iban, result.Iban);
-            Assert.AreEqual(expectedBankAccountNumber.IbanSeparated, result.IbanSeparated);
+            // Assert
+            result.Should().BeEquivalentTo(expectedBankAccountNumber);
         }
 
         [TestMethod]
         public void GenerateNationalCheckDigit_Should_ReturnValidNationalCheckDigit()
         {
+            // Arrange
             var nationalBankCode = "1080";
             var branchCode = "000";
             var expectedNationalCheckDigit = 1;
 
+            // Act
             var result = _sut.GenerateNationalCheckDigit(nationalBankCode, branchCode);
 
-            Assert.AreEqual(expectedNationalCheckDigit, result);
+            // Assert
+            result.Should().Be(expectedNationalCheckDigit);
         }
 
         [TestMethod]
         public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedNationalBankCodeIsNotNumber()
         {
+            // Arrange
             var nationalBankCode = "not a number";
             var branchCode = "000";
 
-            Func<Task> func = () => Task.FromResult(_sut.GenerateNationalCheckDigit(nationalBankCode, branchCode));
+            // Act
+            Action action = () => _sut.GenerateNationalCheckDigit(nationalBankCode, branchCode);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage($"Parameter value is not a number. (Parameter '{nameof(nationalBankCode)}')");
         }
 
         [TestMethod]
         public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedBranchCodeIsNotNumber()
         {
+            // Arrange
             var nationalBankCode = "1080";
             var branchCode = "not a number";
 
-            Func<Task> func = () => Task.FromResult(_sut.GenerateNationalCheckDigit(nationalBankCode, branchCode));
+            // Act
+            Action action = () => _sut.GenerateNationalCheckDigit(nationalBankCode, branchCode);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage($"Parameter value is not a number. (Parameter '{nameof(branchCode)}')");
         }
 
@@ -172,11 +165,14 @@ namespace BankApp.UnitTests.Helpers.Builders
         public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedNationalBankCodeLengthIsIncorrect(
             string nationalBankCode)
         {
+            // Arrange
             var branchCode = "000";
 
-            Func<Task> func = () => Task.FromResult(_sut.GenerateNationalCheckDigit(nationalBankCode, branchCode));
+            // Act
+            Action action = () => _sut.GenerateNationalCheckDigit(nationalBankCode, branchCode);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage(
                     $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");
         }
@@ -187,17 +183,21 @@ namespace BankApp.UnitTests.Helpers.Builders
         public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedBranchCodeLengthIsIncorrect(
             string branchCode)
         {
+            // Arrange
             var nationalBankCode = "1080";
 
-            Func<Task> func = () => Task.FromResult(_sut.GenerateNationalCheckDigit(nationalBankCode, branchCode));
+            // Act
+            Action action = () => _sut.GenerateNationalCheckDigit(nationalBankCode, branchCode);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage($"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
         }
 
         [TestMethod]
         public void GenerateCheckDigits_Should_ReturnValidCheckDigits()
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -208,14 +208,17 @@ namespace BankApp.UnitTests.Helpers.Builders
             var accountNumberText = "9999999999999999";
             var expectedNationalCheckDigits = "63";
 
+            // Act
             var result = _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            Assert.AreEqual(expectedNationalCheckDigits, result);
+            // Assert
+            result.Should().Be(expectedNationalCheckDigits);
         }
 
         [TestMethod]
         public void GenerateCheckDigits_Should_ReturnValidCheckDigitsWithLeadingZero()
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -226,14 +229,17 @@ namespace BankApp.UnitTests.Helpers.Builders
             var accountNumberText = "8540304041736354";
             var expectedNationalCheckDigits = "04";
 
+            // Act
             var result = _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            Assert.AreEqual(expectedNationalCheckDigits, result);
+            // Assert
+            result.Should().Be(expectedNationalCheckDigits);
         }
 
         [TestMethod]
         public void GenerateCheckDigits_Should_ThrowException_When_PassedNationalBankCodeIsNotNumber()
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -243,16 +249,18 @@ namespace BankApp.UnitTests.Helpers.Builders
             var nationalCheckDigit = 8;
             var accountNumberText = "8540304041736354";
 
-            Func<Task> func = () =>
-                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+            // Act
+            Action action = () => _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage($"Parameter value is not a number. (Parameter '{nameof(bankData.NationalBankCode)}')");
         }
 
         [TestMethod]
         public void GenerateCheckDigits_Should_ThrowException_When_PassedBranchCodeIsNotNumber()
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -262,16 +270,18 @@ namespace BankApp.UnitTests.Helpers.Builders
             var nationalCheckDigit = 8;
             var accountNumberText = "8540304041736354";
 
-            Func<Task> func = () =>
-                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+            // Act
+            Action action = () => _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage($"Parameter value is not a number. (Parameter '{nameof(branchCode)}')");
         }
 
         [TestMethod]
         public void GenerateCheckDigits_Should_ThrowException_When_PassedAccountNumberTextIsNotNumber()
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -281,10 +291,11 @@ namespace BankApp.UnitTests.Helpers.Builders
             var nationalCheckDigit = 8;
             var accountNumberText = "not a number";
 
-            Func<Task> func = () =>
-                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+            // Act
+            Action action = () => _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage($"Parameter value is not a number. (Parameter '{nameof(accountNumberText)}')");
         }
 
@@ -294,6 +305,7 @@ namespace BankApp.UnitTests.Helpers.Builders
         public void GenerateCheckDigits_Should_ThrowException_When_PassedNationalBankCodeLengthIsIncorrect(
             string nationalBankCode)
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -303,10 +315,11 @@ namespace BankApp.UnitTests.Helpers.Builders
             var nationalCheckDigit = 8;
             var accountNumberText = "8540304041736354";
 
-            Func<Task> func = () =>
-                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+            // Act
+            Action action = () => _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage(
                     $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");
         }
@@ -317,6 +330,7 @@ namespace BankApp.UnitTests.Helpers.Builders
         public void GenerateCheckDigits_Should_ThrowException_When_PassedBranchCodeLengthIsIncorrect(
             string branchCode)
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -325,10 +339,11 @@ namespace BankApp.UnitTests.Helpers.Builders
             var nationalCheckDigit = 8;
             var accountNumberText = "8540304041736354";
 
-            Func<Task> func = () =>
-                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+            // Act
+            Action action = () => _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage(
                     $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
         }
@@ -339,6 +354,7 @@ namespace BankApp.UnitTests.Helpers.Builders
         public void GenerateCheckDigits_Should_ThrowException_When_PassedAccountNumberTextLengthIsIncorrect(
             string accountNumberText)
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -347,10 +363,11 @@ namespace BankApp.UnitTests.Helpers.Builders
             var branchCode = "405";
             var nationalCheckDigit = 8;
 
-            Func<Task> func = () =>
-                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+            // Act
+            Action action = () => _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
-            func.Should().Throw<ArgumentException>()
+            // Assert
+            action.Should().Throw<ArgumentException>()
                 .WithMessage(
                     $"Account number text should be length of {NumberLengthSettings.BankAccount.AccountNumber} numbers.");
         }
@@ -358,6 +375,7 @@ namespace BankApp.UnitTests.Helpers.Builders
         [TestMethod]
         public void GetIban_Should_ReturnIban()
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -369,14 +387,17 @@ namespace BankApp.UnitTests.Helpers.Builders
             var accountNumberText = "9999999999999999";
             var expectedIban = "PL63108000019999999999999999";
 
+            // Act
             var result = _sut.GetIban(bankData, checkDigits, branchCode, nationalCheckDigit, accountNumberText);
 
-            Assert.AreEqual(expectedIban, result);
+            // Assert
+            result.Should().Be(expectedIban);
         }
 
         [TestMethod]
         public void GetSeparatedIban_Should_ReturnSeparatedIban()
         {
+            // Arrange
             var bankData = new BankData
             {
                 CountryCode = "PL",
@@ -388,10 +409,12 @@ namespace BankApp.UnitTests.Helpers.Builders
             var accountNumberText = "9999999999999999";
             var expectedIbanSeparated = "PL 63 1080 0001 9999 9999 9999 9999";
 
+            // Act
             var result =
                 _sut.GetIbanSeparated(bankData, checkDigits, branchCode, nationalCheckDigit, accountNumberText);
 
-            Assert.AreEqual(expectedIbanSeparated, result);
+            // Assert
+            result.Should().Be(expectedIbanSeparated);
         }
     }
 }
