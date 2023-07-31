@@ -142,21 +142,27 @@ namespace BankApp.Helpers.Builders.Number
         public string GenerateCheckDigits(BankData bankData, string branchCode, int nationalCheckDigit,
             string accountNumberText)
         {
+            ThrowIfStringIsNotNumber(bankData.NationalBankCode, nameof(bankData.NationalBankCode));
             ThrowIfStringIsNotNumber(branchCode, nameof(branchCode));
             ThrowIfStringIsNotNumber(accountNumberText, nameof(accountNumberText));
 
+            if (bankData.NationalBankCode.Length != NumberLengthSettings.BankAccount.NationalBankCode)
+                throw new ArgumentException(
+                    $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");  
+            
             if (branchCode.Length != NumberLengthSettings.BankAccount.BranchCode)
                 throw new ArgumentException(
                     $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");  
             
-            if (branchCode.Length != NumberLengthSettings.BankAccount.BranchCode)
+            if (accountNumberText.Length != NumberLengthSettings.BankAccount.AccountNumber)
                 throw new ArgumentException(
-                    $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
+                    $"Account number text should be length of {NumberLengthSettings.BankAccount.AccountNumber} numbers.");
 
             var firstCountryCodeCharacterAsNumber =
                 CountryCodeCharactersAssignedToNumbers[bankData.CountryCode.Substring(0, 1)];
             var secondCountryCharacterAsNumber =
                 CountryCodeCharactersAssignedToNumbers[bankData.CountryCode.Substring(1, 1)];
+            const int additionalCharsAfterCountryCodeTransformation = 2;
 
             var formattedAccountNumber = $"{bankData.NationalBankCode}" +
                                          $"{branchCode}" +
@@ -166,7 +172,7 @@ namespace BankApp.Helpers.Builders.Number
                                          $"{secondCountryCharacterAsNumber}"
                                          + "00";
 
-            if (formattedAccountNumber.Length != NumberLengthSettings.BankAccount.Iban)
+            if (formattedAccountNumber.Length != NumberLengthSettings.BankAccount.Iban + additionalCharsAfterCountryCodeTransformation)
                 throw new ValidationException("IBAN length is invalid.");
 
             var splitAccountNumberArray = Regex.Split(formattedAccountNumber, "(?<=\\G.{8})");
@@ -194,9 +200,9 @@ namespace BankApp.Helpers.Builders.Number
         public string GetIbanSeparated(BankData bankData, string checkNumber, string branchCode, int nationalCheckDigit,
             string accountNumberText)
         {
-            var splittedAccountNumberArray = Regex.Split(accountNumberText, "(?<=\\G.{4})")
+            var splitAccountNumberArray = Regex.Split(accountNumberText, "(?<=\\G.{4})")
                 .Where(an => !string.IsNullOrEmpty(an)).ToArray();
-            var separatedAccountNumber = string.Join(" ", splittedAccountNumberArray);
+            var separatedAccountNumber = string.Join(" ", splitAccountNumberArray);
 
             return $"{bankData.CountryCode} " +
                    $"{checkNumber} " +
@@ -242,7 +248,7 @@ namespace BankApp.Helpers.Builders.Number
         private static void ThrowIfStringIsNotNumber(string input, string parameterName)
         {
             if (!Regex.IsMatch(input, @"^\d+$"))
-                throw new ArgumentException("Parameter value is not a number.", nameof(parameterName));
+                throw new ArgumentException("Parameter value is not a number.", parameterName);
         }
     }
 }

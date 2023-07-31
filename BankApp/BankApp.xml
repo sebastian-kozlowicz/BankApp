@@ -55,7 +55,8 @@
                 11, and Z or z = 35. Each alphabetic character is therefore replaced by 2 digits
                 Converts the string to an long (i.e.ignore leading zeroes).
                 Calculates mod-97 of the new number, which results in the remainder.
-                Subtracts the remainder from 98 and use the result for the two check digits. If the result is a single-digit number,
+                Subtracts the remainder from 98 and use the result for the two check digits. If the result is a single-digit
+                number,
                 pads it with a leading 0 to make a two-digit number.
             </summary>
             <param name="bankData"></param>

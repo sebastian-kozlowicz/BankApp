@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
+using BankApp.Configuration;
 using BankApp.Data;
-using BankApp.Helpers.Builders;
 using BankApp.Helpers.Builders.Number;
 using BankApp.Models;
+using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -11,8 +13,8 @@ namespace BankApp.UnitTests.Helpers.Builders
     [TestClass]
     public class BankAccountNumberBuilderTests
     {
-        private BankAccountNumberBuilder _sut;
         private ApplicationDbContext _context;
+        private BankAccountNumberBuilder _sut;
 
         private static ApplicationDbContext GetMockContext()
         {
@@ -141,6 +143,59 @@ namespace BankApp.UnitTests.Helpers.Builders
         }
 
         [TestMethod]
+        public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedNationalBankCodeIsNotNumber()
+        {
+            var nationalBankCode = "not a number";
+            var branchCode = "000";
+
+            Func<Task> func = () => Task.FromResult(_sut.GenerateNationalCheckDigit(nationalBankCode, branchCode));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage($"Parameter value is not a number. (Parameter '{nameof(nationalBankCode)}')");
+        }
+
+        [TestMethod]
+        public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedBranchCodeIsNotNumber()
+        {
+            var nationalBankCode = "1080";
+            var branchCode = "not a number";
+
+            Func<Task> func = () => Task.FromResult(_sut.GenerateNationalCheckDigit(nationalBankCode, branchCode));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage($"Parameter value is not a number. (Parameter '{nameof(branchCode)}')");
+        }
+
+        [DataTestMethod]
+        [DataRow("0")]
+        [DataRow("123456")]
+        public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedNationalBankCodeLengthIsIncorrect(
+            string nationalBankCode)
+        {
+            var branchCode = "000";
+
+            Func<Task> func = () => Task.FromResult(_sut.GenerateNationalCheckDigit(nationalBankCode, branchCode));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage(
+                    $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");
+        }
+
+        [DataTestMethod]
+        [DataRow("0")]
+        [DataRow("123456")]
+        public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedBranchCodeLengthIsIncorrect(
+            string branchCode)
+        {
+            var nationalBankCode = "1080";
+
+            Func<Task> func = () => Task.FromResult(_sut.GenerateNationalCheckDigit(nationalBankCode, branchCode));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage($"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
+        }
+
+        [TestMethod]
         public void GenerateCheckDigits_Should_ReturnValidCheckDigits()
         {
             var bankData = new BankData
@@ -169,11 +224,135 @@ namespace BankApp.UnitTests.Helpers.Builders
             var branchCode = "405";
             var nationalCheckDigit = 8;
             var accountNumberText = "8540304041736354";
-            string expectedNationalCheckDigits = "04";
+            var expectedNationalCheckDigits = "04";
 
             var result = _sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText);
 
             Assert.AreEqual(expectedNationalCheckDigits, result);
+        }
+
+        [TestMethod]
+        public void GenerateCheckDigits_Should_ThrowException_When_PassedNationalBankCodeIsNotNumber()
+        {
+            var bankData = new BankData
+            {
+                CountryCode = "PL",
+                NationalBankCode = "not a number"
+            };
+            var branchCode = "405";
+            var nationalCheckDigit = 8;
+            var accountNumberText = "8540304041736354";
+
+            Func<Task> func = () =>
+                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage($"Parameter value is not a number. (Parameter '{nameof(bankData.NationalBankCode)}')");
+        }
+
+        [TestMethod]
+        public void GenerateCheckDigits_Should_ThrowException_When_PassedBranchCodeIsNotNumber()
+        {
+            var bankData = new BankData
+            {
+                CountryCode = "PL",
+                NationalBankCode = "1080"
+            };
+            var branchCode = "not a number";
+            var nationalCheckDigit = 8;
+            var accountNumberText = "8540304041736354";
+
+            Func<Task> func = () =>
+                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage($"Parameter value is not a number. (Parameter '{nameof(branchCode)}')");
+        }
+
+        [TestMethod]
+        public void GenerateCheckDigits_Should_ThrowException_When_PassedAccountNumberTextIsNotNumber()
+        {
+            var bankData = new BankData
+            {
+                CountryCode = "PL",
+                NationalBankCode = "1080"
+            };
+            var branchCode = "405";
+            var nationalCheckDigit = 8;
+            var accountNumberText = "not a number";
+
+            Func<Task> func = () =>
+                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage($"Parameter value is not a number. (Parameter '{nameof(accountNumberText)}')");
+        }
+
+        [DataTestMethod]
+        [DataRow("0")]
+        [DataRow("123456")]
+        public void GenerateCheckDigits_Should_ThrowException_When_PassedNationalBankCodeLengthIsIncorrect(
+            string nationalBankCode)
+        {
+            var bankData = new BankData
+            {
+                CountryCode = "PL",
+                NationalBankCode = nationalBankCode
+            };
+            var branchCode = "405";
+            var nationalCheckDigit = 8;
+            var accountNumberText = "8540304041736354";
+
+            Func<Task> func = () =>
+                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage(
+                    $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");
+        }
+
+        [DataTestMethod]
+        [DataRow("0")]
+        [DataRow("123456")]
+        public void GenerateCheckDigits_Should_ThrowException_When_PassedBranchCodeLengthIsIncorrect(
+            string branchCode)
+        {
+            var bankData = new BankData
+            {
+                CountryCode = "PL",
+                NationalBankCode = "1080"
+            };
+            var nationalCheckDigit = 8;
+            var accountNumberText = "8540304041736354";
+
+            Func<Task> func = () =>
+                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage(
+                    $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
+        }
+
+        [DataTestMethod]
+        [DataRow("0")]
+        [DataRow("123456")]
+        public void GenerateCheckDigits_Should_ThrowException_When_PassedAccountNumberTextLengthIsIncorrect(
+            string accountNumberText)
+        {
+            var bankData = new BankData
+            {
+                CountryCode = "PL",
+                NationalBankCode = "1080"
+            };
+            var branchCode = "405";
+            var nationalCheckDigit = 8;
+
+            Func<Task> func = () =>
+                Task.FromResult(_sut.GenerateCheckDigits(bankData, branchCode, nationalCheckDigit, accountNumberText));
+
+            func.Should().Throw<ArgumentException>()
+                .WithMessage(
+                    $"Account number text should be length of {NumberLengthSettings.BankAccount.AccountNumber} numbers.");
         }
 
         [TestMethod]
@@ -209,7 +388,8 @@ namespace BankApp.UnitTests.Helpers.Builders
             var accountNumberText = "9999999999999999";
             var expectedIbanSeparated = "PL 63 1080 0001 9999 9999 9999 9999";
 
-            var result = _sut.GetIbanSeparated(bankData, checkDigits, branchCode, nationalCheckDigit, accountNumberText);
+            var result =
+                _sut.GetIbanSeparated(bankData, checkDigits, branchCode, nationalCheckDigit, accountNumberText);
 
             Assert.AreEqual(expectedIbanSeparated, result);
         }
