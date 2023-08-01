@@ -6,5 +6,6 @@ namespace BankApp.Interfaces.Helpers.Builders.Number
     {
         PaymentCardNumber GeneratePaymentCardNumber(int length, int bankAccountId);
         byte GenerateCheckDigit(string number);
+        bool ValidatePaymentCardNumber(string paymentCardNumber);
     }
 }

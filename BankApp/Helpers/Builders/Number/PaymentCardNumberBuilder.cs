@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 using BankApp.Configuration;
 using BankApp.Data;
 
@@ -41,19 +43,21 @@ namespace BankApp.Helpers.Builders.Number
         }
 
         protected string GetAccountIdentificationNumberText(int length, long accountNumber) =>
-            accountNumber.ToString($"D{length - NumberLengthSettings.PaymentCard.BankIdentificationNumberAndCheckDigit}");
+            accountNumber.ToString(
+                $"D{length - NumberLengthSettings.PaymentCard.BankIdentificationNumberAndCheckDigit}");
 
         /// <summary>
         ///     Generates payment card's check digit using Luhn algorithm https://en.wikipedia.org/wiki/Luhn_algorithm
         /// </summary>
-        /// <param name="number">payment card number without check digit</param>
+        /// <param name="paymentCardNumberWithoutCheckDigit">payment card number without check digit</param>
         /// <returns></returns>
-        public byte GenerateCheckDigit(string number)
+        public byte GenerateCheckDigit(string paymentCardNumberWithoutCheckDigit)
         {
             var sum = 0;
             var oddPosition = false;
-            number += "0";
-            var numberDigitsArray = number.Select(digit => int.Parse(digit.ToString())).ToArray().Reverse();
+            paymentCardNumberWithoutCheckDigit += "0";
+            var numberDigitsArray = paymentCardNumberWithoutCheckDigit.Select(digit => int.Parse(digit.ToString()))
+                .ToArray().Reverse();
 
             foreach (var digit in numberDigitsArray)
             {
@@ -82,6 +86,20 @@ namespace BankApp.Helpers.Builders.Number
             }
 
             return (byte)(10 - sum % 10);
+        }
+
+        public bool ValidatePaymentCardNumber(string paymentCardNumber)
+        {
+            if (!Regex.IsMatch(paymentCardNumber, @"^\d+$"))
+                throw new ArgumentException("Parameter value is not a number.", nameof(paymentCardNumber));
+
+            var paymentCardNumberWithoutCheckDigit = paymentCardNumber.Remove(paymentCardNumber.Length - 1);
+            var paymentCardNumberLastDigit =
+                byte.Parse(paymentCardNumberWithoutCheckDigit.Substring(paymentCardNumber.Length - 1, 1));
+
+            var checkDigit = GenerateCheckDigit(paymentCardNumberWithoutCheckDigit);
+
+            return checkDigit == paymentCardNumberLastDigit;
         }
     }
 }
