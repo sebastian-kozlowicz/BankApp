@@ -105,7 +105,7 @@
             <summary>
                 Generates payment card's check digit using Luhn algorithm https://en.wikipedia.org/wiki/Luhn_algorithm
             </summary>
-            <param name="number">payment card number without check digit</param>
+            <param name="paymentCardNumberWithoutCheckDigit">payment card number without check digit</param>
             <returns></returns>
         </member>
         <member name="T:BankApp.Helpers.Builders.Number.VisaPaymentCardNumberBuilder">

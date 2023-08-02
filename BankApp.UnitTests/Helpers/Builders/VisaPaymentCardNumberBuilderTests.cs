@@ -190,17 +190,47 @@ namespace BankApp.UnitTests.Helpers.Builders
                 .WithMessage("Visa bank identification number found in database is invalid.");
         }
 
-        [TestMethod]
-        public void GenerateCheckDigit_Should_Return_ValidCheckDigit()
+        [DataTestMethod]
+        [DataRow("7992739871", (byte)3)]
+        [DataRow("427329000000", (byte)8)]
+        [DataRow("427329000000000", (byte)9)]
+        public void GenerateCheckDigit_Should_Return_ValidCheckDigit(string paymentCardNumberWithoutCheckDigit,
+            byte expectedResult)
         {
-            // Arrange
-            var number = "7992739871";
-
             // Act
-            var result = _sut.GenerateCheckDigit(number);
+            var result = _sut.GenerateCheckDigit(paymentCardNumberWithoutCheckDigit);
 
             // Assert
-            result.Should().Be(3);
+            result.Should().Be(expectedResult);
+        }
+
+
+        [DataTestMethod]
+        [DataRow("79927398713", true)]
+        [DataRow("4273290000008", true)]
+        [DataRow("4273290000000009", true)]
+        [DataRow("427329000000000", false)]
+        public void ValidatePaymentCardNumber_Should_ReturnExpectedResult(string paymentCardNumber, bool expectedResult)
+        {
+            // Act
+            var result = _sut.ValidatePaymentCardNumber(paymentCardNumber);
+
+            // Assert
+            result.Should().Be(expectedResult);
+        }
+
+        [TestMethod]
+        public void ValidatePaymentCardNumber_Should_ThrowArgumentException_When_PassedParameterIsNotNumber()
+        {
+            // Arrange
+            var input = "not a number";
+
+            // Act
+            Action action = () => _sut.ValidatePaymentCardNumber(input);
+
+            // Assert
+            action.Should().Throw<ArgumentException>()
+                .Where(e => e.Message.Contains("Parameter value is not a number."));
         }
     }
 }

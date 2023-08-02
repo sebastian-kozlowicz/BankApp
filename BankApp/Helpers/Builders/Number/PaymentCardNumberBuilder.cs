@@ -95,7 +95,7 @@ namespace BankApp.Helpers.Builders.Number
 
             var paymentCardNumberWithoutCheckDigit = paymentCardNumber.Remove(paymentCardNumber.Length - 1);
             var paymentCardNumberLastDigit =
-                byte.Parse(paymentCardNumberWithoutCheckDigit.Substring(paymentCardNumber.Length - 1, 1));
+                byte.Parse(paymentCardNumber.Substring(paymentCardNumber.Length - 1, 1));
 
             var checkDigit = GenerateCheckDigit(paymentCardNumberWithoutCheckDigit);
 
