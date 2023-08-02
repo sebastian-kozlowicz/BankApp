@@ -203,8 +203,6 @@ namespace BankApp.Helpers.Builders.Number
         /// <exception cref="ValidationException"></exception>
         public bool ValidateBankAccountNumber(string iban)
         {
-            ThrowIfStringIsNotNumber(iban, nameof(iban));
-
             if (iban.Length != NumberLengthSettings.BankAccount.Iban)
                 throw new ValidationException("IBAN length is invalid.");
 
@@ -215,7 +213,9 @@ namespace BankApp.Helpers.Builders.Number
             const int additionalCharsAfterCountryCodeTransformation = 2;
 
             var formattedAccountNumber =
-                firstCountryCodeCharacterAsNumber + secondCountryCharacterAsNumber + iban.Remove(0, 2);
+                $"{firstCountryCodeCharacterAsNumber}" +
+                $"{secondCountryCharacterAsNumber}" +
+                $"{iban.Remove(0, 2)}";
 
             formattedAccountNumber =
                 formattedAccountNumber.Remove(0, 4 + additionalCharsAfterCountryCodeTransformation) +

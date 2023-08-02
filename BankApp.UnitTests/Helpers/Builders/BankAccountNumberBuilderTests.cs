@@ -372,6 +372,19 @@ namespace BankApp.UnitTests.Helpers.Builders
                     $"Account number text should be length of {NumberLengthSettings.BankAccount.AccountNumber} numbers.");
         }
 
+        [DataTestMethod]
+        [DataRow("PL61108000010000000000000000", true)]
+        [DataRow("PL27108000140000000000000000", true)]
+        [DataRow("PL27108000140000000000000001", false)]
+        public void ValidateBankAccountNumber_Should_ReturnExpectedResult(string iban, bool expectedResult)
+        {
+            // Act
+            var result = _sut.ValidateBankAccountNumber(iban);
+
+            // Assert
+            result.Should().Be(expectedResult);
+        }
+
         [TestMethod]
         public void GetIban_Should_ReturnIban()
         {

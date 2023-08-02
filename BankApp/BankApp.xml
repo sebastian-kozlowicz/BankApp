@@ -36,6 +36,19 @@
                 number https://www.bankier.pl/smart/numer-konta-bankowego-gdzie-jest-ile-ma-cyfr-przyklad
             </summary>
         </member>
+        <member name="M:BankApp.Helpers.Builders.Number.BankAccountNumberBuilder.ValidateBankAccountNumber(System.String)">
+            <summary>
+                Bank account number validation
+                Checks that the total IBAN length is correct as per the country. If not, the IBAN is invalid
+                Moves the four initial characters to the end of the string
+                Replaces each letter in the string with two digits, thereby expanding the string, where A = 10, B = 11, ..., Z = 35
+                Interprets the string as a decimal integer and compute the remainder of that number on division by 97
+                If the remainder is 1, the check digit test is passed and the IBAN might be valid.
+            </summary>
+            <param name="iban"></param>
+            <returns></returns>
+            <exception cref="T:BankApp.Exceptions.ValidationException"></exception>
+        </member>
         <member name="M:BankApp.Helpers.Builders.Number.BankAccountNumberBuilder.GenerateNationalCheckDigit(System.String,System.String)">
             <summary>
                 Weighted sum: Treats the account number as a series of individual numbers, multiplies each number by a weight value
@@ -56,14 +69,15 @@
                 Converts the string to an long (i.e.ignore leading zeroes).
                 Calculates mod-97 of the new number, which results in the remainder.
                 Subtracts the remainder from 98 and use the result for the two check digits. If the result is a single-digit
-                number,
-                pads it with a leading 0 to make a two-digit number.
+                number, pads it with a leading 0 to make a two-digit number.
             </summary>
             <param name="bankData"></param>
             <param name="branchCode"></param>
             <param name="nationalCheckDigit"></param>
             <param name="accountNumberText"></param>
             <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:BankApp.Exceptions.ValidationException"></exception>
         </member>
         <member name="T:BankApp.Helpers.Builders.Number.MastercardPaymentCardNumberBuilder">
             <summary>
