@@ -104,11 +104,11 @@ namespace BankApp.Helpers.Builders.Number
             ThrowIfStringIsNotNumber(nationalBankCode, nameof(nationalBankCode));
             ThrowIfStringIsNotNumber(branchCode, nameof(branchCode));
 
-            if(nationalBankCode.Length != NumberLengthSettings.BankAccount.NationalBankCode)
+            if (nationalBankCode.Length != NumberLengthSettings.BankAccount.NationalBankCode)
                 throw new ArgumentException(
                     $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");
-            
-            if(branchCode.Length != NumberLengthSettings.BankAccount.BranchCode)
+
+            if (branchCode.Length != NumberLengthSettings.BankAccount.BranchCode)
                 throw new ArgumentException(
                     $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
 
@@ -131,14 +131,15 @@ namespace BankApp.Helpers.Builders.Number
         ///     Converts the string to an long (i.e.ignore leading zeroes).
         ///     Calculates mod-97 of the new number, which results in the remainder.
         ///     Subtracts the remainder from 98 and use the result for the two check digits. If the result is a single-digit
-        ///     number,
-        ///     pads it with a leading 0 to make a two-digit number.
+        ///     number, pads it with a leading 0 to make a two-digit number.
         /// </summary>
         /// <param name="bankData"></param>
         /// <param name="branchCode"></param>
         /// <param name="nationalCheckDigit"></param>
         /// <param name="accountNumberText"></param>
         /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
+        /// <exception cref="ValidationException"></exception>
         public string GenerateCheckDigits(BankData bankData, string branchCode, int nationalCheckDigit,
             string accountNumberText)
         {
@@ -148,12 +149,12 @@ namespace BankApp.Helpers.Builders.Number
 
             if (bankData.NationalBankCode.Length != NumberLengthSettings.BankAccount.NationalBankCode)
                 throw new ArgumentException(
-                    $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");  
-            
+                    $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");
+
             if (branchCode.Length != NumberLengthSettings.BankAccount.BranchCode)
                 throw new ArgumentException(
-                    $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");  
-            
+                    $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
+
             if (accountNumberText.Length != NumberLengthSettings.BankAccount.AccountNumber)
                 throw new ArgumentException(
                     $"Account number text should be length of {NumberLengthSettings.BankAccount.AccountNumber} numbers.");
@@ -172,7 +173,8 @@ namespace BankApp.Helpers.Builders.Number
                                          $"{secondCountryCharacterAsNumber}"
                                          + "00";
 
-            if (formattedAccountNumber.Length != NumberLengthSettings.BankAccount.Iban + additionalCharsAfterCountryCodeTransformation)
+            if (formattedAccountNumber.Length !=
+                NumberLengthSettings.BankAccount.Iban + additionalCharsAfterCountryCodeTransformation)
                 throw new ValidationException("IBAN length is invalid.");
 
             var splitAccountNumberArray = Regex.Split(formattedAccountNumber, "(?<=\\G.{8})");
@@ -186,6 +188,46 @@ namespace BankApp.Helpers.Builders.Number
                 return checkDigits;
 
             return "0" + checkDigits;
+        }
+
+        /// <summary>
+        ///     Bank account number validation
+        ///     Checks that the total IBAN length is correct as per the country. If not, the IBAN is invalid
+        ///     Moves the four initial characters to the end of the string
+        ///     Replaces each letter in the string with two digits, thereby expanding the string, where A = 10, B = 11, ..., Z = 35
+        ///     Interprets the string as a decimal integer and compute the remainder of that number on division by 97
+        ///     If the remainder is 1, the check digit test is passed and the IBAN might be valid.
+        /// </summary>
+        /// <param name="iban"></param>
+        /// <returns></returns>
+        /// <exception cref="ValidationException"></exception>
+        public bool ValidateBankAccountNumber(string iban)
+        {
+            ThrowIfStringIsNotNumber(iban, nameof(iban));
+
+            if (iban.Length != NumberLengthSettings.BankAccount.Iban)
+                throw new ValidationException("IBAN length is invalid.");
+
+            var firstCountryCodeCharacterAsNumber =
+                CountryCodeCharactersAssignedToNumbers[iban.Substring(0, 1)];
+            var secondCountryCharacterAsNumber =
+                CountryCodeCharactersAssignedToNumbers[iban.Substring(1, 1)];
+            const int additionalCharsAfterCountryCodeTransformation = 2;
+
+            var formattedAccountNumber =
+                firstCountryCodeCharacterAsNumber + secondCountryCharacterAsNumber + iban.Remove(0, 2);
+
+            formattedAccountNumber =
+                formattedAccountNumber.Remove(0, 4 + additionalCharsAfterCountryCodeTransformation) +
+                formattedAccountNumber.Substring(0, 4 + additionalCharsAfterCountryCodeTransformation);
+
+            var splitAccountNumberArray = Regex.Split(formattedAccountNumber, "(?<=\\G.{8})");
+
+            var modResult = splitAccountNumberArray.Aggregate(string.Empty,
+                (sum, number) => (long.Parse(sum + number) % 97).ToString());
+
+            var modIntResult = int.Parse(modResult);
+            return modIntResult == 1;
         }
 
         public string GetIban(BankData bankData, string checkDigits, string branchCode, int nationalCheckDigit,
