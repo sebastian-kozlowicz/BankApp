@@ -39,7 +39,12 @@ export class LoginComponent implements OnInit {
       response => {
         if (response) {
           const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-          this.router.navigate([returnUrl || '/']);
+          let isCustomer = this.authService.isCustomer;
+
+          if (isCustomer)
+            this.router.navigate([returnUrl || '/customer/profile']);
+          else
+            this.router.navigate([returnUrl || '/']);
         }
       },
       error => {
