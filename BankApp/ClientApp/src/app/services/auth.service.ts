@@ -13,7 +13,7 @@ import { RegisterByAnotherUser } from '../interfaces/auth/register-by-another-us
 })
 export class AuthService {
 
-  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) {}
+  constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
 
   private readonly administratorsEndpoint = '/api/administrators';
   private readonly customersEndpoint = '/api/customers';
@@ -54,8 +54,11 @@ export class AuthService {
     sessionStorage.removeItem('token');
   }
 
-  isLoggedIn() {
-    return this.jwtHelper.tokenGetter();
+  isLoggedIn(): boolean {
+    if (this.currentUser != null)
+      return true;
+    else
+      return false;
   }
 
   get currentUser(): JwtToken {

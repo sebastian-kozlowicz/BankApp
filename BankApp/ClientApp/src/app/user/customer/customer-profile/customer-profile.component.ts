@@ -16,9 +16,11 @@ export class CustomerProfileComponent implements OnInit {
   bankAccounts;
 
   ngOnInit(): void {
-    this.bankAccountService.getBankAccounts(this.authService.currentUser.userId)
-      .subscribe(bankAccounts => {
-        this.bankAccounts = bankAccounts;
-      });
+    if (this.authService.isLoggedIn()) {
+      this.bankAccountService.getBankAccounts(this.authService.currentUser.userId)
+        .subscribe(bankAccounts => {
+          this.bankAccounts = bankAccounts;
+        });
+    }
   }
 }
