@@ -30,7 +30,7 @@
     "bootstrap": "^5.0.1",
     "core-js": "^3.12.1",
     "jquery": "^3.6.0",
-    "minimist": "^1.2.5",
+    "minimist": "^1.2.6",
     "ngx-toastr": "^13.2.1",
     "oidc-client": "^1.11.5",
     "rxjs": "^6.5.3",
