@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { BankAccountService } from '../../../services/bank-account.service';
 import { Router } from '@angular/router';
@@ -8,6 +8,7 @@ import { BankTransferService } from '../../../services/bank-transfer.service';
 import { ToastrService } from 'ngx-toastr';
 import { BankAccount } from '../../../interfaces/bank-account/bank-account';
 import { Currency } from '../../../enumerators/currency';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   standalone: false,
@@ -27,8 +28,8 @@ export class BankTransferComponent implements OnInit {
 
   requesterBankAccountId: number;
   bankAccount: BankAccount;
-  isLoading = true;
-  isSubmitting = false;
+  readonly isLoading = signal(true);
+  readonly isSubmitting = signal(false);
 
   get receiverIban() {
     return this.bankTransferForm.get('receiverIban');
@@ -65,10 +66,10 @@ export class BankTransferComponent implements OnInit {
         }
 
         this.bankAccount = bankAccount;
-        this.isLoading = false;
+        this.isLoading.set(false);
       },
       error => {
-        this.isLoading = false;
+        this.isLoading.set(false);
         this.router.navigate(['/no-access'], { skipLocationChange: true }); // Todo: Add error page
       });
   }
@@ -79,27 +80,23 @@ export class BankTransferComponent implements OnInit {
   });
 
   submit() {
-    if (this.bankTransferForm.invalid || this.isSubmitting) {
+    if (this.bankTransferForm.invalid || this.isSubmitting()) {
       this.bankTransferForm.markAllAsTouched();
       return;
     }
 
-    this.isSubmitting = true;
+    this.isSubmitting.set(true);
     const bankTransferModel: BankTransferCreation = {
       requesterBankAccountId: this.requesterBankAccountId,
       receiverIban: this.receiverIban.value,
       value: this.value.value
     };
 
-    this.bankTransferService.createBankTransfer(bankTransferModel).subscribe(
-      response => {
-        this.isSubmitting = false;
-        this.toastr.success('Bank transfer created');
-      },
-      error => {
-        this.isSubmitting = false;
-        this.toastr.error('Bank transfer failed.');
-      }
-    );
+    this.bankTransferService.createBankTransfer(bankTransferModel)
+      .pipe(finalize(() => this.isSubmitting.set(false)))
+      .subscribe(
+        response => this.toastr.success('Bank transfer created'),
+        error => this.toastr.error('Bank transfer failed.')
+      );
   }
 }

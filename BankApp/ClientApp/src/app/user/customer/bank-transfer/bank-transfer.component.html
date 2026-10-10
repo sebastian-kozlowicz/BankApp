@@ -57,9 +57,9 @@
           <mat-error *ngIf="value.errors?.min">Amount must be greater than zero.</mat-error>
         </mat-form-field>
 
-        <button type="submit" class="transfer-submit" [disabled]="bankTransferForm.invalid || isSubmitting || isLoading || !bankAccount">
-          <span *ngIf="!isSubmitting">Send transfer <span aria-hidden="true">→</span></span>
-          <span *ngIf="isSubmitting">Sending transfer...</span>
+        <button type="submit" class="transfer-submit" [disabled]="bankTransferForm.invalid || isSubmitting() || isLoading() || !bankAccount">
+          <span *ngIf="!isSubmitting()">Send transfer <span aria-hidden="true">→</span></span>
+          <span *ngIf="isSubmitting()">Sending transfer...</span>
         </button>
       </form>
     </section>
