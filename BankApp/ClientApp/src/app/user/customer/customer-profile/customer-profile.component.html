@@ -1,8 +1,42 @@
-<p *ngIf="isLoading()">Loading bank accounts...</p>
-<p *ngIf="errorMessage()" role="alert">{{ errorMessage() }}</p>
-<p *ngIf="!isLoading() && !errorMessage() && bankAccounts().length === 0">No bank accounts found.</p>
+<main class="profile-page" aria-labelledby="accounts-title">
+  <section class="profile-hero">
+    <div>
+      <p class="eyebrow">Customer profile</p>
+      <h1 id="accounts-title">Your bank accounts</h1>
+      <p class="page-description">Manage your accounts and send money securely from one place.</p>
+    </div>
+    <div class="account-count" *ngIf="!isLoading() && !errorMessage()">
+      <span class="account-count__value">{{ bankAccounts().length }}</span>
+      <span class="account-count__label">{{ bankAccounts().length === 1 ? 'account' : 'accounts' }}</span>
+    </div>
+  </section>
 
-<app-bank-account-summary
-  *ngFor="let bankAccount of bankAccounts()"
-  [bankAccount]="bankAccount">
-</app-bank-account-summary>
+  <section class="accounts-section" aria-live="polite">
+    <div class="loading-state" *ngIf="isLoading()" aria-label="Loading bank accounts">
+      <div class="account-skeleton" *ngFor="let item of [1, 2]"></div>
+    </div>
+
+    <div class="feedback-state feedback-state--error" *ngIf="errorMessage()" role="alert">
+      <span class="feedback-state__icon" aria-hidden="true">!</span>
+      <div>
+        <h2>We couldn't load your accounts</h2>
+        <p>{{ errorMessage() }}</p>
+      </div>
+    </div>
+
+    <div class="feedback-state" *ngIf="!isLoading() && !errorMessage() && bankAccounts().length === 0">
+      <span class="feedback-state__icon" aria-hidden="true">+</span>
+      <div>
+        <h2>No bank accounts yet</h2>
+        <p>When an account is added to your profile, it will appear here.</p>
+      </div>
+    </div>
+
+    <div class="accounts-grid" *ngIf="!isLoading() && !errorMessage() && bankAccounts().length > 0">
+      <app-bank-account-summary
+        *ngFor="let bankAccount of bankAccounts()"
+        [bankAccount]="bankAccount">
+      </app-bank-account-summary>
+    </div>
+  </section>
+</main>

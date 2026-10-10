@@ -1,0 +1,31 @@
+
+.profile-page {
+  --ink: #15233d;
+  --muted: #68758b;
+  --surface: #ffffff;
+  --background: #f4f7fb;
+  min-height: calc(100vh - 64px);
+  padding: 3.5rem clamp(1rem, 4vw, 4rem);
+  background: var(--background);
+  color: var(--ink);
+}
+
+.profile-hero, .accounts-section { max-width: 1180px; margin: 0 auto; }
+.profile-hero { display: flex; align-items: flex-end; justify-content: space-between; gap: 2rem; margin-bottom: 2.25rem; }
+.eyebrow { margin: 0 0 .65rem; color: #4874d8; font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+h1 { margin: 0; font-size: clamp(2rem, 4vw, 3.15rem); font-weight: 750; letter-spacing: -.045em; }
+.page-description { max-width: 40rem; margin: .8rem 0 0; color: var(--muted); font-size: 1rem; }
+.account-count { display: flex; align-items: baseline; gap: .5rem; flex-shrink: 0; padding: .8rem 1.15rem; border: 1px solid #dce4f1; border-radius: 1rem; background: var(--surface); box-shadow: 0 8px 24px rgba(25, 51, 92, .06); }
+.account-count__value { font-size: 1.5rem; font-weight: 750; }
+.account-count__label { color: var(--muted); font-size: .9rem; }
+.accounts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 1.25rem; }
+.feedback-state, .loading-state { display: grid; gap: 1rem; }
+.feedback-state { display: flex; align-items: flex-start; gap: 1rem; padding: 1.5rem; border: 1px solid #dce4f1; border-radius: 1.25rem; background: var(--surface); }
+.feedback-state--error { border-color: #f0c9cb; }
+.feedback-state h2 { margin: 0; font-size: 1.05rem; }
+.feedback-state p { margin: .35rem 0 0; color: var(--muted); }
+.feedback-state__icon { display: grid; width: 2rem; height: 2rem; flex: 0 0 2rem; place-items: center; border-radius: 50%; background: #e8efff; color: #4874d8; font-weight: 800; }
+.feedback-state--error .feedback-state__icon { background: #fff0f0; color: #c3464d; }
+.account-skeleton { min-height: 270px; border-radius: 1.25rem; background: linear-gradient(100deg, #e8edf5 30%, #f7f9fc 45%, #e8edf5 60%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+@media (max-width: 600px) { .profile-page { padding-top: 2rem; } .profile-hero { align-items: flex-start; flex-direction: column; gap: 1.25rem; } }

@@ -1,0 +1,23 @@
+
+.account-card { display: flex; min-height: 270px; flex-direction: column; padding: 1.5rem; overflow: hidden; border: 1px solid #e1e8f3; border-radius: 1.25rem; background: #fff; box-shadow: 0 14px 34px rgba(25, 51, 92, .07); transition: transform .2s ease, box-shadow .2s ease; }
+.account-card:hover { transform: translateY(-3px); box-shadow: 0 18px 42px rgba(25, 51, 92, .12); }
+.account-card__topline, .account-card__identity { display: flex; align-items: center; }
+.account-card__topline { justify-content: space-between; gap: 1rem; }
+.account-card__identity { gap: .75rem; }
+.account-card__mark { display: grid; width: 2.55rem; height: 2.55rem; place-items: center; border-radius: .8rem; background: #e9efff; color: #4874d8; font-size: 1.35rem; font-weight: 800; }
+.account-card__type, .account-card__number, .account-card__label, .account-card__details dt { margin: 0; }
+.account-card__type { color: #15233d; font-size: .95rem; font-weight: 700; }
+.account-card__number { margin-top: .2rem; color: #8a96aa; font-size: .78rem; }
+.account-card__status { display: inline-flex; align-items: center; gap: .35rem; color: #23845a; font-size: .75rem; font-weight: 700; }
+.account-card__status span { width: .45rem; height: .45rem; border-radius: 50%; background: #34b77a; }
+.account-card__balance { margin: 2.3rem 0 1.6rem; }
+.account-card__label { display: block; color: #7b879a; font-size: .78rem; }
+.account-card__balance strong { display: block; margin-top: .3rem; color: #15233d; font-size: 2rem; letter-spacing: -.04em; }
+.account-card__balance small { color: #68758b; font-size: .9rem; font-weight: 700; letter-spacing: 0; }
+.account-card__details { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 0 0 1.35rem; }
+.account-card__details dt { color: #8a96aa; font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.account-card__details dd { margin: .3rem 0 0; overflow: hidden; color: #33425d; font-size: .82rem; text-overflow: ellipsis; white-space: nowrap; }
+.account-card__action { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: auto; padding-top: 1rem; border-top: 1px solid #edf1f7; color: #416bd0; font-size: .88rem; font-weight: 700; text-decoration: none; }
+.account-card__action span { font-size: 1.25rem; transition: transform .2s ease; }
+.account-card__action:hover span, .account-card__action:focus-visible span { transform: translateX(4px); }
+.account-card__action:focus-visible { outline: 3px solid rgba(72, 116, 216, .3); outline-offset: 4px; border-radius: .25rem; }

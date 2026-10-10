@@ -1,4 +1,32 @@
-<ul>
-  <li>{{ bankAccount.id }}</li>
-  <li><a [routerLink]="['/customer/bank-transfer']" [state]="{ requesterBankAccountId: bankAccount.id }">Bank transfer</a></li>
-</ul>
+<article class="account-card">
+  <div class="account-card__topline">
+    <div class="account-card__identity">
+      <span class="account-card__mark" aria-hidden="true">▦</span>
+      <div>
+        <p class="account-card__type">{{ accountTypeLabel }}</p>
+        <p class="account-card__number">Account #{{ bankAccount.id }}</p>
+      </div>
+    </div>
+    <span class="account-card__status"><span aria-hidden="true"></span>Active</span>
+  </div>
+
+  <div class="account-card__balance">
+    <span class="account-card__label">Available balance</span>
+    <strong>{{ bankAccount.balance | number:'1.2-2' }} <small>{{ currencyCode }}</small></strong>
+  </div>
+
+  <dl class="account-card__details">
+    <div>
+      <dt>IBAN</dt>
+      <dd>{{ maskedIban }}</dd>
+    </div>
+    <div>
+      <dt>Country</dt>
+      <dd>{{ bankAccount.countryCode || '—' }}</dd>
+    </div>
+  </dl>
+
+  <a class="account-card__action" [routerLink]="['/customer/bank-transfer']" [state]="{ requesterBankAccountId: bankAccount.id }">
+    Make a transfer <span aria-hidden="true">→</span>
+  </a>
+</article>

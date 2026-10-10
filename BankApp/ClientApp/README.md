@@ -27,5 +27,3 @@ Run `ng generate component component-name` to generate a new component. You can 
 Zachowano NgModule i istniejące trasy. Komponenty generowane przez CLI domyślnie mają `standalone: false`.
 
 `ngx-toastr@20.0.5` deklaruje peers dla Angular 21. Wąski override dopuszcza Angular 22; renderowanie toastów sprawdza test integracyjny. Nie stosujemy globalnego `--legacy-peer-deps`. Karma ma znane podatności developerskie wymagające osobnej modernizacji test runnera.
-
-Więcej: [dokumentacja migracji](../../docs/angular-migration.md).
