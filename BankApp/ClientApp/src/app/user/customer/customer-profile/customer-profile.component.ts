@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { BankAccountService } from '../../../services/bank-account.service';
+import { BankAccount } from '../../../interfaces/bank-account/bank-account';
 
 @Component({
   standalone: false,
@@ -14,14 +15,29 @@ export class CustomerProfileComponent implements OnInit {
     private authService: AuthService) {
   }
 
-  bankAccounts;
+  readonly bankAccounts = signal<BankAccount[]>([]);
+  readonly isLoading = signal(true);
+  readonly errorMessage = signal('');
 
   ngOnInit(): void {
-    if (this.authService.isLoggedIn()) {
-      this.bankAccountService.getBankAccounts(this.authService.currentUser.userId)
-        .subscribe(bankAccounts => {
-          this.bankAccounts = bankAccounts;
-        });
+    const currentUser = this.authService.currentUser;
+
+    if (!currentUser) {
+      this.isLoading.set(false);
+      this.errorMessage.set('User session is not available.');
+      return;
     }
+
+    this.bankAccountService.getBankAccounts(currentUser.userId)
+      .subscribe({
+        next: bankAccounts => {
+          this.bankAccounts.set(bankAccounts ?? []);
+          this.isLoading.set(false);
+        },
+        error: error => {
+          this.isLoading.set(false);
+          this.errorMessage.set(`Could not load bank accounts (HTTP ${error.status || 'unknown'}).`);
+        }
+      });
   }
 }

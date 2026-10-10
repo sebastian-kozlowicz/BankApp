@@ -1,1 +1,8 @@
-<app-bank-account-summary *ngFor="let bankAccount of bankAccounts" [bankAccount]="bankAccount"></app-bank-account-summary>
+<p *ngIf="isLoading()">Loading bank accounts...</p>
+<p *ngIf="errorMessage()" role="alert">{{ errorMessage() }}</p>
+<p *ngIf="!isLoading() && !errorMessage() && bankAccounts().length === 0">No bank accounts found.</p>
+
+<app-bank-account-summary
+  *ngFor="let bankAccount of bankAccounts()"
+  [bankAccount]="bankAccount">
+</app-bank-account-summary>

@@ -61,7 +61,7 @@ import { NewUserComponent } from './user/new-user/new-user.component';
     JwtModule.forRoot({
       config: {
         tokenGetter: () => sessionStorage.getItem("token"),
-        allowedDomains: ["localhost:44387"]
+        allowedDomains: ["localhost:4200", "localhost:44387"]
       }
     }),
     RouterModule.forRoot([
@@ -84,10 +84,10 @@ import { NewUserComponent } from './user/new-user/new-user.component';
         path: 'admin-panel', component: AdminPanelComponent, canActivate: [AdminAuthGuard, AuthGuard]
     },
     {
-        path: 'customer/profile', component: CustomerProfileComponent
+        path: 'customer/profile', component: CustomerProfileComponent, canActivate: [AuthGuard]
     },
     {
-        path: 'customer/bank-transfer', component: BankTransferComponent
+        path: 'customer/bank-transfer', component: BankTransferComponent, canActivate: [AuthGuard]
     },
     {
         path: 'branch/new', component: NewBranchComponent, canActivate: [AdminAuthGuard, AuthGuard]

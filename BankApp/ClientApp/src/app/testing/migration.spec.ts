@@ -5,6 +5,7 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AppTestingModule } from './app-testing.module';
+import { AuthGuard } from '../services/auth-guard.service';
 
 describe('Angular migration integration', () => {
   beforeEach(() => {
@@ -22,6 +23,16 @@ describe('Angular migration integration', () => {
       '', 'registration/customer', 'auth/login', 'no-access', 'user/new',
       'admin-panel', 'customer/profile', 'customer/bank-transfer', 'branch/new'
     ]);
+  });
+
+  it('protects customer profile and bank transfer routes with AuthGuard', () => {
+    const customerRoutes = TestBed.inject(Router).config.filter(route =>
+      route.path === 'customer/profile' || route.path === 'customer/bank-transfer');
+
+    expect(customerRoutes).toHaveSize(2);
+    customerRoutes.forEach(route => {
+      expect(route.canActivate).toContain(AuthGuard);
+    });
   });
 
   it('attaches the current JWT and picks up a replaced session token', () => {

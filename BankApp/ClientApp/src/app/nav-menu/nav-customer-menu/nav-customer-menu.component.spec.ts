@@ -20,6 +20,14 @@ describe('NavCustomerMenuComponent', () => {
     fixture.detectChanges();
   });
 
+  it('links customers to their profile', () => {
+    const profileLink = fixture.nativeElement.querySelector('a');
+
+    expect(profileLink).not.toBeNull();
+    expect(profileLink.getAttribute('href')).toBe('/customer/profile');
+    expect(profileLink.textContent.trim()).toBe('Profile');
+  });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
