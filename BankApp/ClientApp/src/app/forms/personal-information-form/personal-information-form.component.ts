@@ -1,7 +1,6 @@
 import { Component, forwardRef } from '@angular/core';
 import { UntypedFormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from
   '@angular/forms';
-import { NumberLimitValidator } from '../../validators/number-limit-validator';
 import { Subscription } from 'rxjs';
 import { PersonalInformationFormValues } from '../../interfaces/forms/personal-information-form-values';
 
@@ -66,7 +65,7 @@ export class PersonalInformationFormComponent implements ControlValueAccessor {
     name: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     surname: ['', [Validators.required, Validators.minLength(2), Validators.maxLength(50)]],
     phoneNumber: [
-      '', [Validators.required, NumberLimitValidator.limitValidator(100000, 100000000000, { invalidLimit: true })]
+      '', [Validators.required, Validators.minLength(6), Validators.maxLength(12)]
     ],
     email: ['', [Validators.required, Validators.email]]
   });

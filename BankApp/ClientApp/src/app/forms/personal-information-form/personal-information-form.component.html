@@ -34,12 +34,15 @@
   <div class="form-group">
     <mat-form-field>
       <mat-label>Phone number</mat-label>
-      <input type="number" matInput id="phone-number" formControlName="phoneNumber" />
+      <input type="tel" matInput id="phone-number" formControlName="phoneNumber" />
       <mat-error *ngIf="phoneNumber.errors?.required">
         The Phone number field is required
       </mat-error>
-      <mat-error *ngIf="!phoneNumber.errors?.required && phoneNumber.errors?.invalidLimit">
-        Provide valid phone number
+      <mat-error *ngIf="!phoneNumber.errors?.required && phoneNumber.errors?.minlength">
+        The Phone number field must be at least {{phoneNumber.errors?.minlength.requiredLength}} characters long
+      </mat-error>
+      <mat-error *ngIf="!phoneNumber.errors?.required && phoneNumber.errors?.maxlength">
+        The Phone number field must be at max {{phoneNumber.errors?.maxlength.requiredLength}} characters long
       </mat-error>
     </mat-form-field>
   </div>
