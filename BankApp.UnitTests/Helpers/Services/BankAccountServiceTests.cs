@@ -542,7 +542,7 @@ namespace BankApp.UnitTests.Helpers.Services
         }
 
         [TestMethod]
-        public void
+        public async Task
             CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowValidationException_When_CurrentUserNotExist()
         {
             // Arrange
@@ -581,12 +581,12 @@ namespace BankApp.UnitTests.Helpers.Services
                 await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>()
+            await func.Should().ThrowAsync<ValidationException>()
                 .WithMessage($"User with id {currentUserId} found in claims doesn't exist in database.");
         }
 
         [TestMethod]
-        public void
+        public async Task
             CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowValidationException_When_TellerIsNotAssignedToBranch()
         {
             // Arrange
@@ -628,12 +628,12 @@ namespace BankApp.UnitTests.Helpers.Services
                 await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>()
+            await func.Should().ThrowAsync<ValidationException>()
                 .WithMessage($"Worker with id {currentUserId} is currently not assigned to any branch.");
         }
 
         [TestMethod]
-        public void
+        public async Task
             CreateBankAccountWithCustomerByWorkerAsync_Should_ThrowValidationException_When_ManagerIsNotAssignedToBranch()
         {
             // Arrange
@@ -675,7 +675,7 @@ namespace BankApp.UnitTests.Helpers.Services
                 await _sut.CreateBankAccountWithCustomerByWorkerAsync(bankAccountCreation, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>()
+            await func.Should().ThrowAsync<ValidationException>()
                 .WithMessage($"Worker with id {currentUserId} is currently not assigned to any branch.");
         }
     }

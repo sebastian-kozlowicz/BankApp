@@ -187,7 +187,7 @@ namespace BankApp.UnitTests.Helpers.Services
         }
 
         [TestMethod]
-        public void CreateBranchWithAddressAsync_Should_ThrowValidationException_When_BranchCodeIsAlreadyInUse()
+        public async Task CreateBranchWithAddressAsync_Should_ThrowValidationException_When_BranchCodeIsAlreadyInUse()
         {
             // Arrange
             var branchCreation = new BranchWithAddressCreationDto
@@ -211,7 +211,7 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.CreateBranchWithAddressAsync(branchCreation);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage("Branch code is already in use.");
+            await func.Should().ThrowAsync<ValidationException>().WithMessage("Branch code is already in use.");
         }
 
         [TestMethod]
@@ -250,7 +250,7 @@ namespace BankApp.UnitTests.Helpers.Services
         }
 
         [TestMethod]
-        public void AssignTellerToBranchAsync_Should_ThrowValidationException_When_TellerNotExist()
+        public async Task AssignTellerToBranchAsync_Should_ThrowValidationException_When_TellerNotExist()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -265,12 +265,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.AssignTellerToBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>()
+            await func.Should().ThrowAsync<ValidationException>()
                 .WithMessage($"Teller with id {workerAtBranch.WorkerId} doesn't exist.");
         }
 
         [TestMethod]
-        public void AssignTellerToBranchAsync_Should_ThrowValidationException_When_BranchNotExist()
+        public async Task AssignTellerToBranchAsync_Should_ThrowValidationException_When_BranchNotExist()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -285,12 +285,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.AssignTellerToBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>()
+            await func.Should().ThrowAsync<ValidationException>()
                 .WithMessage($"Branch with id {workerAtBranch.BranchId} doesn't exist.");
         }
 
         [TestMethod]
-        public void AssignTellerToBranchAsync_Should_ThrowValidationException_When_TellerIsAlreadyAssignedToBranch()
+        public async Task AssignTellerToBranchAsync_Should_ThrowValidationException_When_TellerIsAlreadyAssignedToBranch()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -305,7 +305,7 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.AssignTellerToBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Teller with id {workerAtBranch.WorkerId} is currently assigned to branch with id {_secondBranch.Id}.");
         }
 
@@ -346,7 +346,7 @@ namespace BankApp.UnitTests.Helpers.Services
         }
 
         [TestMethod]
-        public void AssignManagerToBranchAsync_Should_ThrowValidationException_When_ManagerNotExist()
+        public async Task AssignManagerToBranchAsync_Should_ThrowValidationException_When_ManagerNotExist()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -361,12 +361,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.AssignManagerToBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>()
+            await func.Should().ThrowAsync<ValidationException>()
                 .WithMessage($"Manager with id {workerAtBranch.WorkerId} doesn't exist.");
         }
 
         [TestMethod]
-        public void AssignManagerToBranchAsync_Should_ThrowValidationException_When_BranchNotExist()
+        public async Task AssignManagerToBranchAsync_Should_ThrowValidationException_When_BranchNotExist()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -381,12 +381,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.AssignManagerToBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>()
+            await func.Should().ThrowAsync<ValidationException>()
                 .WithMessage($"Branch with id {workerAtBranch.BranchId} doesn't exist.");
         }
 
         [TestMethod]
-        public void AssignManagerToBranchAsync_Should_ThrowValidationException_When_ManagerIsAlreadyAssignedToBranch()
+        public async Task AssignManagerToBranchAsync_Should_ThrowValidationException_When_ManagerIsAlreadyAssignedToBranch()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -401,7 +401,7 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.AssignManagerToBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Manager with id {workerAtBranch.WorkerId} is currently assigned to branch with id {_secondBranch.Id}.");
         }
 
@@ -442,7 +442,7 @@ namespace BankApp.UnitTests.Helpers.Services
         }
 
         [TestMethod]
-        public void ExpelTellerFromBranchAsync_Should_ThrowValidationException_When_TellerNotExist()
+        public async Task ExpelTellerFromBranchAsync_Should_ThrowValidationException_When_TellerNotExist()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -457,12 +457,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.ExpelTellerFromBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Teller with id {workerAtBranch.WorkerId} doesn't exist.");
         }
 
         [TestMethod]
-        public void ExpelTellerFromBranchAsync_Should_ThrowValidationException_WhenBranchNotExist()
+        public async Task ExpelTellerFromBranchAsync_Should_ThrowValidationException_WhenBranchNotExist()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -477,12 +477,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.ExpelTellerFromBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Branch with id {workerAtBranch.BranchId} doesn't exist.");
         }
 
         [TestMethod]
-        public void ExpelTellerFromBranchAsync_Should_ThrowValidationException_TellerIsNotAssignedToBranch()
+        public async Task ExpelTellerFromBranchAsync_Should_ThrowValidationException_TellerIsNotAssignedToBranch()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -497,12 +497,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.ExpelTellerFromBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Teller with id {workerAtBranch.WorkerId} is currently not assigned to any branch.");
         }
         
         [TestMethod]
-        public void ExpelTellerFromBranchAsync_Should_ThrowValidationException_TellerIsAssignedToOtherBranch()
+        public async Task ExpelTellerFromBranchAsync_Should_ThrowValidationException_TellerIsAssignedToOtherBranch()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -517,7 +517,7 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.ExpelTellerFromBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Teller with id {workerAtBranch.WorkerId} is currently not assigned to branch with id {_secondBranch.Id}.");
         } 
         
@@ -558,7 +558,7 @@ namespace BankApp.UnitTests.Helpers.Services
         }
 
         [TestMethod]
-        public void ExpelManagerFromBranchAsync_Should_ThrowValidationException_When_ManagerNotExist()
+        public async Task ExpelManagerFromBranchAsync_Should_ThrowValidationException_When_ManagerNotExist()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -573,12 +573,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.ExpelManagerFromBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Manager with id {workerAtBranch.WorkerId} doesn't exist.");
         }
 
         [TestMethod]
-        public void ExpelManagerFromBranchAsync_Should_ThrowValidationException_WhenBranchNotExist()
+        public async Task ExpelManagerFromBranchAsync_Should_ThrowValidationException_WhenBranchNotExist()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -593,12 +593,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.ExpelManagerFromBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Branch with id {workerAtBranch.BranchId} doesn't exist.");
         }
 
         [TestMethod]
-        public void ExpelManagerFromBranchAsync_Should_ThrowValidationException_ManagerIsNotAssignedToBranch()
+        public async Task ExpelManagerFromBranchAsync_Should_ThrowValidationException_ManagerIsNotAssignedToBranch()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -613,12 +613,12 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.ExpelManagerFromBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Manager with id {workerAtBranch.WorkerId} is currently not assigned to any branch.");
         }
         
         [TestMethod]
-        public void ExpelManagerFromBranchAsync_Should_ThrowValidationException_TellerIsAssignedToOtherBranch()
+        public async Task ExpelManagerFromBranchAsync_Should_ThrowValidationException_TellerIsAssignedToOtherBranch()
         {
             // Arrange
             var workerAtBranch = new WorkerAtBranchDto
@@ -633,7 +633,7 @@ namespace BankApp.UnitTests.Helpers.Services
             Func<Task> func = async () => await _sut.ExpelManagerFromBranchAsync(workerAtBranch, currentUserId);
 
             // Assert
-            func.Should().Throw<ValidationException>().WithMessage(
+            await func.Should().ThrowAsync<ValidationException>().WithMessage(
                 $"Manager with id {workerAtBranch.WorkerId} is currently not assigned to branch with id {_secondBranch.Id}.");
         }
     }

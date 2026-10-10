@@ -164,7 +164,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                 .WithMessage("Mastercard bank identification number found in database is invalid.");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("7992739871", (byte)3)]
         [DataRow("510918000000000", (byte)9)]
         public void GenerateCheckDigit_Should_Return_ValidCheckDigit(string paymentCardNumberWithoutCheckDigit,
@@ -177,7 +177,7 @@ namespace BankApp.UnitTests.Helpers.Builders
             result.Should().Be(expectedResult);
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("79927398713", true)]
         [DataRow("5109180000000009", true)]
         [DataRow("5109180000000000", false)]

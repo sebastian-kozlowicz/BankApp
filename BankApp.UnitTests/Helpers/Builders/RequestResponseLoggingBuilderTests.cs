@@ -472,7 +472,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                     "Http Response Information: \r\nTrace Identifier: 80000006-0000-fc00-b63f-84710c7967bb \r\nPath: /api/unit-test \r\nStatus Code: 200 \r\nHeaders: \r\nHost: {localhost:44387}\r\nAuthorization: [Sanitized] \r\nResponse: \r\n{\"ParentObjectInt\":\"[Sanitized]\",\"ParentObjectString\":\"String\",\"ParentObjectDateTime\":\"2021-01-01T00:00:00\",\"ChildObjectModel\":{\"ChildObjectInt\":2,\"ChildObjectString\":\"[Sanitized]\",\"ChildObjectDateTime\":\"2022-12-31T00:00:00\",\"ComplexObjectModel\":{\"ComplexObjectInt\":3,\"ComplexObjectString\":\"[Sanitized]\",\"ComplexObjectDateTime\":\"2023-01-01T00:00:00\"},\"ComplexObjectModelSanitized\":\"[Sanitized]\"},\"ChildrenObjectModel\":[{\"ChildrenObjectInt\":5,\"ChildrenObjectString\":\"[Sanitized]\",\"ChildrenObjectDateTime\":\"2024-01-01T00:00:00\",\"ComplexChildrenObjectModel\":{\"ComplexChildrenObjectInt\":6,\"ComplexChildrenObjectString\":\"[Sanitized]\",\"ComplexChildrenObjectDateTime\":\"2024-12-31T00:00:00\"},\"ComplexChildrenObjectModelSanitized\":\"[Sanitized]\"}]}");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")]
         [DataRow(" ")]
         [DataRow("exception message")]
@@ -559,7 +559,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                     $"Http Response Information: \r\nTrace Identifier: 80000006-0000-fc00-b63f-84710c7967bb \r\nPath: /api/unit-test \r\nStatus Code: 500 \r\nHeaders: \r\nHost: {{localhost:44387}}\r\nAuthorization: {{Bearer qwerty}} \r\nResponse: \r\n{exceptionMessage}");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("")]
         [DataRow(" ")]
         [DataRow("exception message")]

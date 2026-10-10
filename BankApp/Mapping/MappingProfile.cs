@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.Internal;
 using BankApp.Dtos.Address;
 using BankApp.Dtos.Administrator;
 using BankApp.Dtos.ApplicationUser;
@@ -18,6 +19,9 @@ namespace BankApp.Mapping
     {
         public MappingProfile()
         {
+            // The MIT release has no default recursion bound. Apply the upstream
+            // recommended mitigation to every map, including future additions.
+            this.Internal().ForAllMaps((_, mapping) => mapping.MaxDepth(64));
             CreateMap<BankAccount, BankAccountDto>();
             CreateMap<ApplicationUser, ApplicationUserDto>();
             CreateMap<PaymentCard, PaymentCardDto>();

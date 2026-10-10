@@ -174,7 +174,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                 .WithMessage($"Parameter value is not a number. (Parameter '{nameof(branchCode)}')");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("0")]
         [DataRow("123456")]
         public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedNationalBankCodeLengthIsIncorrect(
@@ -192,7 +192,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                     $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("0")]
         [DataRow("123456")]
         public void GenerateNationalCheckDigit_Should_ThrowException_When_PassedBranchCodeLengthIsIncorrect(
@@ -314,7 +314,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                 .WithMessage($"Parameter value is not a number. (Parameter '{nameof(accountNumberText)}')");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("0")]
         [DataRow("123456")]
         public void GenerateCheckDigits_Should_ThrowException_When_PassedNationalBankCodeLengthIsIncorrect(
@@ -339,7 +339,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                     $"National bank code should be length of {NumberLengthSettings.BankAccount.NationalBankCode} numbers.");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("0")]
         [DataRow("123456")]
         public void GenerateCheckDigits_Should_ThrowException_When_PassedBranchCodeLengthIsIncorrect(
@@ -363,7 +363,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                     $"Branch code should be length of {NumberLengthSettings.BankAccount.BranchCode} numbers.");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("0")]
         [DataRow("123456")]
         public void GenerateCheckDigits_Should_ThrowException_When_PassedAccountNumberTextLengthIsIncorrect(
@@ -387,7 +387,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                     $"Account number text should be length of {NumberLengthSettings.BankAccount.AccountNumber} numbers.");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("PL61108000010000000000000000", true)]
         [DataRow("PL27108000140000000000000000", true)]
         [DataRow("PL27108000140000000000000001", false)]

@@ -190,7 +190,7 @@ namespace BankApp.UnitTests.Helpers.Builders
                 .WithMessage("Visa bank identification number found in database is invalid.");
         }
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("7992739871", (byte)3)]
         [DataRow("427329000000", (byte)8)]
         [DataRow("427329000000000", (byte)9)]
@@ -205,7 +205,7 @@ namespace BankApp.UnitTests.Helpers.Builders
         }
 
 
-        [DataTestMethod]
+        [TestMethod]
         [DataRow("79927398713", true)]
         [DataRow("4273290000008", true)]
         [DataRow("4273290000000009", true)]
