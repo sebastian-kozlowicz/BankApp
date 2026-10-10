@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { JwtToken } from '../interfaces/auth/jwtToken';
@@ -39,15 +39,14 @@ export class AuthService {
 
   login(loginModel: Login) {
     return this.http.post(this.loginEndpoint, loginModel)
-      .pipe(map(
-        (response: any) => {
-          if (response && response.token) {
+      .pipe(
+        tap((response: any) => {
+          if (response?.token) {
             sessionStorage.setItem('token', response.token);
-            return true;
           }
-          return false;
-        }
-      ));
+        }),
+        map((response: any) => Boolean(response?.token))
+    )
   }
 
   logout() {
