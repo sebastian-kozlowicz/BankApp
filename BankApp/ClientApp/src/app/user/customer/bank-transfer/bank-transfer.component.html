@@ -1,21 +1,76 @@
-<form [formGroup]="bankTransferForm" autocomplete="off" (submit)="submit()">
-  <div class="form-group">
-    <mat-form-field>
-      <mat-label>Receiver's Iban</mat-label>
-      <input matInput id="receiverIban" formControlName="receiverIban" />
-      <mat-error *ngIf="receiverIban.errors?.required">
-        The Receiver's Iban field is required
-      </mat-error>
-    </mat-form-field>
+<main class="transfer-page" aria-labelledby="transfer-title">
+  <div class="transfer-layout">
+    <section class="transfer-main">
+      <div class="transfer-heading">
+        <a class="back-link" [routerLink]="['/customer/profile']">← Back to accounts</a>
+        <p class="eyebrow">Payments</p>
+        <h1 id="transfer-title">Make a transfer</h1>
+        <p>Send money securely from your account to any bank account.</p>
+      </div>
 
-    <mat-form-field>
-      <mat-label>Value</mat-label>
-      <input type="number" matInput id="value" formControlName="value" />
-      <mat-error *ngIf="value.errors?.required">
-        The Value field is required
-      </mat-error>
-    </mat-form-field>
+      <section class="source-account" *ngIf="bankAccount; else sourceAccountLoading" aria-labelledby="source-account-title">
+        <div class="source-account__icon" aria-hidden="true">▦</div>
+        <div class="source-account__content">
+          <span class="field-label" id="source-account-title">Sending from</span>
+          <strong>Account #{{ bankAccount.id }}</strong>
+          <span class="source-account__iban">{{ maskedIban }}</span>
+        </div>
+        <div class="source-account__balance">
+          <span class="field-label">Available</span>
+          <strong>{{ bankAccount.balance | number:'1.2-2' }} {{ currencyCode }}</strong>
+        </div>
+      </section>
+
+      <ng-template #sourceAccountLoading>
+        <div class="source-account source-account--loading" aria-label="Loading source account"></div>
+      </ng-template>
+
+      <form class="transfer-form" [formGroup]="bankTransferForm" autocomplete="off" (ngSubmit)="submit()" novalidate>
+        <div class="form-section-heading">
+          <span class="step-number">1</span>
+          <div>
+            <h2>Recipient details</h2>
+            <p>Enter the IBAN of the person or business receiving the funds.</p>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Recipient IBAN</mat-label>
+          <input matInput id="receiverIban" formControlName="receiverIban" autocomplete="off" placeholder="e.g. PL00 0000 0000 0000 0000 0000 0000" />
+          <mat-hint>Make sure the IBAN is correct before sending.</mat-hint>
+          <mat-error *ngIf="receiverIban.errors?.required">Recipient IBAN is required.</mat-error>
+        </mat-form-field>
+
+        <div class="form-section-heading form-section-heading--amount">
+          <span class="step-number">2</span>
+          <div>
+            <h2>Transfer amount</h2>
+            <p>Choose how much you would like to send.</p>
+          </div>
+        </div>
+
+        <mat-form-field appearance="outline" class="amount-field">
+          <mat-label>Amount</mat-label>
+          <input type="number" min="0.01" step="0.01" matInput id="value" formControlName="value" inputmode="decimal" />
+          <span matTextSuffix>{{ currencyCode }}</span>
+          <mat-error *ngIf="value.errors?.required">Transfer amount is required.</mat-error>
+          <mat-error *ngIf="value.errors?.min">Amount must be greater than zero.</mat-error>
+        </mat-form-field>
+
+        <button type="submit" class="transfer-submit" [disabled]="bankTransferForm.invalid || isSubmitting || isLoading || !bankAccount">
+          <span *ngIf="!isSubmitting">Send transfer <span aria-hidden="true">→</span></span>
+          <span *ngIf="isSubmitting">Sending transfer...</span>
+        </button>
+      </form>
+    </section>
+
+    <aside class="transfer-summary" aria-label="Transfer summary">
+      <div class="summary-icon" aria-hidden="true">✓</div>
+      <h2>Transfer securely</h2>
+      <p>Check the recipient details carefully. Transfers cannot always be reversed after they are sent.</p>
+      <div class="summary-divider"></div>
+      <div class="summary-note"><span aria-hidden="true">⌁</span> Your account data is protected</div>
+      <div class="summary-note"><span aria-hidden="true">✓</span> No additional fields are required</div>
+    </aside>
   </div>
-
-  <button type="submit" class="btn btn-primary" [disabled]="!bankTransferForm.valid">Send</button>
-</form>
+</main>
