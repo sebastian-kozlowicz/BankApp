@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, provideZoneChangeDetection } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -52,9 +52,9 @@ import { NewUserComponent } from './user/new-user/new-user.component';
     NewUserComponent
   ],
   imports: [
-    BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    BrowserModule,
     MaterialModule,
-    HttpClientModule,
+
     ReactiveFormsModule,
     BrowserAnimationsModule,
     ToastrModule.forRoot(),
@@ -92,9 +92,12 @@ import { NewUserComponent } from './user/new-user/new-user.component';
     {
         path: 'branch/new', component: NewBranchComponent, canActivate: [AdminAuthGuard, AuthGuard]
     }
-], { relativeLinkResolution: 'legacy' })
+])
   ],
   providers: [
+    provideZoneChangeDetection(),
+    // Keep JwtModule's DI interceptor when using the modern HTTP provider.
+    provideHttpClient(withInterceptorsFromDi()),
     AuthService,
     AuthGuard,
     AdminAuthGuard

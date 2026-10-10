@@ -1,10 +1,10 @@
-# BankApp
+# BankApp — Angular 22.2.2
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.0.
+Runtime zalecany: Node.js 24.21.0 (`.nvmrc`). Najpierw `npm ci` w tym katalogu.
 
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Uruchom `npm start`, następnie backend w Visual Studio w profilu Development. Otwieraj URL backendu: API obsługuje ASP.NET Core, SPA jest proxy do `http://localhost:4200`. Visual Studio nie uruchamia frontendu automatycznie. Nie używaj `--openssl-legacy-provider` ani Node 14.
 
 ## Code scaffolding
 
@@ -12,16 +12,20 @@ Run `ng generate component component-name` to generate a new component. You can 
 
 ## Build
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+`npm run build` tworzy produkcyjne artefakty bezpośrednio w `dist/`, zgodnie z konfiguracją hosta ASP.NET Core.
 
 ## Running unit tests
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+`npm test` uruchamia testy Karma/ChromeHeadless. Zainstalowany Google Chrome jest wymagany.
 
 ## Running end-to-end tests
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+`npm run e2e` uruchamia Playwright z Google Chrome i automatycznie uruchamia dev-server. Protractor został usunięty.
 
 ## Further help
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+Zachowano NgModule i istniejące trasy. Komponenty generowane przez CLI domyślnie mają `standalone: false`.
+
+`ngx-toastr@20.0.5` deklaruje peers dla Angular 21. Wąski override dopuszcza Angular 22; renderowanie toastów sprawdza test integracyjny. Nie stosujemy globalnego `--legacy-peer-deps`. Karma ma znane podatności developerskie wymagające osobnej modernizacji test runnera.
+
+Więcej: [dokumentacja migracji](../../docs/angular-migration.md).

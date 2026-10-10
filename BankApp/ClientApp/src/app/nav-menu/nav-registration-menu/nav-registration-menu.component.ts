@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
+  standalone: false,
   selector: 'app-nav-registration-menu',
   templateUrl: './nav-registration-menu.component.html',
   styleUrls: ['./nav-registration-menu.component.css']

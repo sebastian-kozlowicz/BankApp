@@ -1,20 +1,22 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "baseUrl": "./",
-    "module": "es2020",
-    "outDir": "./dist/out-tsc",
+    "module": "preserve",
+    "outDir": "./out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "experimentalDecorators": true,
-    "target": "es2015",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "target": "ES2022",
+    "useDefineForClassFields": false,
     "lib": [
-      "es2017",
+      "ES2022",
       "dom"
-    ]
+    ],
+    "skipLibCheck": true,
+    "strict": false
+  },
+  "angularCompilerOptions": {
+    "strictInjectionParameters": true
   }
 }

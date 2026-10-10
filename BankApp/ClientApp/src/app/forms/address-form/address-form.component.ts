@@ -1,11 +1,12 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from
+import { UntypedFormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from
   '@angular/forms';
 import { Subscription } from 'rxjs';
 import { AddressFormValues } from '../../interfaces/forms/address-form-values';
 import { COUNTRIES } from '../../constants/app-constants';
 
 @Component({
+  standalone: false,
   selector: 'app-address-form',
   templateUrl: './address-form.component.html',
   styleUrls: ['./address-form.component.css'],
@@ -24,7 +25,7 @@ import { COUNTRIES } from '../../constants/app-constants';
 })
 export class AddressFormComponent implements ControlValueAccessor {
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.subscriptions.push(
       this.addressForm.valueChanges.subscribe(value => {
         this.onChange(value);

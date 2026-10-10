@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
 import { PersonalInformationFormValues } from '../../interfaces/forms/personal-information-form-values';
@@ -8,13 +8,14 @@ import { UserRole } from '../../enumerators/userRole';
 import { RegisterByAnotherUser } from '../../interfaces/auth/register-by-another-user';
 
 @Component({
+  standalone: false,
   selector: 'app-new-user',
   templateUrl: './new-user.component.html',
   styleUrls: ['./new-user.component.css']
 })
 export class NewUserComponent {
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     private authService: AuthService,
     private toastr: ToastrService) {
   }

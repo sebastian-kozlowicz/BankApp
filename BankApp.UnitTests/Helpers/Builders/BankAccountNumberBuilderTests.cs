@@ -88,6 +88,21 @@ namespace BankApp.UnitTests.Helpers.Builders
         }
 
         [TestMethod]
+        public void GenerateAccountNumber_Should_ThrowClearException_When_HeadquartersDoesNotExist()
+        {
+            // Arrange
+            _context.Headquarters.RemoveRange(_context.Headquarters);
+            _context.SaveChanges();
+
+            // Act
+            Action action = () => _sut.GenerateBankAccountNumber();
+
+            // Assert
+            action.Should().Throw<InvalidOperationException>()
+                .WithMessage("Headquarters doesn't exist in database.");
+        }
+
+        [TestMethod]
         public void GenerateAccountNumber_Should_ReturnIbanWithIteratedAccountNumber_When_SomeAccountNumberExistsInDb()
         {
             // Arrange

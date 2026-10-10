@@ -1,18 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { Validators, FormBuilder } from '@angular/forms';
+import { Validators, UntypedFormBuilder } from '@angular/forms';
 import { BranchService } from '../../services/branch.service';
 import { ToastrService } from 'ngx-toastr';
 import { BranchWithAddressCreation } from '../../interfaces/branch/with-address/branch-with-address-creation';
 import { AddressFormValues } from '../../interfaces/forms/address-form-values';
 
 @Component({
+  standalone: false,
   selector: 'app-new-branch',
   templateUrl: './new-branch.component.html',
   styleUrls: ['./new-branch.component.css']
 })
 export class NewBranchComponent implements OnInit {
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     private branchService: BranchService,
     private toastr: ToastrService) {
   }

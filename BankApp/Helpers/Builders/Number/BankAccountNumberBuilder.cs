@@ -260,10 +260,16 @@ namespace BankApp.Helpers.Builders.Number
         {
             if (branchId == null)
             {
-                var headquarters =
-                    _context.Branches.SingleOrDefault(b => b.Id == _context.Headquarters.FirstOrDefault().Id);
+                var headquartersId = _context.Headquarters
+                    .Select(h => (int?)h.Id)
+                    .SingleOrDefault();
+
+                if (headquartersId == null)
+                    throw new InvalidOperationException("Headquarters doesn't exist in database.");
+
+                var headquarters = _context.Branches.SingleOrDefault(b => b.Id == headquartersId.Value);
                 if (headquarters == null)
-                    throw new Exception("Headquarters doesn't exist in database.");
+                    throw new InvalidOperationException("Headquarters branch doesn't exist in database.");
 
                 return headquarters.BranchCode;
             }

@@ -2,12 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../services/auth.service';
 import { BankAccountService } from '../../../services/bank-account.service';
 import { Router } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { BankTransferCreation } from '../../../interfaces/bank-transfer/bank-transfer-creation';
 import { BankTransferService } from '../../../services/bank-transfer.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
+  standalone: false,
   selector: 'app-bank-transfer',
   templateUrl: './bank-transfer.component.html',
   styleUrls: ['./bank-transfer.component.css']
@@ -15,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 export class BankTransferComponent implements OnInit {
 
   constructor(private authService: AuthService,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private bankAccountService: BankAccountService,
     private bankTransferService: BankTransferService,
     private router: Router,
@@ -33,7 +34,7 @@ export class BankTransferComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.requesterBankAccountId = history.state.requesterBankAccountId;
+    this.requesterBankAccountId = history.state?.requesterBankAccountId;
 
     if (!this.requesterBankAccountId) {
       this.router.navigate(['/no-access'], { skipLocationChange: true });

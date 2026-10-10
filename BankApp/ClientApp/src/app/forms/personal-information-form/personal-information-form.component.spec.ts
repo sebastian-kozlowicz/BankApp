@@ -1,3 +1,4 @@
+import { AppTestingModule } from '../../testing/app-testing.module';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { PersonalInformationFormComponent } from './personal-information-form.component';
@@ -8,7 +9,7 @@ describe('PersonalInformationFormComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ PersonalInformationFormComponent ]
+      imports: [AppTestingModule]
     })
     .compileComponents();
   }));

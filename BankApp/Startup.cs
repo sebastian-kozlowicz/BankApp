@@ -27,7 +27,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -228,7 +228,9 @@ namespace BankApp
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
-                    spa.UseAngularCliServer("start");
+                    // Run `npm start` in ClientApp independently of the backend.
+                    // Modern Angular CLI output is not compatible with the legacy CLI readiness parser.
+                    spa.UseProxyToSpaDevelopmentServer("http://localhost:4200");
             });
 
             AsyncContext.Run(async () => await DataInitializer.SeedData(userManager, roleManager, context));

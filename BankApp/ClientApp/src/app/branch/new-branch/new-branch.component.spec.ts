@@ -1,3 +1,4 @@
+import { AppTestingModule } from '../../testing/app-testing.module';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NewBranchComponent } from './new-branch.component';
@@ -8,7 +9,7 @@ describe('NewBranchComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NewBranchComponent ]
+      imports: [AppTestingModule]
     })
     .compileComponents();
   }));

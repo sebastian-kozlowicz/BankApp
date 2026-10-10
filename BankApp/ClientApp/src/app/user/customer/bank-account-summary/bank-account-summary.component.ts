@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
+  standalone: false,
   selector: 'app-bank-account-summary',
   templateUrl: './bank-account-summary.component.html',
   styleUrls: ['./bank-account-summary.component.css']
