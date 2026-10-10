@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { BankAccountService } from '../../services/bank-account.service';
 import { AccountType } from '../../enumerators/accountType';
@@ -13,13 +13,14 @@ import { ACCOUNT_TYPES } from '../../constants/app-constants';
 
 
 @Component({
+  standalone: false,
   selector: 'app-registration',
   templateUrl: './new-bank-account-with-customer.component.html',
   styleUrls: ['./new-bank-account-with-customer.component.css']
 })
 export class NewBankAccountWithCustomer {
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     private bankAccountService: BankAccountService,
     private toastr: ToastrService) {
   }

@@ -1,3 +1,4 @@
+import { AppTestingModule } from '../../testing/app-testing.module';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NoAccessComponent } from './no-access.component';
@@ -8,7 +9,7 @@ describe('NoAccessComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NoAccessComponent ]
+      imports: [AppTestingModule]
     })
     .compileComponents();
   }));

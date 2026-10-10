@@ -1,11 +1,12 @@
 import { Component, forwardRef } from '@angular/core';
-import { FormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from
+import { UntypedFormBuilder, Validators, ControlValueAccessor, NG_VALUE_ACCESSOR, NG_VALIDATORS, FormControl } from
   '@angular/forms';
 import { NumberLimitValidator } from '../../validators/number-limit-validator';
 import { Subscription } from 'rxjs';
 import { PersonalInformationFormValues } from '../../interfaces/forms/personal-information-form-values';
 
 @Component({
+  standalone: false,
   selector: 'app-personal-information-form',
   templateUrl: './personal-information-form.component.html',
   styleUrls: ['./personal-information-form.component.css'],
@@ -24,7 +25,7 @@ import { PersonalInformationFormValues } from '../../interfaces/forms/personal-i
 })
 export class PersonalInformationFormComponent implements ControlValueAccessor {
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.subscriptions.push(
       this.personalInformationForm.valueChanges.subscribe(value => {
         this.onChange(value);

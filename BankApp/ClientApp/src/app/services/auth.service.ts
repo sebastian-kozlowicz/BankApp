@@ -62,7 +62,8 @@ export class AuthService {
   }
 
   get currentUser(): JwtToken {
-    const token = this.jwtHelper.tokenGetter();
+    // AppModule configures a synchronous sessionStorage token getter.
+    const token = this.jwtHelper.tokenGetter() as string;
 
     if (!token)
       return null;

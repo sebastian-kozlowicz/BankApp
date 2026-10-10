@@ -1,3 +1,4 @@
+import { AppTestingModule } from '../../testing/app-testing.module';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NewBankAccountWithCustomer } from "./new-bank-account-with-customer.component";
@@ -8,7 +9,7 @@ describe('NewBankAccountWithCustomer', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NewBankAccountWithCustomer ]
+      imports: [AppTestingModule]
     })
     .compileComponents();
   }));

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
+  standalone: false,
   selector: 'app-nav-login-menu',
   templateUrl: './nav-login-menu.component.html',
   styleUrls: ['./nav-login-menu.component.css']

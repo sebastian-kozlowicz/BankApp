@@ -1,3 +1,4 @@
+import { AppTestingModule } from '../../../testing/app-testing.module';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { BankAccountSummaryComponent } from './bank-account-summary.component';
@@ -8,7 +9,7 @@ describe('BankAccountSummaryComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ BankAccountSummaryComponent ]
+      imports: [AppTestingModule]
     })
     .compileComponents();
   }));
@@ -16,6 +17,7 @@ describe('BankAccountSummaryComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BankAccountSummaryComponent);
     component = fixture.componentInstance;
+    fixture.componentRef.setInput('bankAccount', { id: 7 });
     fixture.detectChanges();
   });
 

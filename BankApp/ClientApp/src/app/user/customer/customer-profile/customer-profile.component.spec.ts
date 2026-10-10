@@ -1,3 +1,5 @@
+import { AuthService } from '../../../services/auth.service';
+import { AppTestingModule } from '../../../testing/app-testing.module';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CustomerProfileComponent } from './customer-profile.component';
@@ -8,7 +10,7 @@ describe('CustomerProfileComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ CustomerProfileComponent ]
+      imports: [AppTestingModule]
     })
     .compileComponents();
   }));
@@ -16,6 +18,7 @@ describe('CustomerProfileComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CustomerProfileComponent);
     component = fixture.componentInstance;
+    spyOnProperty(TestBed.inject(AuthService), 'currentUser', 'get').and.returnValue({ userId: 1 } as any);
     fixture.detectChanges();
   });
 

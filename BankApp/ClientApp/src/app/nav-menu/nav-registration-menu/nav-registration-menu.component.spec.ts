@@ -1,3 +1,4 @@
+import { AppTestingModule } from '../../testing/app-testing.module';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NavRegistrationMenuComponent } from './nav-registration-menu.component';
@@ -8,7 +9,7 @@ describe('NavRegistrationMenuComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavRegistrationMenuComponent ]
+      imports: [AppTestingModule]
     })
     .compileComponents();
   }));

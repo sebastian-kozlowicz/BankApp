@@ -3,6 +3,7 @@ import { AuthService } from '../../../services/auth.service';
 import { BankAccountService } from '../../../services/bank-account.service';
 
 @Component({
+  standalone: false,
   selector: 'app-customer-profile',
   templateUrl: './customer-profile.component.html',
   styleUrls: ['./customer-profile.component.css']

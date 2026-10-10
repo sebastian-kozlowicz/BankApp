@@ -1,3 +1,4 @@
+import { AppTestingModule } from '../../testing/app-testing.module';
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { NavAdministratorMenuComponent } from './nav-administrator-menu.component';
@@ -8,7 +9,7 @@ describe('NavAdministratorMenuComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ NavAdministratorMenuComponent ]
+      imports: [AppTestingModule]
     })
     .compileComponents();
   }));
