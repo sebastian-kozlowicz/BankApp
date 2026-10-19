@@ -27,6 +27,7 @@ Target publikacji backendu uruchamia `npm ci`, potem `npm run build` (skrypt wyb
 - Build produkcyjny, 28 testów jednostkowych i 3 testy przeglądarkowe Playwright przechodzą. Testy obejmują routing, bieżący token JWT, brak wycieku tokena do zewnętrznych domen i renderowanie toastów.
 - `dotnet publish` z czystym `npm ci` zakończony sukcesem; sprawdzono opublikowany `ClientApp/dist/index.html` i wskazane przez niego bundlery JS/CSS.
 - Testy przeglądarkowe obejmują frontend bez realnej bazy bankowej, nie pełną transakcję finansową przez backend.
+- Widok `/auth/login` ma responsywny, dostępny formularz z obsługą menedżerów haseł, stanem wysyłania i zachowaniem istniejącego przekierowania `returnUrl`.
 
 ## Ryzyka pozostające po migracji
 

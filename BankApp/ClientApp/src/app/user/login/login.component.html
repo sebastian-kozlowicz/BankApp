@@ -1,28 +1,66 @@
-<form [formGroup]="loginFormModel" autocomplete="off" (submit)="onSubmit()">
-  <div class="mb-3">
-    <label for="email">Email</label>
-    <input id="email" class="form-control" formControlName="email" />
-    <div class="alert alert-danger"
-         *ngIf="email.touched
-              && email.errors?.required">
-      The Email field is required.
-    </div>
-    <div class="alert alert-danger"
-         *ngIf="email.touched
-              && email.errors?.email">
-      The Email field is not a valid e-mail address.
-    </div>
-  </div>
+<main class="login-page" aria-labelledby="login-title">
+  <section class="login-shell">
+    <aside class="login-story" aria-label="BankApp benefits">
+      <a class="brand" [routerLink]="['/']" aria-label="BankApp home">
+        <span class="brand__mark" aria-hidden="true">B</span>
+        <span>BankApp</span>
+      </a>
 
-  <div class="mb-3">
-    <label for="password">Password</label>
-    <input type="password" id="password" class="form-control" formControlName="password" />
-    <div class="alert alert-danger"
-         *ngIf="password.touched
-              && password.errors?.required">
-      The Password field is required.
-    </div>
-  </div>
+      <div class="login-story__content">
+        <p class="eyebrow">Your finances, clearly managed</p>
+        <h2>Banking that keeps you in control.</h2>
+        <p>Access your accounts, review balances and send money securely from one simple dashboard.</p>
 
-  <button class="btn btn-primary" [disabled]="!loginFormModel.valid">Sign In</button>
-</form>
+        <ul class="benefit-list">
+          <li><span aria-hidden="true">✓</span> Secure access to your accounts</li>
+          <li><span aria-hidden="true">✓</span> Fast and clear money transfers</li>
+          <li><span aria-hidden="true">✓</span> Your balances in one place</li>
+        </ul>
+      </div>
+
+      <p class="security-note"><span aria-hidden="true">⌁</span> Protected banking session</p>
+    </aside>
+
+    <section class="login-panel">
+      <div class="login-panel__content">
+        <div class="login-heading">
+          <p class="eyebrow">Welcome back</p>
+          <h1 id="login-title">Sign in to your account</h1>
+          <p>Enter your details to continue to secure banking.</p>
+        </div>
+
+        <form class="login-form" [formGroup]="loginFormModel" (ngSubmit)="onSubmit()" novalidate>
+          <div class="field-group">
+            <label for="email">Email address</label>
+            <div class="input-shell" [class.input-shell--invalid]="email.touched && email.invalid">
+              <span class="input-icon" aria-hidden="true">@</span>
+              <input id="email" type="email" formControlName="email" autocomplete="email" placeholder="name@example.com" />
+            </div>
+            <p class="field-error" *ngIf="email.touched && email.errors?.required" role="alert">Email address is required.</p>
+            <p class="field-error" *ngIf="email.touched && email.errors?.email" role="alert">Enter a valid email address.</p>
+          </div>
+
+          <div class="field-group">
+            <label for="password">Password</label>
+            <div class="input-shell" [class.input-shell--invalid]="password.touched && password.invalid">
+              <span class="input-icon" aria-hidden="true">●</span>
+              <input [type]="passwordVisible() ? 'text' : 'password'" id="password" formControlName="password" autocomplete="current-password" placeholder="Enter your password" />
+              <button class="password-toggle" type="button" (click)="togglePasswordVisibility()" [attr.aria-label]="passwordVisible() ? 'Hide password' : 'Show password'">
+                {{ passwordVisible() ? 'Hide' : 'Show' }}
+              </button>
+            </div>
+            <p class="field-error" *ngIf="password.touched && password.errors?.required" role="alert">Password is required.</p>
+          </div>
+
+          <button class="login-submit" type="submit" [disabled]="loginFormModel.invalid || isSubmitting()">
+            <span *ngIf="!isSubmitting()">Sign in <span aria-hidden="true">→</span></span>
+            <span *ngIf="isSubmitting()">Signing in...</span>
+          </button>
+        </form>
+
+        <p class="registration-link">New to BankApp? <a [routerLink]="['/registration/customer']">Create an account</a></p>
+        <p class="privacy-note">Never share your password or authentication details with anyone.</p>
+      </div>
+    </section>
+  </section>
+</main>

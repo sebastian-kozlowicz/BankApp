@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from '../../services/auth.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   standalone: false,
@@ -11,6 +12,8 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  readonly isSubmitting = signal(false);
+  readonly passwordVisible = signal(false);
 
   constructor(private fb: UntypedFormBuilder,
     private authService: AuthService,
@@ -35,23 +38,34 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onSubmit() {
-    this.authService.login(this.loginFormModel.value).subscribe(
-      response => {
-        if (response) {
-          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
-          const isCustomer = this.authService.isCustomer();
+  togglePasswordVisibility(): void {
+    this.passwordVisible.update(visible => !visible);
+  }
 
-          if (isCustomer)
-            this.router.navigate([returnUrl || '/customer/profile']);
-          else
-            this.router.navigate([returnUrl || '/']);
-        }
-      },
-      error => {
-        if (error.status == 400)
-          this.toastr.error('Invalid login attempt');
-      }
-    );
+  onSubmit() {
+    if (this.loginFormModel.invalid || this.isSubmitting()) {
+      this.loginFormModel.markAllAsTouched();
+      return;
+    }
+
+    this.isSubmitting.set(true);
+    this.authService.login(this.loginFormModel.value)
+      .pipe(finalize(() => this.isSubmitting.set(false)))
+      .subscribe({
+        next: response => {
+          if (!response) {
+            this.toastr.error('Invalid email or password');
+            return;
+          }
+
+          const returnUrl = this.route.snapshot.queryParamMap.get('returnUrl');
+          const destination = this.authService.isCustomer()
+            ? returnUrl || '/customer/profile'
+            : returnUrl || '/';
+
+          this.router.navigate([destination]);
+        },
+        error: () => this.toastr.error('Invalid email or password')
+      });
   }
 }
