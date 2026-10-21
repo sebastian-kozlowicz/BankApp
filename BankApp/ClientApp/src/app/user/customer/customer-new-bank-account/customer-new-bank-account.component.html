@@ -1,0 +1,53 @@
+<main class="new-account-page" aria-labelledby="new-account-title">
+  <div class="new-account-layout">
+    <section class="new-account-main">
+      <a class="back-link" [routerLink]="['/customer/profile']">← Back to accounts</a>
+      <p class="eyebrow">New bank account</p>
+      <h1 id="new-account-title">Choose the account that fits you</h1>
+      <p class="page-description">Select an account type and currency. Your account number will be generated securely.</p>
+
+      <form class="account-form" [formGroup]="accountForm" (ngSubmit)="createAccount()" novalidate>
+        <fieldset>
+          <legend><span>1</span> Account type</legend>
+          <div class="option-grid">
+            <label class="option-card" *ngFor="let type of accountTypes" [class.option-card--selected]="accountForm.value.accountType === type.value">
+              <input type="radio" formControlName="accountType" [value]="type.value" />
+              <span class="option-card__indicator" aria-hidden="true"></span>
+              <strong>{{ type.name }}</strong>
+              <small>{{ type.description }}</small>
+            </label>
+          </div>
+          <p class="field-error" *ngIf="accountForm.get('accountType').touched && accountForm.get('accountType').invalid" role="alert">Choose an account type.</p>
+        </fieldset>
+
+        <fieldset>
+          <legend><span>2</span> Account currency</legend>
+          <div class="currency-grid">
+            <label class="currency-card" *ngFor="let currency of currencies" [class.currency-card--selected]="accountForm.value.currency === currency.value">
+              <input type="radio" formControlName="currency" [value]="currency.value" />
+              <strong>{{ currency.code }}</strong>
+              <small>{{ currency.name }}</small>
+            </label>
+          </div>
+          <p class="field-error" *ngIf="accountForm.get('currency').touched && accountForm.get('currency').invalid" role="alert">Choose an account currency.</p>
+        </fieldset>
+
+        <button class="create-account-button" type="submit" [disabled]="accountForm.invalid || isSubmitting()">
+          <span *ngIf="!isSubmitting()">Open account <span aria-hidden="true">→</span></span>
+          <span *ngIf="isSubmitting()">Opening account...</span>
+        </button>
+      </form>
+    </section>
+
+    <aside class="account-info" aria-label="Account opening information">
+      <span class="account-info__icon" aria-hidden="true">✓</span>
+      <h2>Simple and secure</h2>
+      <p>The account is linked directly to your customer profile. No additional personal details are needed.</p>
+      <ul>
+        <li>Instant account number generation</li>
+        <li>No opening fee</li>
+        <li>Available in your profile immediately</li>
+      </ul>
+    </aside>
+  </div>
+</main>

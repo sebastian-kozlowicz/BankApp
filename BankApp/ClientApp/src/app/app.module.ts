@@ -29,6 +29,7 @@ import { NewBranchComponent } from './branch/new-branch/new-branch.component';
 import { AddressFormComponent } from "./forms/address-form/address-form.component";
 import { PersonalInformationFormComponent } from './forms/personal-information-form/personal-information-form.component';
 import { NewUserComponent } from './user/new-user/new-user.component';
+import { CustomerNewBankAccountComponent } from './user/customer/customer-new-bank-account/customer-new-bank-account.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { NewUserComponent } from './user/new-user/new-user.component';
     NewBranchComponent,
     AddressFormComponent,
     PersonalInformationFormComponent,
-    NewUserComponent
+    NewUserComponent,
+    CustomerNewBankAccountComponent
   ],
   imports: [
     BrowserModule,
@@ -88,6 +90,9 @@ import { NewUserComponent } from './user/new-user/new-user.component';
     },
     {
         path: 'customer/bank-transfer', component: BankTransferComponent, canActivate: [AuthGuard]
+    },
+    {
+        path: 'customer/accounts/new', component: CustomerNewBankAccountComponent, canActivate: [AuthGuard]
     },
     {
         path: 'branch/new', component: NewBranchComponent, canActivate: [AdminAuthGuard, AuthGuard]

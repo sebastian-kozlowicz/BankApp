@@ -24,11 +24,12 @@
       </div>
     </div>
 
-    <div class="feedback-state" *ngIf="!isLoading() && !errorMessage() && bankAccounts().length === 0">
+    <div class="feedback-state feedback-state--empty" *ngIf="!isLoading() && !errorMessage() && bankAccounts().length === 0">
       <span class="feedback-state__icon" aria-hidden="true">+</span>
-      <div>
-        <h2>No bank accounts yet</h2>
-        <p>When an account is added to your profile, it will appear here.</p>
+      <div class="feedback-state__content">
+        <h2>You don't have a bank account yet</h2>
+        <p>Open your first account to start managing your money and making transfers.</p>
+        <a class="open-account-button" [routerLink]="['/customer/accounts/new']">Open your first account <span aria-hidden="true">→</span></a>
       </div>
     </div>
 

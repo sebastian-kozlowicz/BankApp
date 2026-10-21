@@ -36,7 +36,12 @@ export class CustomerProfileComponent implements OnInit {
         },
         error: error => {
           this.isLoading.set(false);
-          this.errorMessage.set(`Could not load bank accounts (HTTP ${error.status || 'unknown'}).`);
+          if (error.status === 404) {
+            this.bankAccounts.set([]);
+            return;
+          }
+
+          this.errorMessage.set('Could not load bank accounts');
         }
       });
   }

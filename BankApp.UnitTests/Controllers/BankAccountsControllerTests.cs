@@ -263,6 +263,39 @@ namespace BankApp.UnitTests.Controllers
         }
 
         [TestMethod]
+        public async Task CreateBankAccountForCurrentCustomerAsync_Should_UseCustomerIdFromClaims()
+        {
+            const int currentUserId = 42;
+            var model = new CurrentCustomerBankAccountCreationDto
+            {
+                AccountType = AccountType.Checking,
+                Currency = Currency.Pln
+            };
+            _sut.ControllerContext = new ControllerContext
+            {
+                HttpContext = new DefaultHttpContext
+                {
+                    User = new ClaimsPrincipal(new ClaimsIdentity(new[]
+                    {
+                        new Claim(CustomClaimTypes.UserId, currentUserId.ToString())
+                    }))
+                }
+            };
+            _bankAccountServiceMock
+                .Setup(service => service.CreateBankAccountAsync(It.IsAny<BankAccountCreationDto>()))
+                .ReturnsAsync(_bankAccount);
+
+            var result = await _sut.CreateBankAccountForCurrentCustomerAsync(model);
+
+            result.Result.Should().BeOfType<CreatedAtRouteResult>();
+            _bankAccountServiceMock.Verify(service => service.CreateBankAccountAsync(
+                It.Is<BankAccountCreationDto>(request =>
+                    request.CustomerId == currentUserId &&
+                    request.AccountType == model.AccountType &&
+                    request.Currency == model.Currency)), Times.Once);
+        }
+
+        [TestMethod]
         public async Task
             CreateBankAccountWithCustomerByCustomerAsync_Should_ReturnBankAccountDto_When_ModelStateIsValid()
         {

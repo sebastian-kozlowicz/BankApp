@@ -5,6 +5,7 @@ import { BankAccountWithCustomerCreation } from
 import { BankAccountCreation } from '../interfaces/bank-account/bank-account-creation';
 import { BankAccount } from '../interfaces/bank-account/bank-account';
 import { Observable } from 'rxjs';
+import { CurrentCustomerBankAccountCreation } from '../interfaces/bank-account/current-customer-bank-account-creation';
 
 @Injectable({
   providedIn: 'root'
@@ -15,8 +16,8 @@ export class BankAccountService {
 
   private readonly bankAccountEndpoint = '/api/BankAccounts';
 
-  createBankAccount(bankAccount: BankAccountCreation): Observable<BankAccount> {
-    return this.http.post<BankAccount>(this.bankAccountEndpoint, bankAccount);
+  createBankAccountForCurrentCustomer(bankAccount: CurrentCustomerBankAccountCreation): Observable<BankAccount> {
+    return this.http.post<BankAccount>(this.bankAccountEndpoint + '/CreateForCurrentCustomer', bankAccount);
   }
 
   createBankAccountWithCustomerByCustomer(bankAccountWithCustomer: BankAccountWithCustomerCreation):

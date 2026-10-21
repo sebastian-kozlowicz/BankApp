@@ -21,15 +21,17 @@ describe('Angular migration integration', () => {
   it('preserves all application route paths', () => {
     expect(TestBed.inject(Router).config.map(route => route.path)).toEqual([
       '', 'registration/customer', 'auth/login', 'no-access', 'user/new',
-      'admin-panel', 'customer/profile', 'customer/bank-transfer', 'branch/new'
+      'admin-panel', 'customer/profile', 'customer/bank-transfer', 'customer/accounts/new', 'branch/new'
     ]);
   });
 
   it('protects customer profile and bank transfer routes with AuthGuard', () => {
     const customerRoutes = TestBed.inject(Router).config.filter(route =>
-      route.path === 'customer/profile' || route.path === 'customer/bank-transfer');
+      route.path === 'customer/profile' ||
+      route.path === 'customer/bank-transfer' ||
+      route.path === 'customer/accounts/new');
 
-    expect(customerRoutes).toHaveSize(2);
+    expect(customerRoutes).toHaveSize(3);
     customerRoutes.forEach(route => {
       expect(route.canActivate).toContain(AuthGuard);
     });

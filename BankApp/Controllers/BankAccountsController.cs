@@ -5,6 +5,7 @@ using AutoMapper;
 using BankApp.Configuration;
 using BankApp.Dtos.BankAccount;
 using BankApp.Dtos.BankAccount.WithCustomerCreation;
+using BankApp.Enumerators;
 using BankApp.Interfaces.Helpers.Services;
 using BankApp.Models;
 using BankApp.Policies;
@@ -52,12 +53,21 @@ namespace BankApp.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<BankAccountDto>> CreateBankAccountAsync([FromBody] BankAccountCreationDto model)
+        [Authorize(Roles = nameof(UserRole.Customer), Policy = PolicyName.UserIdIncludedInJwtToken)]
+        [Route("CreateForCurrentCustomer")]
+        public async Task<ActionResult<BankAccountDto>> CreateBankAccountForCurrentCustomerAsync(
+            [FromBody] CurrentCustomerBankAccountCreationDto model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var bankAccount = await _bankAccountService.CreateBankAccountAsync(model);
+            var currentUserId = int.Parse(User.Claims.Single(c => c.Type == CustomClaimTypes.UserId).Value);
+            var bankAccount = await _bankAccountService.CreateBankAccountAsync(new BankAccountCreationDto
+            {
+                AccountType = model.AccountType,
+                Currency = model.Currency,
+                CustomerId = currentUserId
+            });
 
             var bankAccountDto = _mapper.Map<BankAccount, BankAccountDto>(bankAccount);
             return CreatedAtRoute("GetBankAccount", new { bankAccountId = bankAccountDto.Id }, bankAccountDto);
