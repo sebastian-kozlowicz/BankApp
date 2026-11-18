@@ -74,7 +74,7 @@ export class AddressFormComponent implements ControlValueAccessor {
   addressForm = this.fb.group({
     street: ['', Validators.required],
     houseNumber: ['', Validators.required],
-    apartmentNumber: ['', Validators.required],
+    apartmentNumber: [''],
     postalCode: ['', Validators.required],
     city: ['', Validators.required],
     country: ['', Validators.required]

@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { finalize } from 'rxjs/operators';
 import { UntypedFormBuilder, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+
 import { BankAccountService } from '../../services/bank-account.service';
 import { AccountType } from '../../enumerators/accountType';
 import { Currency } from '../../enumerators/currency';
@@ -20,9 +22,13 @@ import { ACCOUNT_TYPES } from '../../constants/app-constants';
 })
 export class NewBankAccountWithCustomer {
 
+  readonly isSubmitting = signal(false);
+  readonly errorMessage = signal('');
+  readonly registrationComplete = signal(false);
+  private readonly destroyRef = inject(DestroyRef);
+
   constructor(private fb: UntypedFormBuilder,
-    private bankAccountService: BankAccountService,
-    private toastr: ToastrService) {
+    private bankAccountService: BankAccountService) {
   }
 
   AccountType = AccountType;
@@ -34,36 +40,6 @@ export class NewBankAccountWithCustomer {
     { name: 'US dollar', code: Currency.Usd },
     { name: 'Pound sterling', code: Currency.Gbp }
   ];
-
-  get getPasswordErrorCount() {
-    let errorCount = 0;
-
-    if (PasswordValidator.isErrorOccur(this.password, 'required'))
-      errorCount++;
-    if (PasswordValidator.isErrorOccur(this.password, 'hasNumber'))
-      errorCount++;
-    if (PasswordValidator.isErrorOccur(this.password, 'hasCapitalCase'))
-      errorCount++;
-    if (PasswordValidator.isErrorOccur(this.password, 'hasLowerCase'))
-      errorCount++;
-    if (PasswordValidator.isErrorOccur(this.password, 'hasSpecialCharacter'))
-      errorCount++;
-    if (PasswordValidator.isErrorOccur(this.password, 'minlength'))
-      errorCount++;
-
-    return errorCount;
-  }
-
-  setErrorClasses() {
-    const errorCount = this.getPasswordErrorCount;
-
-    return {
-      'one-error': errorCount === 1,
-      'two-errors': errorCount === 2,
-      'three-errors': errorCount === 3,
-      'four-errors': errorCount === 4
-    };
-  }
 
   get accountType() {
     return this.accountInformationForm.get('accountType');
@@ -128,6 +104,16 @@ export class NewBankAccountWithCustomer {
     });
 
   register() {
+    if (this.isSubmitting() || this.registrationComplete()) {
+      return;
+    }
+
+    const forms = [this.accountInformationForm, this.personalInformationForm, this.residentialAddressForm, this.passwordForm];
+    if (forms.some(form => form.invalid)) {
+      forms.forEach(form => form.markAllAsTouched());
+      return;
+    }
+
     const registerModel: BankAccountWithCustomerCreation = {
       register: {
         user: {
@@ -152,20 +138,28 @@ export class NewBankAccountWithCustomer {
       }
     };
 
-    this.bankAccountService.createBankAccountWithCustomerByCustomer(registerModel).subscribe(
-      response => {
-        if (response)
-          this.toastr.success('New user created!', 'Registration successful.');
-      },
-      badRequest => {
-        if (Array.isArray(badRequest.error))
-          badRequest.error.forEach(element => {
-            if (element.code === 'DuplicateUserName')
-              this.toastr.error('Username is already taken', 'Registration failed.');
-          });
-        else
-          this.toastr.error('Registration failed.');
-      }
-    );
+    this.errorMessage.set('');
+    this.isSubmitting.set(true);
+    this.bankAccountService.createBankAccountWithCustomerByCustomer(registerModel)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.isSubmitting.set(false))
+      ).subscribe({
+        next: response => {
+          if (response) {
+            this.registrationComplete.set(true);
+            this.passwordForm.reset();
+          } else {
+            this.errorMessage.set('We could not confirm your registration. Try signing in before submitting again.');
+          }
+        },
+        error: badRequest => {
+          const duplicateEmail = Array.isArray(badRequest.error) &&
+            badRequest.error.some(element => element?.code === 'DuplicateUserName' || element?.code === 'DuplicateEmail');
+          this.errorMessage.set(duplicateEmail
+            ? 'Registration failed. This email may already be registered. Try signing in.'
+            : 'Registration failed. Please check your details and try again.');
+        }
+      });
   }
 }

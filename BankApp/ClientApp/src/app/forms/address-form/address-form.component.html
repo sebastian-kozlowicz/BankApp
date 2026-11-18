@@ -1,4 +1,4 @@
-<div [formGroup]="addressForm" autocomplete="off">
+<div [formGroup]="addressForm">
   <div class="form-group">
     <mat-form-field>
       <mat-label>Street</mat-label>
@@ -21,18 +21,15 @@
 
   <div class="form-group">
     <mat-form-field>
-      <mat-label>Apartment number</mat-label>
-      <input matInput id="apartment-number" formControlName="apartmentNumber" />
-      <mat-error *ngIf="apartmentNumber.errors?.required">
-        The Apartment number field is required
-      </mat-error>
+      <mat-label>Apartment number (optional)</mat-label>
+      <input matInput id="apartment-number" formControlName="apartmentNumber" autocomplete="address-line2" />
     </mat-form-field>
   </div>
 
   <div class="form-group">
     <mat-form-field>
       <mat-label>Postal code</mat-label>
-      <input type="text" matInput id="postal-code" placeholder="Ex. 61-923" formControlName="postalCode" />
+      <input type="text" matInput id="postal-code" formControlName="postalCode" autocomplete="postal-code" />
       <mat-error *ngIf="postalCode.errors?.required">
         The Postal code field is required
       </mat-error>
@@ -42,7 +39,7 @@
   <div class="form-group">
     <mat-form-field>
       <mat-label>City</mat-label>
-      <input matInput id="city" formControlName="city" />
+      <input matInput id="city" formControlName="city" autocomplete="address-level2" />
       <mat-error *ngIf="city.errors?.required">
         The City field is required
       </mat-error>

@@ -1,88 +1,99 @@
-<mat-vertical-stepper linear>
-  <!-- #region Account information step -->
-  <mat-step label="Account information" [stepControl]="accountInformationForm" [completed]="accountInformationForm.valid">
-    <form [formGroup]="accountInformationForm" autocomplete="off">
-      <div class="form-group">
-        <mat-form-field>
-          <mat-label>Account type</mat-label>
-          <mat-select id="account-type" formControlName="accountType">
-            <mat-option *ngFor="let accountType of accountTypes" [value]="accountType">
-              {{AccountType[accountType]}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="accountType.errors?.required">
-            The Account type field is required
-          </mat-error>
-        </mat-form-field>
-
-        <mat-form-field>
-          <mat-label>Currency</mat-label>
-          <mat-select id="currency" formControlName="currency">
-            <mat-option *ngFor="let currency of currencies" [value]="currency.code">
-              {{currency.name}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="currency.errors?.required">
-            The Currency field is required
-          </mat-error>
-        </mat-form-field>
+<main class="registration-page" aria-labelledby="registration-title">
+  <div class="registration-shell">
+    <aside class="registration-story" aria-label="Welcome to BankApp">
+      <a class="brand" routerLink="/"><span class="brand-mark" aria-hidden="true">B</span> BankApp</a>
+      <div class="story-copy">
+        <p class="eyebrow">A new beginning</p>
+        <h2>Your next chapter<br>starts here.</h2>
+        <p>One place for your everyday money. Start with an account that fits your plans.</p>
+        <ul class="benefits">
+          <li><span aria-hidden="true">01</span><div><strong>Make it yours</strong><small>Choose checking or savings.</small></div></li>
+          <li><span aria-hidden="true">02</span><div><strong>Choose your currency</strong><small>PLN, EUR, USD or GBP.</small></div></li>
+          <li><span aria-hidden="true">03</span><div><strong>Keep things together</strong><small>Manage your accounts and transfers.</small></div></li>
+        </ul>
       </div>
-    </form>
-  </mat-step>
-  <!-- #endregion -->
-  <!-- #region Personal information step -->
-  <mat-step label="Personal information" [stepControl]="personalInformationForm" [completed]="personalInformationForm.valid">
-    <form [formGroup]="personalInformationForm" autocomplete="off">
-      <app-personal-information-form formControlName="personalInformation"></app-personal-information-form>
-    </form>
-  </mat-step>
-  <!-- #endregion -->
-  <!-- #region Residential address step -->
-  <mat-step label="Residential address" [stepControl]="residentialAddressForm" [completed]="residentialAddressForm.valid">
-    <form [formGroup]="residentialAddressForm" autocomplete="off">
-      <app-address-form formControlName="address"></app-address-form>
-    </form>
-  </mat-step>
-  <!-- #endregion -->
-  <!-- #region Password step -->
-  <mat-step label="Password" [stepControl]="passwordForm" [completed]="passwordForm.valid">
-    <form [formGroup]="passwordForm" autocomplete="off" (submit)="register()">
-      <div class="form-group">
-        <mat-form-field [ngClass]="setErrorClasses()">
-          <mat-label>Password</mat-label>
-          <input type="password" matInput id="password" formControlName="password" />
-          <mat-error *ngIf="password.errors?.required">
-            The Password field is required
-          </mat-error>
-          <mat-error *ngIf="!password.errors?.required">
-            <mat-error *ngIf="password.errors?.hasNumber">The Password must include number</mat-error>
-            <mat-error *ngIf="password.errors?.hasCapitalCase">The Password must include capital case letter</mat-error>
-            <mat-error *ngIf="password.errors?.hasLowerCase">The Password must include lower case letter</mat-error>
-            <mat-error *ngIf="password.errors?.hasSpecialCharacter">The Password must include special character</mat-error>
-            <mat-error *ngIf="password.errors?.minlength">The Password must be at least 8 characters</mat-error>
-          </mat-error>
-        </mat-form-field>
-      </div>
+      <p class="story-footer">Everyday banking. Clearly.</p>
+    </aside>
 
-      <div class="form-group">
-        <mat-form-field>
-          <mat-label>Confirm password</mat-label>
-          <input type="password" matInput id="confirm-password" formControlName="confirmPassword" />
-          <mat-error *ngIf="confirmPassword.errors?.required">
-            The Confirm password field is required
-          </mat-error>
-          <mat-error *ngIf="confirmPassword.errors?.passwordMismatch">
-            Passwords do not match
-          </mat-error>
-        </mat-form-field>
-      </div>
+    <section class="registration-panel" [attr.aria-busy]="isSubmitting()">
+      <header class="registration-heading">
+        <p class="eyebrow">Join BankApp</p>
+        <h1 id="registration-title">Create your BankApp account</h1>
+        <p>A few details now. A clearer view of your money next.</p>
+        <p class="sign-in-link">Already registered? <a routerLink="/auth/login">Sign in →</a></p>
+      </header>
 
-      <button type="submit"
-              class="btn btn-primary"
-              [disabled]="!accountInformationForm.valid || !personalInformationForm.valid || !residentialAddressForm.valid || !passwordForm.valid">
-        Sign Up
-      </button>
-    </form>
-  </mat-step>
-  <!-- #endregion -->
-</mat-vertical-stepper>
+      <p *ngIf="errorMessage()" class="request-error" role="alert">{{ errorMessage() }}</p>
+      <p *ngIf="isSubmitting()" class="step-description" role="status">Creating your account… Please wait.</p>
+      <section *ngIf="registrationComplete()" class="success-state" role="status" aria-labelledby="registration-success-title">
+        <span class="success-icon" aria-hidden="true">✓</span>
+        <h2 id="registration-success-title">Your account is ready</h2>
+        <p>Your customer profile and first bank account have been created. Sign in to start using BankApp.</p>
+        <a class="action action-primary" routerLink="/auth/login">Continue to sign in <span aria-hidden="true">→</span></a>
+      </section>
+      <mat-vertical-stepper *ngIf="!registrationComplete()" linear class="registration-stepper" aria-label="Account registration" [inert]="isSubmitting()">
+        <mat-step label="Your first account" [stepControl]="accountInformationForm">
+          <form [formGroup]="accountInformationForm" (ngSubmit)="accountNext.click()">
+            <p class="step-description">Choose how you want to get started. All fields are required unless marked optional.</p>
+            <fieldset class="account-choices">
+              <legend>Account type</legend>
+              <label class="account-choice" *ngFor="let type of accountTypes" [class.is-selected]="accountType.value === type">
+                <input type="radio" name="accountType" formControlName="accountType" [value]="type" />
+                <span><strong>{{ AccountType[type] }} account</strong><small>{{ type === AccountType.Checking ? 'For everyday payments and transfers.' : 'A separate place for your savings.' }}</small></span>
+              </label>
+            </fieldset>
+            <div class="field-group">
+              <label for="registration-currency">Account currency</label>
+              <select id="registration-currency" formControlName="currency">
+                <option [ngValue]="''" disabled>Select your currency</option>
+                <option *ngFor="let item of currencies" [ngValue]="item.code">{{ item.name }}</option>
+              </select>
+            </div>
+            <div class="step-actions"><button #accountNext type="button" class="action action-primary" matStepperNext [disabled]="accountInformationForm.invalid">Continue <span aria-hidden="true">→</span></button></div>
+          </form>
+        </mat-step>
+
+        <mat-step label="About you" [stepControl]="personalInformationForm">
+          <form [formGroup]="personalInformationForm" (ngSubmit)="personalNext.click()">
+            <p class="step-description">Tell us a little about yourself. Your email will be used to sign in.</p>
+            <app-personal-information-form class="registration-fields" formControlName="personalInformation"></app-personal-information-form>
+            <div class="step-actions"><button type="button" class="action action-secondary" matStepperPrevious>Back</button><button #personalNext type="button" class="action action-primary" matStepperNext [disabled]="personalInformationForm.invalid">Continue <span aria-hidden="true">→</span></button></div>
+          </form>
+        </mat-step>
+
+        <mat-step label="Where you live" [stepControl]="residentialAddressForm">
+          <form [formGroup]="residentialAddressForm" (ngSubmit)="addressNext.click()">
+            <p class="step-description">Enter your residential address to complete your customer details.</p>
+            <app-address-form class="registration-fields" formControlName="address"></app-address-form>
+            <div class="step-actions"><button type="button" class="action action-secondary" matStepperPrevious>Back</button><button #addressNext type="button" class="action action-primary" matStepperNext [disabled]="residentialAddressForm.invalid">Continue <span aria-hidden="true">→</span></button></div>
+          </form>
+        </mat-step>
+
+        <mat-step label="Set your password" [stepControl]="passwordForm">
+          <form [formGroup]="passwordForm" (ngSubmit)="register()">
+            <fieldset class="submission-fields" [disabled]="isSubmitting()">
+            <p class="step-description">Choose a unique password that you don't use for other accounts.</p>
+            <div class="field-group">
+              <label for="password">Password</label>
+              <input type="password" id="password" autocomplete="new-password" formControlName="password" aria-describedby="password-requirements" [attr.aria-invalid]="password.touched && password.invalid" />
+            </div>
+            <ul id="password-requirements" class="password-requirements">
+              <li [class.is-met]="password.value && !password.hasError('minlength')"><span aria-hidden="true">{{ password.value && !password.hasError('minlength') ? '✓' : '○' }}</span> At least 8 characters</li>
+              <li [class.is-met]="password.value && !password.hasError('hasCapitalCase') && !password.hasError('hasLowerCase')"><span aria-hidden="true">{{ password.value && !password.hasError('hasCapitalCase') && !password.hasError('hasLowerCase') ? '✓' : '○' }}</span> Uppercase and lowercase letters</li>
+              <li [class.is-met]="password.value && !password.hasError('hasNumber')"><span aria-hidden="true">{{ password.value && !password.hasError('hasNumber') ? '✓' : '○' }}</span> At least one number</li>
+              <li [class.is-met]="password.value && !password.hasError('hasSpecialCharacter')"><span aria-hidden="true">{{ password.value && !password.hasError('hasSpecialCharacter') ? '✓' : '○' }}</span> At least one special character</li>
+            </ul>
+            <div class="field-group">
+              <label for="confirm-password">Confirm password</label>
+              <input type="password" id="confirm-password" autocomplete="new-password" formControlName="confirmPassword" aria-describedby="confirm-password-error" [attr.aria-invalid]="confirmPassword.touched && confirmPassword.invalid" />
+              <p id="confirm-password-error" class="field-error" *ngIf="confirmPassword.touched && confirmPassword.invalid">{{ confirmPassword.hasError('required') ? 'Please confirm your password.' : 'Passwords do not match.' }}</p>
+            </div>
+            <div class="step-actions"><button type="button" class="action action-secondary" matStepperPrevious>Back</button><button type="submit" class="action action-primary" [disabled]="isSubmitting() || accountInformationForm.invalid || personalInformationForm.invalid || residentialAddressForm.invalid || passwordForm.invalid">{{ isSubmitting() ? 'Creating account…' : 'Create account' }} <span aria-hidden="true">↗</span></button></div>
+            </fieldset>
+          </form>
+        </mat-step>
+      </mat-vertical-stepper>
+      <p class="panel-note">Your registration creates your customer profile and first bank account.</p>
+    </section>
+  </div>
+</main>

@@ -17,15 +17,17 @@ export class PasswordValidator {
   }
 
   static isPasswordMatch(fg: FormGroup) {
-    let password = fg.controls['password'];
-    let confirmPassword = fg.controls['confirmPassword'];
+    const password = fg.controls['password'];
+    const confirmPassword = fg.controls['confirmPassword'];
+    const errors = { ...confirmPassword.errors };
+    delete errors.passwordMismatch;
 
-    if (confirmPassword.errors == null) {
-      if (password.value == confirmPassword.value)
-        confirmPassword.setErrors(null);
-      else
-        confirmPassword.setErrors({ passwordMismatch: true })
+    if (confirmPassword.value && password.value !== confirmPassword.value) {
+      errors.passwordMismatch = true;
     }
+
+    confirmPassword.setErrors(Object.keys(errors).length ? errors : null);
+    return null;
   }
 
   static isErrorOccur(ac: AbstractControl, error) {

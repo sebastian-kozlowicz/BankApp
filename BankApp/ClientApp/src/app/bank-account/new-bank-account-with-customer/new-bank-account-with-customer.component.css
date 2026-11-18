@@ -1,0 +1,90 @@
+
+:host { display: block; }
+.registration-page {
+  --ink: #15233d;
+  --muted: #68758b;
+  --blue: #416bd0;
+  --mat-stepper-container-color: transparent;
+  --mat-stepper-header-selected-state-icon-background-color: #416bd0;
+  --mat-stepper-header-done-state-icon-background-color: #416bd0;
+  --mat-stepper-header-edit-state-icon-background-color: #416bd0;
+  --mat-stepper-header-selected-state-label-text-color: #15233d;
+  --mat-form-field-container-text-size: 14px;
+  min-height: calc(100vh - 94px);
+  padding: clamp(1rem, 3vw, 2.5rem) 0;
+  color: var(--ink);
+  background: #f4f7fb;
+}
+.registration-shell { display: grid; grid-template-columns: minmax(260px, .75fr) minmax(0, 1.25fr); width: min(100%, 1080px); margin: 0 auto; overflow: hidden; border: 1px solid #dfe7f2; border-radius: 1.5rem; background: #fff; box-shadow: 0 24px 60px #19335c14; }
+.registration-story { display: flex; flex-direction: column; gap: 3rem; padding: clamp(1.5rem, 3vw, 3rem); color: #fff; background: var(--ink); }
+.brand { display: inline-flex; align-items: center; gap: .7rem; align-self: flex-start; color: #fff; font-size: 1.1rem; font-weight: 750; text-decoration: none; }
+.brand-mark { display: grid; width: 2.3rem; height: 2.3rem; place-items: center; border-radius: .7rem; background: #5f86e5; }
+.story-copy { margin: auto 0; }
+.eyebrow { margin: 0 0 .85rem; color: var(--blue); font-size: .72rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+.registration-story .eyebrow { color: #a7c0ff; }
+.story-copy h2 { margin: 0; font-size: clamp(2rem, 3.5vw, 2.8rem); font-weight: 750; line-height: 1.12; letter-spacing: -.035em; }
+.story-copy > p:not(.eyebrow) { margin: 1.4rem 0 0; color: #bdcce6; font-size: .92rem; line-height: 1.8; }
+.benefits { display: grid; gap: 1.4rem; margin: 2.5rem 0 0; padding: 0; list-style: none; }
+.benefits li { display: flex; align-items: flex-start; gap: .8rem; }
+.benefits li > span { display: grid; width: 2rem; height: 2rem; flex-shrink: 0; place-items: center; border: 1px solid #42597f; border-radius: .6rem; color: #a7c0ff; font-size: .7rem; }
+.benefits strong, .benefits small { display: block; }
+.benefits strong { font-size: .85rem; font-weight: 650; }
+.benefits small { margin-top: .3rem; color: #bdcce6; font-size: .78rem; line-height: 1.6; }
+.story-footer { margin: auto 0 0; padding-top: 2rem; color: #bdcce6; font-size: .75rem; }
+.registration-panel { min-width: 0; padding: clamp(1.25rem, 3vw, 3rem); }
+.registration-heading h1 { margin: 0; font-size: clamp(1.8rem, 3vw, 2.3rem); font-weight: 750; line-height: 1.15; letter-spacing: -.035em; }
+.registration-heading > p:not(.eyebrow) { margin: .85rem 0 0; color: var(--muted); font-size: .88rem; line-height: 1.65; }
+.sign-in-link a { color: var(--blue); font-weight: 700; text-decoration: none; white-space: nowrap; }
+.sign-in-link a:hover { text-decoration: underline; }
+.registration-stepper { margin: 1.6rem -1.5rem 0; }
+.step-description { margin: .25rem 0 1.25rem; color: var(--muted); font-size: .84rem; line-height: 1.7; }
+.account-choices { display: grid; gap: .7rem; margin: 0 0 1.4rem; padding: 0; border: 0; }
+.account-choices legend, .field-group label { margin-bottom: .5rem; color: #33425d; font-size: .8rem; font-weight: 700; }
+.account-choice { display: flex; align-items: center; gap: .8rem; padding: 1rem; border: 1px solid #d8e1ee; border-radius: .85rem; cursor: pointer; }
+.account-choice.is-selected { border-color: var(--blue); background: #f0f4ff; }
+.account-choice input { width: 1.1rem; height: 1.1rem; flex-shrink: 0; accent-color: var(--blue); }
+.account-choice strong, .account-choice small { display: block; }
+.account-choice strong { font-size: .88rem; }
+.account-choice small { margin-top: .3rem; color: var(--muted); font-size: .76rem; line-height: 1.6; }
+.field-group { display: grid; min-width: 0; gap: .3rem; }
+.submission-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
+.field-group > input, .field-group select { width: 100%; min-width: 0; min-height: 3.2rem; padding: .8rem; border: 1px solid #d8e1ee; border-radius: .8rem; background: #fff; color: var(--ink); font: inherit; font-size: .9rem; }
+.field-group > input[aria-invalid="true"] { border-color: #bd4149; }
+.step-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: .65rem; margin-top: 1.5rem; }
+.action { display: inline-flex; min-height: 3rem; align-items: center; justify-content: center; gap: 1rem; padding: .75rem 1.25rem; border: 1px solid transparent; border-radius: .75rem; font: inherit; font-size: .85rem; font-weight: 700; text-decoration: none; cursor: pointer; }
+.action-primary { background: var(--blue); color: #fff; }
+.action-primary:not(:disabled):hover { background: #3159ba; }
+.action-secondary { margin-right: auto; border-color: #dfe7f2; background: #fff; color: var(--ink); }
+.action-secondary:not(:disabled):hover { background: #f0f4ff; }
+.action:disabled { background: #e7edf7; color: #68758b; cursor: not-allowed; }
+.password-requirements { display: grid; gap: .45rem; margin: 1rem 0 1.5rem; padding: 0; color: var(--muted); font-size: .78rem; list-style: none; }
+.password-requirements span { display: inline-block; width: 1.2rem; }
+.password-requirements .is-met { color: #23755a; }
+.field-error, .request-error { color: #ad303c; font-size: .8rem; line-height: 1.6; }
+.field-error { margin: .25rem 0 0; }
+.request-error { margin: 1rem 0; padding: 1rem; border: 1px solid #f0c6ce; border-radius: .75rem; background: #fff4f5; }
+.panel-note { margin: 1.5rem 0 0; padding-top: 1.2rem; border-top: 1px solid #edf1f7; color: var(--muted); font-size: .75rem; line-height: 1.7; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid #6388e4; outline-offset: 3px; }
+.registration-story a:focus-visible { outline-color: #a7c0ff; }
+.success-state { padding: 2.5rem 0; }
+.success-icon { display: grid; width: 3.5rem; height: 3.5rem; place-items: center; margin-bottom: 1.5rem; border-radius: 1rem; background: #e5f4ec; color: #23755a; font-size: 1.6rem; }
+.success-state h2 { font-size: 1.6rem; font-weight: 700; letter-spacing: -.03em; }
+.success-state p { margin: 1rem 0 1.5rem; color: var(--muted); line-height: 1.8; }
+@media (max-width: 820px) {
+  .registration-shell { grid-template-columns: 1fr; max-width: 620px; }
+  .registration-story { gap: 1.5rem; }
+  .story-copy { margin: 0; }
+  .story-copy h2 { font-size: 2rem; }
+  .benefits, .story-footer { display: none; }
+}
+@media (max-width: 520px) {
+  .registration-page { padding: 0; }
+  .registration-shell { border-radius: 1rem; box-shadow: none; }
+  .registration-story { padding: 1.25rem; }
+  .story-copy { display: none; }
+  .registration-panel { padding: 1.5rem 1rem; }
+  .registration-heading h1 { font-size: 1.9rem; }
+  .registration-stepper { margin-right: -1rem; margin-left: -1.4rem; }
+  .account-choice { padding: .8rem; }
+  .step-actions .action-primary { flex: 1; }
+}

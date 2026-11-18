@@ -1,8 +1,8 @@
-<div [formGroup]="personalInformationForm" autocomplete="off">
+<div [formGroup]="personalInformationForm">
   <div class="form-group">
     <mat-form-field>
       <mat-label>Name</mat-label>
-      <input matInput id="name" formControlName="name" />
+      <input matInput id="name" formControlName="name" autocomplete="given-name" />
       <mat-error *ngIf="name.errors?.required">
         The Name field is required
       </mat-error>
@@ -18,7 +18,7 @@
   <div class="form-group">
     <mat-form-field>
       <mat-label>Surname</mat-label>
-      <input matInput id="surname" formControlName="surname" />
+      <input matInput id="surname" formControlName="surname" autocomplete="family-name" />
       <mat-error *ngIf="surname.errors?.required">
         The Surname field is required
       </mat-error>
@@ -34,7 +34,7 @@
   <div class="form-group">
     <mat-form-field>
       <mat-label>Phone number</mat-label>
-      <input type="tel" matInput id="phone-number" formControlName="phoneNumber" />
+      <input type="tel" matInput id="phone-number" formControlName="phoneNumber" autocomplete="tel" />
       <mat-error *ngIf="phoneNumber.errors?.required">
         The Phone number field is required
       </mat-error>
@@ -50,7 +50,7 @@
   <div class="form-group">
     <mat-form-field>
       <mat-label>Email</mat-label>
-      <input matInput id="email" formControlName="email" />
+      <input type="email" matInput id="email" formControlName="email" autocomplete="email" />
       <mat-error *ngIf="email.errors?.required">
         The Email field is required
       </mat-error>

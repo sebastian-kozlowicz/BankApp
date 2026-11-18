@@ -24,6 +24,15 @@ describe('AddressFormComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('accepts a residential address without an apartment number', () => {
+    component.addressForm.setValue({ country: 'Poland', city: 'Poznan', street: 'Test street', houseNumber: '1', apartmentNumber: '2', postalCode: '01-001' });
+    const input = fixture.nativeElement.querySelector('#apartment-number') as HTMLInputElement;
+    input.value = '';
+    input.dispatchEvent(new Event('input'));
+
+    expect(component.addressForm.valid).toBeTrue();
+  });
+
   it('preserves postal codes as JSON strings including hyphens and leading zeros', () => {
     const input: HTMLInputElement = fixture.nativeElement.querySelector('#postal-code');
 

@@ -1,0 +1,8 @@
+
+:host(.registration-fields) { display: block; }
+:host(.registration-fields) > div { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem 1rem; }
+:host(.registration-fields) .form-group { min-width: 0; }
+:host(.registration-fields) mat-form-field { width: 100%; max-width: none; --mat-form-field-filled-container-color: #f4f7fb; --mat-form-field-filled-container-shape: 12px; }
+@media (max-width: 600px) {
+  :host(.registration-fields) > div { grid-template-columns: 1fr; }
+}
