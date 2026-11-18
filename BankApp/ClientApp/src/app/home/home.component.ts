@@ -5,9 +5,10 @@ import { AuthService } from '../services/auth.service';
   standalone: false,
   selector: 'app-home',
   templateUrl: './home.component.html',
+  styleUrls: ['./home.component.css']
 })
 export class HomeComponent {
-  constructor(private authService: AuthService) {
+  constructor(public readonly authService: AuthService) {
   }
 
 }

@@ -6,7 +6,7 @@ test('should display the home welcome content without runtime errors', async ({ 
   page.on('pageerror', error => errors.push(error.message));
   const app = new AppPage(page);
   await app.navigateTo();
-  await expect(app.getMainHeading()).toContainText('Home');
+  await expect(app.getMainHeading()).toContainText('Your money.');
   await expect(page.getByRole('link', { name: 'Login', exact: true })).toBeVisible();
   expect(errors).toEqual([]);
 });

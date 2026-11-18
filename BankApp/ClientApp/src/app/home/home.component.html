@@ -1,3 +1,53 @@
-<div *ngIf="!authService.isLoggedIn()">
-  Home
-</div>
+<main class="home-page" aria-labelledby="home-title">
+  <section class="hero">
+    <div class="hero-copy">
+      <p class="eyebrow"><span aria-hidden="true"></span> Banking, made clearer</p>
+      <h1 id="home-title">Your money.<br>Your plans.<br><span>Your next move.</span></h1>
+      <p class="hero-description">A clear view of your accounts. A simpler way to send money. Bring your everyday banking together with BankApp.</p>
+
+      <div class="hero-actions" *ngIf="!authService.isLoggedIn(); else signedInActions">
+        <a class="action action--primary" routerLink="/registration/customer">Get started <span aria-hidden="true">↗</span></a>
+        <a class="action action--secondary" routerLink="/auth/login">Sign in to BankApp <span aria-hidden="true">→</span></a>
+      </div>
+      <ng-template #signedInActions>
+        <div class="hero-actions" *ngIf="authService.isCustomer(); else staffActions">
+          <a class="action action--primary" routerLink="/customer/profile">Go to your accounts <span aria-hidden="true">↗</span></a>
+        </div>
+      </ng-template>
+      <ng-template #staffActions>
+        <p class="session-note">You're signed in. Use the navigation above to access your workspace.</p>
+      </ng-template>
+      <p class="hero-footnote">Built around the essentials. Designed to keep things simple.</p>
+    </div>
+
+    <div class="product-scene" role="img" aria-label="Illustration of BankApp accounts and transfers, not live account data">
+      <div class="scene-orbit" aria-hidden="true"></div>
+      <div class="account-preview" aria-hidden="true">
+        <div class="preview-top"><span class="brand-mark">B</span><strong>BankApp</strong><span class="preview-label">A clearer overview</span></div>
+        <p class="preview-eyebrow">Everything in one place</p>
+        <h2>Make room for<br>what's next.</h2>
+        <div class="preview-account"><span class="preview-icon">↗</span><div><strong>Everyday banking</strong><small>Checking accounts</small></div><span class="preview-arrow">→</span></div>
+        <div class="preview-account"><span class="preview-icon preview-icon--light">◎</span><div><strong>Future plans</strong><small>Savings accounts</small></div><span class="preview-arrow">→</span></div>
+        <div class="preview-currencies"><span>PLN</span><span>EUR</span><span>USD</span><span>GBP</span></div>
+      </div>
+      <div class="transfer-preview" aria-hidden="true"><span class="transfer-symbol">↗</span><div><strong>A simpler way to send</strong><small>Your account. Your next move.</small></div></div>
+      <span class="illustration-caption">Explore the BankApp experience</span>
+    </div>
+  </section>
+
+  <section class="features" aria-labelledby="features-title">
+    <div class="section-heading"><p class="eyebrow">Less friction. More clarity.</p><h2 id="features-title">Everyday banking,<br>without the clutter.</h2><p>The tools you need, right where you expect them.</p></div>
+    <div class="feature-grid">
+      <article class="feature-card"><span class="feature-icon" aria-hidden="true">▦</span><span class="feature-number" aria-hidden="true">01</span><h3>Your accounts, together</h3><p>Keep checking and savings accounts in one place, with a clear view of each balance.</p></article>
+      <article class="feature-card"><span class="feature-icon" aria-hidden="true">↗</span><span class="feature-number" aria-hidden="true">02</span><h3>Transfers made simple</h3><p>Choose your account, enter the recipient's IBAN and send money in a few straightforward steps.</p></article>
+      <article class="feature-card"><span class="feature-icon" aria-hidden="true">◎</span><span class="feature-number" aria-hidden="true">03</span><h3>A currency that fits</h3><p>Open an account in PLN, EUR, USD or GBP. Choose the currency that works for your plans.</p></article>
+    </div>
+  </section>
+
+  <section class="getting-started" aria-labelledby="start-title">
+    <div><p class="eyebrow">Your next chapter</p><h2 id="start-title">Good plans start<br>with a clear overview.</h2><p>Make BankApp your starting point for everyday money management.</p></div>
+    <a *ngIf="!authService.isLoggedIn()" class="action action--light" routerLink="/registration/customer">Create your account <span aria-hidden="true">↗</span></a>
+    <a *ngIf="authService.isCustomer()" class="action action--light" routerLink="/customer/profile">View your accounts <span aria-hidden="true">↗</span></a>
+  </section>
+  <footer class="home-footer"><span class="footer-brand">BankApp</span><span>Everyday banking. Clearly.</span><a href="#home-title">Back to top ↑</a></footer>
+</main>
