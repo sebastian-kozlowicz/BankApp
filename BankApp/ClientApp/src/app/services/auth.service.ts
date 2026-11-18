@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map, tap } from 'rxjs/operators';
 
@@ -12,6 +12,9 @@ import { RegisterByAnotherUser } from '../interfaces/auth/register-by-another-us
   providedIn: 'root'
 })
 export class AuthService {
+
+  // Storage is not reactive. Invalidate views reading the session after each change.
+  private readonly sessionVersion = signal(0);
 
   constructor(private http: HttpClient, private jwtHelper: JwtHelperService) { }
 
@@ -43,6 +46,7 @@ export class AuthService {
         tap((response: any) => {
           if (response?.token) {
             sessionStorage.setItem('token', response.token);
+            this.sessionVersion.update(version => version + 1);
           }
         }),
         map((response: any) => Boolean(response?.token))
@@ -51,6 +55,7 @@ export class AuthService {
 
   logout() {
     sessionStorage.removeItem('token');
+    this.sessionVersion.update(version => version + 1);
   }
 
   isLoggedIn(): boolean {
@@ -61,6 +66,7 @@ export class AuthService {
   }
 
   get currentUser(): JwtToken {
+    this.sessionVersion();
     // AppModule configures a synchronous sessionStorage token getter.
     const token = this.jwtHelper.tokenGetter() as string;
 
